@@ -114,3 +114,65 @@ export function listRecentMessages(limit = 200) {
 export function acknowledgeMessage(id, at = Date.now()) {
   getDb().prepare('UPDATE messages SET acknowledged_at = ? WHERE id = ?').run(at, id);
 }
+
+// --- patients_today ---
+
+export function insertPatient({ name, scheduled_time = null, is_walkin = 0 }) {
+  const now = Date.now();
+  const info = getDb()
+    .prepare(
+      `INSERT INTO patients_today (name, scheduled_time, status, is_walkin, created_at, updated_at)
+       VALUES (?, ?, 'waiting', ?, ?, ?)`,
+    )
+    .run(name, scheduled_time, is_walkin ? 1 : 0, now, now);
+  return info.lastInsertRowid;
+}
+
+export function bulkInsertPatients(list) {
+  const insert = getDb().prepare(
+    `INSERT INTO patients_today (name, scheduled_time, status, is_walkin, created_at, updated_at)
+     VALUES (?, ?, 'waiting', 0, ?, ?)`,
+  );
+  const run = getDb().transaction((rows) => {
+    const now = Date.now();
+    for (const r of rows) insert.run(r.name, r.scheduled_time ?? null, now, now);
+  });
+  run(list);
+  return list.length;
+}
+
+export function listPatients() {
+  return getDb()
+    .prepare(
+      `SELECT * FROM patients_today
+       ORDER BY CASE status WHEN 'current' THEN 0 WHEN 'waiting' THEN 1 ELSE 2 END,
+                scheduled_time IS NULL, scheduled_time, created_at`,
+    )
+    .all();
+}
+
+// current → done, waiting 중 가장 빠른 환자 → current (CLAUDE.md §9).
+export function advanceQueue() {
+  const d = getDb();
+  const run = d.transaction(() => {
+    const now = Date.now();
+    d.prepare("UPDATE patients_today SET status='done', updated_at=? WHERE status='current'").run(now);
+    const next = d
+      .prepare(
+        `SELECT * FROM patients_today WHERE status='waiting'
+         ORDER BY scheduled_time IS NULL, scheduled_time, created_at LIMIT 1`,
+      )
+      .get();
+    if (next) {
+      d.prepare("UPDATE patients_today SET status='current', updated_at=? WHERE id=?").run(now, next.id);
+      return { ...next, status: 'current', updated_at: now };
+    }
+    return null;
+  });
+  const current = run();
+  return { current, exhausted: current === null };
+}
+
+export function clearPatients() {
+  getDb().prepare('DELETE FROM patients_today').run();
+}

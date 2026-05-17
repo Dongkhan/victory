@@ -140,6 +140,199 @@ body {
   color: var(--muted);
 }
 
+/* --- 버튼 --- */
+
+.btn {
+  padding: 8px 14px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--accent);
+  color: #0f172a;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  filter: brightness(1.08);
+}
+
+.btn--sm {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--muted);
+  border-color: var(--border);
+}
+
+/* --- 환자 큐 --- */
+
+.queue {
+  width: 268px;
+  flex-shrink: 0;
+}
+
+.queue__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.queue__count {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.queue__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.queue__actions .btn {
+  flex: 1;
+}
+
+.queue__list {
+  list-style: none;
+  padding: 0;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 80px;
+}
+
+.queue__empty {
+  color: var(--muted);
+  font-size: 13px;
+  margin: auto;
+}
+
+.patient {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--panel-2);
+  border-left: 3px solid var(--border);
+  font-size: 13px;
+}
+
+.patient--current {
+  border-left-color: var(--accent);
+  background: #0e3a44;
+}
+
+.patient--done {
+  opacity: 0.45;
+}
+
+.patient__time {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  font-size: 12px;
+  width: 38px;
+}
+
+.patient__name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.patient__tag {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #f59e0b;
+  color: #0f172a;
+}
+
+.patient__status {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.queue__walkin input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.queue__walkin input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* --- 모달 --- */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal__box {
+  width: 440px;
+  max-width: 90vw;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+
+.modal__box h3 {
+  font-size: 15px;
+}
+
+.modal__hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.modal__hint code {
+  background: var(--panel-2);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.modal__box textarea {
+  resize: vertical;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.modal__box textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .app__footer {
   font-size: 12px;
   color: var(--muted);

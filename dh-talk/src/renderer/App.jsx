@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import MacroGrid from './components/MacroGrid.jsx';
+import PatientQueue from './components/PatientQueue.jsx';
 
 const STATUS_LABEL = {
   connecting: '연결 중…',
@@ -11,6 +12,7 @@ const STATUS_LABEL = {
 export default function App() {
   const [appInfo, setAppInfo] = useState(null);
   const [macros, setMacros] = useState([]);
+  const [patients, setPatients] = useState([]);
   const [status, setStatus] = useState('connecting');
 
   const wsRef = useRef(null);
@@ -25,6 +27,7 @@ export default function App() {
       if (cancelled) return;
       setAppInfo(info);
       setMacros(await window.dhtalk.getMacros());
+      setPatients(await window.dhtalk.listPatients());
 
       ws = new WebSocket(`ws://127.0.0.1:${info.wsPort}`);
       wsRef.current = ws;
@@ -44,9 +47,20 @@ export default function App() {
     };
   }, []);
 
+  const currentPatient = patients.find((p) => p.status === 'current') || null;
+
+  const bulkAdd = async (text) => setPatients(await window.dhtalk.bulkAddPatients(text));
+  const addWalkin = async (name) => setPatients(await window.dhtalk.addWalkin(name));
+  const clearQueue = async () => setPatients(await window.dhtalk.clearPatients());
+  const advance = async () => {
+    const result = await window.dhtalk.advancePatients();
+    setPatients(result.list);
+    if (result.exhausted) console.log('[queue] 대기 환자가 없습니다.');
+  };
+
   const triggerMacro = (macro) => {
-    // Day 2: 클릭 동작 확인용 콘솔 로그. Day 4 에서 실제 메시지 전송으로 연결한다.
-    console.log('[macro]', macro.id, '→', macro.text);
+    // Day 3: 매크로 클릭 확인용 콘솔 로그. Day 4 에서 메시지 전송 + advance 연결.
+    console.log('[macro]', macro.id, '→', macro.text, '| 현재 환자:', currentPatient?.name ?? '없음');
   };
 
   return (
@@ -57,7 +71,14 @@ export default function App() {
       </header>
 
       <main className="app__main">
-        <section className="panel">
+        <PatientQueue
+          patients={patients}
+          onBulkAdd={bulkAdd}
+          onAddWalkin={addWalkin}
+          onAdvance={advance}
+          onClear={clearQueue}
+        />
+        <section className="panel panel--grow">
           <h2 className="panel__title">매크로</h2>
           <MacroGrid macros={macros} onTrigger={triggerMacro} />
         </section>

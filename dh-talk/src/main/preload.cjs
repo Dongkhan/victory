@@ -9,6 +9,13 @@ contextBridge.exposeInMainWorld('dhtalk', {
   getSettings: () => ipcRenderer.invoke('config:get-settings'),
   getUsers: () => ipcRenderer.invoke('config:get-users'),
 
+  // 환자 큐 — 변경 작업은 갱신된 큐 목록을 반환한다.
+  listPatients: () => ipcRenderer.invoke('patients:list'),
+  bulkAddPatients: (text) => ipcRenderer.invoke('patients:bulk-add', text),
+  addWalkin: (name) => ipcRenderer.invoke('patients:add-walkin', name),
+  advancePatients: () => ipcRenderer.invoke('patients:advance'),
+  clearPatients: () => ipcRenderer.invoke('patients:clear'),
+
   // config/macros.yaml 핫리로드 시 main 이 push. 해제 함수를 반환한다.
   onMacrosChanged: (callback) => {
     const listener = (_event, macros) => callback(macros);
