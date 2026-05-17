@@ -115,6 +115,25 @@ export function acknowledgeMessage(id, at = Date.now()) {
   getDb().prepare('UPDATE messages SET acknowledged_at = ? WHERE id = ?').run(at, id);
 }
 
+// FTS5 한글 검색. 공백 구분 토큰을 각각 접두 일치(prefix)로 AND 검색한다.
+export function searchMessages(query, limit = 100) {
+  const tokens = String(query ?? '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((t) => `"${t.replace(/"/g, '""')}"*`);
+  if (!tokens.length) return [];
+  return getDb()
+    .prepare(
+      `SELECT m.* FROM messages m
+       JOIN messages_fts f ON m.id = f.rowid
+       WHERE messages_fts MATCH ?
+       ORDER BY m.ts DESC LIMIT ?`,
+    )
+    .all(tokens.join(' '), limit)
+    .reverse();
+}
+
 // --- patients_today ---
 
 export function insertPatient({ name, scheduled_time = null, is_walkin = 0 }) {

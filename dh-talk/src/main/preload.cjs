@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld('dhtalk', {
   getUsers: () => ipcRenderer.invoke('config:get-users'),
 
   getRecentMessages: () => ipcRenderer.invoke('messages:recent'),
+  searchMessages: (query) => ipcRenderer.invoke('messages:search', query),
 
   // 환자 큐 — 변경 작업은 갱신된 큐 목록을 반환한다.
   listPatients: () => ipcRenderer.invoke('patients:list'),
@@ -27,6 +28,13 @@ contextBridge.exposeInMainWorld('dhtalk', {
     const listener = (_event, macros) => callback(macros);
     ipcRenderer.on('config:macros-changed', listener);
     return () => ipcRenderer.removeListener('config:macros-changed', listener);
+  },
+
+  // 자정 환자 큐 리셋 알림.
+  onPatientsReset: (callback) => {
+    const listener = () => callback();
+    ipcRenderer.on('patients:reset', listener);
+    return () => ipcRenderer.removeListener('patients:reset', listener);
   },
 
   // 알람 창의 "확인" 결과 — 메인 창이 WS 로 ack 를 보내야 한다.

@@ -7,6 +7,7 @@ import {
   advanceQueue,
   clearPatients,
   listRecentMessages,
+  searchMessages,
 } from './db.js';
 import { parseQueueText } from './queue-parser.js';
 
@@ -27,6 +28,7 @@ export function registerIpc(getConfig) {
 
   // --- 메시지 ---
   ipcMain.handle('messages:recent', () => listRecentMessages());
+  ipcMain.handle('messages:search', (_e, query) => searchMessages(query));
 
   // --- 환자 큐 ---
   ipcMain.handle('patients:list', () => listPatients());

@@ -4,9 +4,10 @@ import path from 'node:path';
 import { WS_PORT } from '../shared/types.js';
 import { startServer, stopServer } from './server.js';
 import { registerIpc } from './ipc.js';
-import { initDb, closeDb } from './db.js';
+import { initDb, closeDb, clearPatients } from './db.js';
 import { loadConfig, watchConfig } from './config.js';
 import { configureAlertWindow, showAlert, closeAlert } from './alert-window.js';
+import { runCleanup, scheduleDailyAt } from './cleanup.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.join(__dirname, '..', '..');
@@ -20,10 +21,12 @@ const dataDir = app.isPackaged
 const configDir = app.isPackaged
   ? path.join(process.resourcesPath, 'config')
   : path.join(projectRoot, 'config');
+const attachmentsDir = path.join(dataDir, 'attachments');
 
 let mainWindow = null;
 let config = { macros: [], settings: {}, users: [] };
 let configWatcher = null;
+const scheduled = [];
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -82,7 +85,7 @@ app.whenReady().then(() => {
   // WebSocket 허브는 데스크1(is_server) PC 에서만 기동한다.
   const meUser = config.users.find((u) => u.id === config.settings.me);
   if (meUser?.is_server) {
-    startServer(WS_PORT);
+    startServer(WS_PORT, { attachmentsDir });
   } else {
     console.log(`[main] 이 PC(${config.settings.me})는 서버가 아님 — 허브 미기동`);
   }
@@ -91,6 +94,15 @@ app.whenReady().then(() => {
   configureAlertWindow({ isPackaged: app.isPackaged, devUrl: DEV_SERVER_URL, projectRoot });
   wireAlertIpc();
   createWindow();
+
+  // 정기 작업: 02:00 메시지/첨부 30일 정리, 00:00 환자 큐 리셋 (CLAUDE.md §11, §9).
+  scheduled.push(scheduleDailyAt(2, () => runCleanup(attachmentsDir)));
+  scheduled.push(
+    scheduleDailyAt(0, () => {
+      clearPatients();
+      mainWindow?.webContents.send('patients:reset');
+    }),
+  );
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
@@ -102,6 +114,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('before-quit', () => {
+  scheduled.forEach((cancel) => cancel());
   configWatcher?.close();
   stopServer();
   closeAlert();

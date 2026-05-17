@@ -2,8 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import MacroGrid from './components/MacroGrid.jsx';
 import PatientQueue from './components/PatientQueue.jsx';
 import ChatPane from './components/ChatPane.jsx';
+import FileDropZone from './components/FileDropZone.jsx';
 import { resolveMacroText, macroTextNeeds, matchesHotkey } from './lib/macro.js';
 import { shouldPulse, shouldPulseOnEscalate } from './lib/alert.js';
+import { readFileAsDataURL, splitDataUrl, MAX_FILE_BYTES, formatBytes } from './lib/file.js';
 
 const STATUS_LABEL = {
   connecting: '연결 중…',
@@ -19,6 +21,7 @@ export default function App() {
   const [macros, setMacros] = useState([]);
   const [patients, setPatients] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [searchResults, setSearchResults] = useState(null); // null = 검색 안 함
   const [status, setStatus] = useState('connecting');
   const [pendingMacro, setPendingMacro] = useState(null);
   const [promptName, setPromptName] = useState('');
@@ -79,7 +82,6 @@ export default function App() {
         }
       };
 
-      // 알람 창 ↔ WS 중계: 알람 창의 확인/에스컬레이션을 WS 메시지로 전송.
       cleanups.push(
         window.dhtalk.onAlertAcked((m) => {
           wsRef.current?.send(JSON.stringify({ kind: 'ack', id: m.id, by: myId }));
@@ -91,13 +93,25 @@ export default function App() {
     }
 
     init();
-    cleanups.push(window.dhtalk.onMacrosChanged((next) => !cancelled && setMacros(next)));
+    cleanups.push(
+      window.dhtalk.onMacrosChanged((next) => !cancelled && setMacros(next)),
+      window.dhtalk.onPatientsReset(async () => {
+        if (!cancelled) setPatients(await window.dhtalk.listPatients());
+      }),
+    );
+
+    // OS 파일을 드롭존 밖에 떨어뜨렸을 때 Electron 이 그 파일로 이동하는 것을 막는다.
+    const preventNav = (e) => e.preventDefault();
+    window.addEventListener('dragover', preventNav);
+    window.addEventListener('drop', preventNav);
 
     return () => {
       cancelled = true;
       if (ws) ws.close();
       wsRef.current = null;
       cleanups.forEach((fn) => fn?.());
+      window.removeEventListener('dragover', preventNav);
+      window.removeEventListener('drop', preventNav);
     };
   }, []);
 
@@ -124,17 +138,49 @@ export default function App() {
       mirror_to: macro.mirror_to ?? null,
     });
 
+  const sendFile = async (file) => {
+    if (file.size > MAX_FILE_BYTES) {
+      window.alert(`파일이 5MB를 초과합니다 (${formatBytes(file.size)}): ${file.name}`);
+      return;
+    }
+    const ws = wsRef.current;
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      console.error('[ws] 연결되지 않아 파일을 전송할 수 없습니다.');
+      return;
+    }
+    const { mime, base64 } = splitDataUrl(await readFileAsDataURL(file));
+    ws.send(
+      JSON.stringify({
+        kind: 'file',
+        ts: Date.now(),
+        sender: me,
+        recipient: 'all',
+        filename: file.name || 'pasted-image.png',
+        mime,
+        dataBase64: base64,
+      }),
+    );
+  };
+
+  const onDropFiles = (files) => files.forEach(sendFile);
+
+  const onSearch = async (query) => {
+    if (!query) {
+      setSearchResults(null);
+      return;
+    }
+    setSearchResults(await window.dhtalk.searchMessages(query));
+  };
+
   const triggerMacro = async (macro) => {
     let patientName = currentPatient?.name ?? '';
 
-    // action_after: advance_queue — 큐를 먼저 진행시킨 뒤 새 current 환자로 치환.
     if (macro.action_after === 'advance_queue') {
       const result = await window.dhtalk.advancePatients();
       setPatients(result.list);
       patientName = result.current?.name ?? '';
     }
 
-    // {patient} 가 필요한데 현재 환자가 없으면 이름 입력 모달.
     if (macroTextNeeds(macro.text, 'patient') && !patientName) {
       setPromptName('');
       setPendingMacro(macro);
@@ -163,7 +209,6 @@ export default function App() {
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-    // macros/patients/me 가 바뀌면 최신 클로저로 다시 바인딩
   }, [macros, patients, me]);
 
   const bulkAdd = async (text) => setPatients(await window.dhtalk.bulkAddPatients(text));
@@ -182,22 +227,31 @@ export default function App() {
         <span className={`status status--${status}`}>{STATUS_LABEL[status]}</span>
       </header>
 
-      <main className="app__main">
-        <PatientQueue
-          patients={patients}
-          onBulkAdd={bulkAdd}
-          onAddWalkin={addWalkin}
-          onAdvance={advance}
-          onClear={clearQueue}
-        />
-        <section className="workspace">
-          <ChatPane messages={messages} me={me} onSendText={sendText} />
-          <div className="macros-bar panel">
-            <h2 className="panel__title">매크로</h2>
-            <MacroGrid macros={macros} onTrigger={triggerMacro} />
-          </div>
-        </section>
-      </main>
+      <FileDropZone onFiles={onDropFiles}>
+        <main className="app__main">
+          <PatientQueue
+            patients={patients}
+            onBulkAdd={bulkAdd}
+            onAddWalkin={addWalkin}
+            onAdvance={advance}
+            onClear={clearQueue}
+          />
+          <section className="workspace">
+            <ChatPane
+              messages={searchResults ?? messages}
+              me={me}
+              isSearching={searchResults !== null}
+              onSendText={sendText}
+              onSendFile={sendFile}
+              onSearch={onSearch}
+            />
+            <div className="macros-bar panel">
+              <h2 className="panel__title">매크로</h2>
+              <MacroGrid macros={macros} onTrigger={triggerMacro} />
+            </div>
+          </section>
+        </main>
+      </FileDropZone>
 
       <footer className="app__footer">
         {appInfo
@@ -212,9 +266,7 @@ export default function App() {
         >
           <div className="modal__box">
             <h3>환자 이름 입력</h3>
-            <p className="modal__hint">
-              진료중인 환자가 없습니다. 호출할 환자 이름을 입력하세요.
-            </p>
+            <p className="modal__hint">진료중인 환자가 없습니다. 호출할 환자 이름을 입력하세요.</p>
             <input
               className="modal__input"
               type="text"
