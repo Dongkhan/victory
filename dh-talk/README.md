@@ -64,7 +64,12 @@ dh-talk/
 | 6 | 파일 드래그앤드롭/붙여넣기, 검색, 30일 cleanup |
 | 7 | Hermes 텔레그램 미러링, Windows 빌드 설정 |
 
-비-GUI 로직(DB·파서·메시지 허브·매크로 치환·검색·cleanup·미러링)은 단위
-검증을 마쳤다. **남은 검증**: `npm run dev`로 실제 창·펄스 알람 창·핫키
-동작 확인, 다PC LAN 환경 메시지 왕복, `npm run build:win` 으로 Windows
-설치본 생성 및 데스크 PC 설치 테스트 (`scripts/deploy-checklist.md`).
+**v0.1.1 보강** (배포 전 보안·운영) — WebSocket HMAC 인증, sender 위장
+방지, 메시지 스키마 검증, ack 위조 방지, `retention_days` 실제 반영,
+packaged 설정을 userData 로 이동, 큐 비우기 확인창, 운영 진단 패널.
+
+비-GUI 로직(DB·파서·메시지 허브·인증·검증·매크로 치환·검색·cleanup·
+미러링)은 단위 검증을 마쳤다. **남은 검증**: `npm run dev`로 실제 창·
+펄스 알람 창·핫키 동작 확인, 다PC LAN 환경 메시지 왕복, `npm run
+build:win` 으로 Windows 설치본 생성 및 데스크 PC 설치 테스트
+(`scripts/deploy-checklist.md`).

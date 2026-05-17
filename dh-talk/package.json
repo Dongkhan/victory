@@ -1,6 +1,6 @@
 {
   "name": "dh-talk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "동행 정신건강의학과의원 원장↔데스크 LAN 메신저",
   "private": true,
   "type": "module",
