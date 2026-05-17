@@ -1,0 +1,25 @@
+appId: clinic.dongheng.dhtalk
+productName: DH Talk
+copyright: Dongheng Psychiatric Clinic
+
+directories:
+  output: dist/win
+  buildResources: build
+
+# renderer 는 vite build 결과(dist/renderer)를 패키징. main/shared 는 소스 그대로.
+files:
+  - src/main/**/*
+  - src/shared/**/*
+  - dist/renderer/**/*
+  - package.json
+
+win:
+  target:
+    - nsis
+  artifactName: ${productName}-${version}-setup.${ext}
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  shortcutName: DH Talk
