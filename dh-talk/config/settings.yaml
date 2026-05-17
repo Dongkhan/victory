@@ -3,6 +3,11 @@
 # 이 PC 의 사용자 id. users.yaml 의 id 중 하나로, 설치 PC 마다 수정한다.
 me: desk1
 
+# WebSocket 인증 — 4대 PC 모두 동일한 값이어야 한다.
+# !!! 배포 전 반드시 길고 무작위한 문자열로 변경할 것 !!!
+auth:
+  shared_key: "dhtalk-lan-secret-CHANGE-BEFORE-DEPLOY"
+
 server:
   host: "192.168.0.10"   # 데스크1 PC 의 LAN IP (실제 값으로 수정)
   ws_port: 8123

@@ -6,6 +6,7 @@ import FileDropZone from './components/FileDropZone.jsx';
 import { resolveMacroText, macroTextNeeds, matchesHotkey } from './lib/macro.js';
 import { shouldPulse, shouldPulseOnEscalate } from './lib/alert.js';
 import { readFileAsDataURL, splitDataUrl, MAX_FILE_BYTES, formatBytes } from './lib/file.js';
+import { computeHmac } from './lib/auth.js';
 
 const STATUS_LABEL = {
   connecting: '연결 중…',
@@ -23,6 +24,7 @@ export default function App() {
   const [messages, setMessages] = useState([]);
   const [searchResults, setSearchResults] = useState(null); // null = 검색 안 함
   const [status, setStatus] = useState('connecting');
+  const [lastReceivedAt, setLastReceivedAt] = useState(null);
   const [pendingMacro, setPendingMacro] = useState(null);
   const [promptName, setPromptName] = useState('');
 
@@ -43,6 +45,7 @@ export default function App() {
       const meUser = users.find((u) => u.id === myId);
       const role = meUser?.role || 'desk';
       const host = meUser?.is_server ? '127.0.0.1' : settings.server?.host || '127.0.0.1';
+      const sharedKey = settings.auth?.shared_key || '';
 
       setAppInfo(info);
       setMe(myId);
@@ -55,12 +58,9 @@ export default function App() {
       ws = new WebSocket(`ws://${host}:${info.wsPort}`);
       wsRef.current = ws;
 
-      ws.onopen = () => {
-        if (cancelled) return;
-        ws.send(JSON.stringify({ kind: 'hello', userId: myId }));
-        setStatus('open');
-      };
-      ws.onclose = () => !cancelled && setStatus('closed');
+      // 인증 핸드셰이크: 서버 challenge → HMAC 응답 → authorized 후 'open'
+      ws.onopen = () => !cancelled && setStatus('connecting');
+      ws.onclose = (ev) => !cancelled && setStatus(ev.code === 4001 ? 'error' : 'closed');
       ws.onerror = () => !cancelled && setStatus('error');
       ws.onmessage = (ev) => {
         if (cancelled) return;
@@ -70,8 +70,15 @@ export default function App() {
         } catch {
           return;
         }
-        if (msg.kind === 'message') {
+        if (msg.kind === 'challenge') {
+          computeHmac(sharedKey, msg.nonce).then((hmac) => {
+            if (!cancelled) ws.send(JSON.stringify({ kind: 'auth', userId: myId, hmac }));
+          });
+        } else if (msg.kind === 'authorized') {
+          setStatus('open');
+        } else if (msg.kind === 'message') {
           setMessages((prev) => [...prev, msg]);
+          setLastReceivedAt(Date.now());
           if (shouldPulse(msg, { me: myId, role })) window.dhtalk.showAlert(msg);
         } else if (msg.kind === 'ack') {
           window.dhtalk.closeAlert();

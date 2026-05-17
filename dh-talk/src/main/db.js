@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS messages (
   attachment_path TEXT,
   alert_level TEXT,
   acknowledged_at INTEGER,
+  acknowledged_by TEXT,
   mirrored_to TEXT
 );
 
@@ -64,8 +65,18 @@ export function initDb(dbPath) {
   db = new Database(dbPath);
   db.pragma('journal_mode = WAL');
   db.exec(SCHEMA);
+  migrate();
   console.log(`[db] 초기화 완료: ${dbPath}`);
   return db;
+}
+
+// 기존 DB 에 누락된 컬럼을 보강한다 (CREATE TABLE IF NOT EXISTS 로는 컬럼 추가 불가).
+function migrate() {
+  const cols = db.prepare('PRAGMA table_info(messages)').all().map((c) => c.name);
+  if (!cols.includes('acknowledged_by')) {
+    db.exec('ALTER TABLE messages ADD COLUMN acknowledged_by TEXT');
+    console.log('[db] 마이그레이션: messages.acknowledged_by 추가');
+  }
 }
 
 export function getDb() {
@@ -111,8 +122,14 @@ export function listRecentMessages(limit = 200) {
     .reverse();
 }
 
-export function acknowledgeMessage(id, at = Date.now()) {
-  getDb().prepare('UPDATE messages SET acknowledged_at = ? WHERE id = ?').run(at, id);
+// 첫 ack 만 기록한다 (중복 ack 무시). 변경된 행 수를 반환.
+export function acknowledgeMessage(id, by, at = Date.now()) {
+  return getDb()
+    .prepare(
+      `UPDATE messages SET acknowledged_at = ?, acknowledged_by = ?
+       WHERE id = ? AND acknowledged_at IS NULL`,
+    )
+    .run(at, by ?? null, id).changes;
 }
 
 // FTS5 한글 검색. 공백 구분 토큰을 각각 접두 일치(prefix)로 AND 검색한다.
