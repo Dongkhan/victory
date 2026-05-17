@@ -3,6 +3,7 @@ import MacroGrid from './components/MacroGrid.jsx';
 import PatientQueue from './components/PatientQueue.jsx';
 import ChatPane from './components/ChatPane.jsx';
 import { resolveMacroText, macroTextNeeds, matchesHotkey } from './lib/macro.js';
+import { shouldPulse, shouldPulseOnEscalate } from './lib/alert.js';
 
 const STATUS_LABEL = {
   connecting: '연결 중…',
@@ -14,6 +15,7 @@ const STATUS_LABEL = {
 export default function App() {
   const [appInfo, setAppInfo] = useState(null);
   const [me, setMe] = useState('');
+  const [myRole, setMyRole] = useState('');
   const [macros, setMacros] = useState([]);
   const [patients, setPatients] = useState([]);
   const [messages, setMessages] = useState([]);
@@ -26,7 +28,7 @@ export default function App() {
   useEffect(() => {
     let cancelled = false;
     let ws = null;
-    let offMacros = null;
+    const cleanups = [];
 
     async function init() {
       const info = await window.dhtalk.getAppInfo();
@@ -35,11 +37,13 @@ export default function App() {
       if (cancelled) return;
 
       const myId = settings.me || 'desk1';
-      const meIsServer = users.find((u) => u.id === myId)?.is_server || false;
-      const host = meIsServer ? '127.0.0.1' : settings.server?.host || '127.0.0.1';
+      const meUser = users.find((u) => u.id === myId);
+      const role = meUser?.role || 'desk';
+      const host = meUser?.is_server ? '127.0.0.1' : settings.server?.host || '127.0.0.1';
 
       setAppInfo(info);
       setMe(myId);
+      setMyRole(role);
       setMacros(await window.dhtalk.getMacros());
       setPatients(await window.dhtalk.listPatients());
       setMessages(await window.dhtalk.getRecentMessages());
@@ -47,6 +51,7 @@ export default function App() {
 
       ws = new WebSocket(`ws://${host}:${info.wsPort}`);
       wsRef.current = ws;
+
       ws.onopen = () => {
         if (cancelled) return;
         ws.send(JSON.stringify({ kind: 'hello', userId: myId }));
@@ -62,18 +67,37 @@ export default function App() {
         } catch {
           return;
         }
-        if (msg.kind === 'message') setMessages((prev) => [...prev, msg]);
+        if (msg.kind === 'message') {
+          setMessages((prev) => [...prev, msg]);
+          if (shouldPulse(msg, { me: myId, role })) window.dhtalk.showAlert(msg);
+        } else if (msg.kind === 'ack') {
+          window.dhtalk.closeAlert();
+        } else if (msg.kind === 'escalate') {
+          if (shouldPulseOnEscalate(msg.original, { me: myId, role })) {
+            window.dhtalk.showAlert(msg.original);
+          }
+        }
       };
+
+      // 알람 창 ↔ WS 중계: 알람 창의 확인/에스컬레이션을 WS 메시지로 전송.
+      cleanups.push(
+        window.dhtalk.onAlertAcked((m) => {
+          wsRef.current?.send(JSON.stringify({ kind: 'ack', id: m.id, by: myId }));
+        }),
+        window.dhtalk.onAlertEscalateRequest((m) => {
+          wsRef.current?.send(JSON.stringify({ kind: 'escalate', id: m.id, original: m }));
+        }),
+      );
     }
 
     init();
-    offMacros = window.dhtalk.onMacrosChanged((next) => !cancelled && setMacros(next));
+    cleanups.push(window.dhtalk.onMacrosChanged((next) => !cancelled && setMacros(next)));
 
     return () => {
       cancelled = true;
       if (ws) ws.close();
       wsRef.current = null;
-      offMacros?.();
+      cleanups.forEach((fn) => fn?.());
     };
   }, []);
 
@@ -177,7 +201,7 @@ export default function App() {
 
       <footer className="app__footer">
         {appInfo
-          ? `${appInfo.name} v${appInfo.version} · ${appInfo.platform} · ws:${appInfo.wsPort}`
+          ? `${appInfo.name} v${appInfo.version} · ${appInfo.platform} · ${me}/${myRole} · ws:${appInfo.wsPort}`
           : '앱 정보 로딩 중…'}
       </footer>
 

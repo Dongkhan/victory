@@ -1,5 +1,5 @@
 import { WebSocketServer } from 'ws';
-import { insertMessage } from './db.js';
+import { insertMessage, acknowledgeMessage } from './db.js';
 
 // 메시지 허브 — 데스크1 PC 에서만 기동된다 (CLAUDE.md §4).
 // 클라이언트가 보낸 메시지를 DB 에 저장하고 전 클라이언트에 브로드캐스트한다.
@@ -48,6 +48,17 @@ function handleIncoming(socket, raw) {
       broadcast({ ...msg, kind: 'message', id, ts });
       break;
     }
+
+    case 'ack':
+      // 펄스 알람 확인 — 확인 시각 기록 후 전 클라이언트에 전파.
+      if (msg.id) acknowledgeMessage(msg.id);
+      broadcast(msg);
+      break;
+
+    case 'escalate':
+      // 원장 60초 미확인 — 데스크 PC 들이 대신 알리도록 전파.
+      broadcast(msg);
+      break;
 
     default:
       console.error('[server] 알 수 없는 kind:', msg.kind);

@@ -1,0 +1,121 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html,
+body {
+  height: 100%;
+  background: transparent;
+  font-family: -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+  overflow: hidden;
+}
+
+#alert-root {
+  height: 100%;
+}
+
+/* 청록색 배경이 3초 주기로 호흡 (opacity 0.7 ↔ 1.0) — CLAUDE.md §8 */
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes flash {
+  0%,
+  100% {
+    background: #b91c1c;
+  }
+  50% {
+    background: #ef4444;
+  }
+}
+
+.pulse {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #06b6d4;
+  color: #07252b;
+  animation: breathe 3s ease-in-out infinite;
+}
+
+.pulse__text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.pulse__tag {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  opacity: 0.75;
+}
+
+.pulse__body {
+  font-size: 17px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pulse__ack {
+  flex-shrink: 0;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 10px;
+  background: #07252b;
+  color: #e2f9ff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pulse__ack:hover {
+  filter: brightness(1.2);
+}
+
+/* 긴급 — 전체 화면 빨강 플래시 */
+.pulse--urgent {
+  border-radius: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+  color: #fff;
+  animation: flash 0.8s steps(1, end) infinite;
+}
+
+.pulse--urgent .pulse__text {
+  flex: 0;
+  align-items: center;
+  text-align: center;
+}
+
+.pulse--urgent .pulse__tag {
+  font-size: 22px;
+  opacity: 0.9;
+}
+
+.pulse--urgent .pulse__body {
+  font-size: 44px;
+  white-space: normal;
+}
+
+.pulse--urgent .pulse__ack {
+  padding: 18px 48px;
+  font-size: 20px;
+  background: #fff;
+  color: #b91c1c;
+}

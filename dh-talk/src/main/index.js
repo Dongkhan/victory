@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { WS_PORT } from '../shared/types.js';
@@ -6,6 +6,7 @@ import { startServer, stopServer } from './server.js';
 import { registerIpc } from './ipc.js';
 import { initDb, closeDb } from './db.js';
 import { loadConfig, watchConfig } from './config.js';
+import { configureAlertWindow, showAlert, closeAlert } from './alert-window.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.join(__dirname, '..', '..');
@@ -52,6 +53,23 @@ function createWindow() {
   });
 }
 
+// 펄스 알람 창 ↔ 메인 창 IPC 중계.
+function wireAlertIpc() {
+  ipcMain.on('alert:show', (_e, msg) => showAlert(msg));
+  ipcMain.on('alert:close', () => closeAlert());
+
+  // 알람 창의 "확인" → 알람 닫고, 메인 창이 ack 를 WS 로 보내도록 전달.
+  ipcMain.on('alert:ack', (_e, msg) => {
+    closeAlert();
+    mainWindow?.webContents.send('alert:acked', msg);
+  });
+
+  // 알람 창의 60초 미확인 → 메인 창이 escalate 를 WS 로 보내도록 전달.
+  ipcMain.on('alert:escalate', (_e, msg) => {
+    mainWindow?.webContents.send('alert:escalate-request', msg);
+  });
+}
+
 app.whenReady().then(() => {
   initDb(path.join(dataDir, 'messages.db'));
 
@@ -70,6 +88,8 @@ app.whenReady().then(() => {
   }
 
   registerIpc(() => config);
+  configureAlertWindow({ isPackaged: app.isPackaged, devUrl: DEV_SERVER_URL, projectRoot });
+  wireAlertIpc();
   createWindow();
 
   app.on('activate', () => {
@@ -84,5 +104,6 @@ app.on('window-all-closed', () => {
 app.on('before-quit', () => {
   configWatcher?.close();
   stopServer();
+  closeAlert();
   closeDb();
 });
