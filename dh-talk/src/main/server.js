@@ -1,7 +1,9 @@
 import { WebSocketServer } from 'ws';
+import { insertMessage } from './db.js';
 
-// Day 1: 단순 echo 서버. 받은 메시지를 그대로 되돌려준다.
-// Day 4 에서 메시지 허브(브로드캐스트/라우팅) 로직으로 확장한다.
+// 메시지 허브 — 데스크1 PC 에서만 기동된다 (CLAUDE.md §4).
+// 클라이언트가 보낸 메시지를 DB 에 저장하고 전 클라이언트에 브로드캐스트한다.
+// v1 은 단일 공유 채널: 모든 메시지를 모두에게 전달, 구분은 sender/alert_level 로.
 
 let wss = null;
 
@@ -9,26 +11,54 @@ export function startServer(port) {
   wss = new WebSocketServer({ port });
 
   wss.on('listening', () => {
-    console.log(`[server] WebSocket echo 서버 시작: ws://127.0.0.1:${port}`);
+    console.log(`[server] 메시지 허브 시작: ws://0.0.0.0:${port}`);
   });
 
   wss.on('connection', (socket, req) => {
-    const peer = req.socket.remoteAddress;
-    console.log(`[server] 클라이언트 접속: ${peer}`);
-
-    socket.on('message', (data, isBinary) => {
-      const text = isBinary ? '<binary>' : data.toString();
-      console.log(`[server] 수신: ${text}`);
-      socket.send(JSON.stringify({ type: 'echo', body: text, ts: Date.now() }));
-    });
-
-    socket.on('close', () => console.log(`[server] 클라이언트 해제: ${peer}`));
+    console.log(`[server] 클라이언트 접속: ${req.socket.remoteAddress}`);
+    socket.on('message', (raw) => handleIncoming(socket, raw));
     socket.on('error', (err) => console.error('[server] socket 오류:', err.message));
+    socket.on('close', () =>
+      console.log(`[server] 클라이언트 해제: ${socket.userId ?? '미식별'}`),
+    );
   });
 
   wss.on('error', (err) => console.error('[server] 서버 오류:', err.message));
-
   return wss;
+}
+
+function handleIncoming(socket, raw) {
+  let msg;
+  try {
+    msg = JSON.parse(raw.toString());
+  } catch {
+    return console.error('[server] 잘못된 JSON 수신');
+  }
+
+  switch (msg.kind) {
+    case 'hello':
+      // 접속 클라이언트 식별 (desk1/desk2/desk3/doctor)
+      socket.userId = msg.userId;
+      console.log(`[server] 식별: ${msg.userId}`);
+      break;
+
+    case 'message': {
+      const ts = msg.ts ?? Date.now();
+      const id = insertMessage({ ...msg, ts });
+      broadcast({ ...msg, kind: 'message', id, ts });
+      break;
+    }
+
+    default:
+      console.error('[server] 알 수 없는 kind:', msg.kind);
+  }
+}
+
+function broadcast(payload) {
+  const data = JSON.stringify(payload);
+  for (const client of wss.clients) {
+    if (client.readyState === client.OPEN) client.send(data);
+  }
 }
 
 export function stopServer() {

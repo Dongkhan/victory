@@ -9,6 +9,8 @@ contextBridge.exposeInMainWorld('dhtalk', {
   getSettings: () => ipcRenderer.invoke('config:get-settings'),
   getUsers: () => ipcRenderer.invoke('config:get-users'),
 
+  getRecentMessages: () => ipcRenderer.invoke('messages:recent'),
+
   // 환자 큐 — 변경 작업은 갱신된 큐 목록을 반환한다.
   listPatients: () => ipcRenderer.invoke('patients:list'),
   bulkAddPatients: (text) => ipcRenderer.invoke('patients:bulk-add', text),
