@@ -2,6 +2,7 @@ import { WebSocketServer } from 'ws';
 import fs from 'node:fs';
 import path from 'node:path';
 import { insertMessage, acknowledgeMessage } from './db.js';
+import { mirror } from './hermes-mirror.js';
 
 // 메시지 허브 — 데스크1 PC 에서만 기동된다 (CLAUDE.md §4).
 // 클라이언트가 보낸 메시지를 DB 에 저장하고 전 클라이언트에 브로드캐스트한다.
@@ -75,6 +76,8 @@ function handleIncoming(socket, raw) {
       const ts = msg.ts ?? Date.now();
       const id = insertMessage({ ...msg, ts });
       broadcast({ ...msg, kind: 'message', id, ts });
+      // mirror_to 에 telegram 이 있으면 Hermes 경유 미러링 (실패해도 무관, await 안 함).
+      mirror({ ...msg, ts });
       break;
     }
 

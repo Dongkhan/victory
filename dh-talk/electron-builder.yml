@@ -13,6 +13,15 @@ files:
   - dist/renderer/**/*
   - package.json
 
+# 네이티브 모듈(better-sqlite3 .node)은 asar 밖으로 풀어야 로드된다.
+asarUnpack:
+  - "**/*.node"
+
+# config/ 는 사용자가 메모장으로 편집하므로 asar 밖 resources/config 로 복사.
+extraResources:
+  - from: config
+    to: config
+
 win:
   target:
     - nsis

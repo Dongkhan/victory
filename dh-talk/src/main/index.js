@@ -8,6 +8,7 @@ import { initDb, closeDb, clearPatients } from './db.js';
 import { loadConfig, watchConfig } from './config.js';
 import { configureAlertWindow, showAlert, closeAlert } from './alert-window.js';
 import { runCleanup, scheduleDailyAt } from './cleanup.js';
+import { loadEnv } from './env.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.join(__dirname, '..', '..');
@@ -74,6 +75,9 @@ function wireAlertIpc() {
 }
 
 app.whenReady().then(() => {
+  // .env 로드 (HERMES_URL, DHTALK_API_KEY) — Hermes 미러링용.
+  loadEnv(path.join(app.isPackaged ? process.resourcesPath : projectRoot, '.env'));
+
   initDb(path.join(dataDir, 'messages.db'));
 
   config = loadConfig(configDir);
