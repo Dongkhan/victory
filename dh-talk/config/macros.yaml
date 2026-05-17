@@ -1,0 +1,17 @@
+# 매크로 정의 — 메모장으로도 편집 가능. 총 10개 목표 (나머지는 인터뷰 후 채움).
+# 필드 설명은 CLAUDE.md §7 참조.
+macros:
+  - id: call_next
+    label: "다음 환자"
+    color: "#06b6d4"
+    hotkey: "Ctrl+1"
+    alert_level: "next_patient"     # 수신측 펄스 알람 트리거
+    text: "{patient} 님 들어오세요"
+    action_after: "advance_queue"   # 큐: current → done, 다음 waiting → current
+    mirror_to: ["telegram"]
+
+  - id: hold_5min
+    label: "5분 대기"
+    color: "#f59e0b"
+    hotkey: "Ctrl+2"
+    text: "잠시 5분만 대기 부탁드립니다"

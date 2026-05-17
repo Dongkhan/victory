@@ -1,0 +1,551 @@
+:root {
+  --bg: #0f172a;
+  --panel: #1e293b;
+  --panel-2: #273449;
+  --border: #334155;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #06b6d4;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+  gap: 12px;
+}
+
+.app__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app__header h1 {
+  font-size: 20px;
+}
+
+.status {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.status--open {
+  color: #4ade80;
+  border-color: #4ade80;
+}
+
+.status--error,
+.status--closed {
+  color: #f87171;
+  border-color: #f87171;
+}
+
+.app__main {
+  flex: 1;
+  display: flex;
+  gap: 12px;
+  min-height: 0;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel);
+}
+
+.panel--grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.panel__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* --- 매크로 그리드 --- */
+
+.macrogrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.macro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-height: 64px;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 10px;
+  background: var(--macro-color, var(--accent));
+  color: #0f172a;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.06s ease, filter 0.12s ease;
+}
+
+.macro:hover {
+  filter: brightness(1.08);
+}
+
+.macro:active {
+  transform: scale(0.97);
+}
+
+.macro__label {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.macro__hotkey {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.65;
+}
+
+.macrogrid__empty {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* --- 버튼 --- */
+
+.btn {
+  padding: 8px 14px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--accent);
+  color: #0f172a;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  filter: brightness(1.08);
+}
+
+.btn--sm {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--muted);
+  border-color: var(--border);
+}
+
+/* --- 환자 큐 --- */
+
+.queue {
+  width: 268px;
+  flex-shrink: 0;
+}
+
+.queue__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.queue__count {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.queue__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.queue__actions .btn {
+  flex: 1;
+}
+
+.queue__list {
+  list-style: none;
+  padding: 0;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 80px;
+}
+
+.queue__empty {
+  color: var(--muted);
+  font-size: 13px;
+  margin: auto;
+}
+
+.patient {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--panel-2);
+  border-left: 3px solid var(--border);
+  font-size: 13px;
+}
+
+.patient--current {
+  border-left-color: var(--accent);
+  background: #0e3a44;
+}
+
+.patient--done {
+  opacity: 0.45;
+}
+
+.patient__time {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  font-size: 12px;
+  width: 38px;
+}
+
+.patient__name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.patient__tag {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #f59e0b;
+  color: #0f172a;
+}
+
+.patient__status {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.queue__walkin input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.queue__walkin input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* --- 모달 --- */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal__box {
+  width: 440px;
+  max-width: 90vw;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+
+.modal__box h3 {
+  font-size: 15px;
+}
+
+.modal__hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.modal__hint code {
+  background: var(--panel-2);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.modal__box textarea {
+  resize: vertical;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.modal__box textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.modal__input {
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.modal__input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.app__me {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+/* --- 작업 영역: 대화 + 매크로 --- */
+
+.workspace {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.chat {
+  flex: 1;
+  min-height: 0;
+}
+
+.chat__log {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-height: 80px;
+  padding-right: 4px;
+}
+
+.chat__empty {
+  margin: auto;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.msg {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-width: 76%;
+  padding: 7px 11px;
+  border-radius: 9px;
+  background: var(--panel-2);
+  align-self: flex-start;
+}
+
+.msg--mine {
+  align-self: flex-end;
+  background: #0e3a44;
+}
+
+.msg--macro {
+  border: 1px solid var(--accent);
+}
+
+.msg--alert {
+  border-left: 3px solid var(--accent);
+}
+
+.msg__meta {
+  display: flex;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.msg__sender {
+  font-weight: 700;
+}
+
+.msg__body {
+  font-size: 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.chat__input {
+  display: flex;
+  gap: 8px;
+}
+
+.chat__input input {
+  flex: 1;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+}
+
+.chat__input input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.macros-bar {
+  flex-shrink: 0;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+/* --- 드래그앤드롭 --- */
+
+.dropzone {
+  position: relative;
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.dropzone__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed var(--accent);
+  border-radius: 12px;
+  background: rgba(6, 182, 212, 0.14);
+  color: var(--accent);
+  font-size: 16px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+/* --- 검색 --- */
+
+.chat__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.searchbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.searchbar input {
+  width: 200px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.searchbar input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.searchbar__clear {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.chat__searchnote {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* --- 파일 메시지 --- */
+
+.msg__image {
+  max-width: 280px;
+  max-height: 280px;
+  border-radius: 8px;
+  display: block;
+}
+
+.msg__file {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+}
+
+.msg__file-name {
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.app__footer {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: right;
+}

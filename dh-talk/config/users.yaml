@@ -1,0 +1,16 @@
+# 사용자 식별 — 각 PC 의 DH Talk 가 자기 id 로 동작.
+# is_server: true 인 PC(데스크1)가 WebSocket 서버를 호스팅한다.
+users:
+  - id: desk1
+    label: "데스크1"
+    role: desk
+    is_server: true
+  - id: desk2
+    label: "데스크2"
+    role: desk
+  - id: desk3
+    label: "데스크3"
+    role: desk
+  - id: doctor
+    label: "원장"
+    role: doctor
