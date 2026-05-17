@@ -5,4 +5,14 @@ const { contextBridge, ipcRenderer } = require('electron');
 // renderer 의 window.dhtalk 으로만 main 기능에 접근. nodeIntegration 은 꺼져 있다.
 contextBridge.exposeInMainWorld('dhtalk', {
   getAppInfo: () => ipcRenderer.invoke('app:get-info'),
+  getMacros: () => ipcRenderer.invoke('config:get-macros'),
+  getSettings: () => ipcRenderer.invoke('config:get-settings'),
+  getUsers: () => ipcRenderer.invoke('config:get-users'),
+
+  // config/macros.yaml 핫리로드 시 main 이 push. 해제 함수를 반환한다.
+  onMacrosChanged: (callback) => {
+    const listener = (_event, macros) => callback(macros);
+    ipcRenderer.on('config:macros-changed', listener);
+    return () => ipcRenderer.removeListener('config:macros-changed', listener);
+  },
 });

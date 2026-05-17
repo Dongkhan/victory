@@ -2,13 +2,17 @@ import { ipcMain, app } from 'electron';
 import { WS_PORT } from '../shared/types.js';
 
 // renderer ↔ main IPC 핸들러 등록.
-// Day 1 은 앱 정보 조회 채널 하나만. Day 4 부터 메시지/큐/DB 채널이 추가된다.
+// getConfig: 현재 로드된 config 객체를 돌려주는 함수 (핫리로드 반영).
 
-export function registerIpc() {
+export function registerIpc(getConfig) {
   ipcMain.handle('app:get-info', () => ({
     name: 'DH Talk',
     version: app.getVersion(),
     platform: process.platform,
     wsPort: WS_PORT,
   }));
+
+  ipcMain.handle('config:get-macros', () => getConfig().macros);
+  ipcMain.handle('config:get-settings', () => getConfig().settings);
+  ipcMain.handle('config:get-users', () => getConfig().users);
 }

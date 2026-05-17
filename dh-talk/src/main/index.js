@@ -2,13 +2,27 @@ import { app, BrowserWindow } from 'electron';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { WS_PORT } from '../shared/types.js';
-import { startEchoServer, stopEchoServer } from './server.js';
+import { startServer, stopServer } from './server.js';
 import { registerIpc } from './ipc.js';
+import { initDb, closeDb } from './db.js';
+import { loadConfig, watchConfig } from './config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const projectRoot = path.join(__dirname, '..', '..');
 const DEV_SERVER_URL = 'http://localhost:5173';
 
+// dev: 프로젝트 폴더 내 data/, config/
+// packaged: 사용자 문서 폴더(쓰기 가능) + resources/config
+const dataDir = app.isPackaged
+  ? path.join(app.getPath('documents'), 'DH Talk')
+  : path.join(projectRoot, 'data');
+const configDir = app.isPackaged
+  ? path.join(process.resourcesPath, 'config')
+  : path.join(projectRoot, 'config');
+
 let mainWindow = null;
+let config = { macros: [], settings: {}, users: [] };
+let configWatcher = null;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -27,7 +41,7 @@ function createWindow() {
   });
 
   if (app.isPackaged) {
-    mainWindow.loadFile(path.join(__dirname, '..', '..', 'dist', 'renderer', 'index.html'));
+    mainWindow.loadFile(path.join(projectRoot, 'dist', 'renderer', 'index.html'));
   } else {
     mainWindow.loadURL(DEV_SERVER_URL);
     mainWindow.webContents.openDevTools({ mode: 'detach' });
@@ -39,21 +53,29 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  startEchoServer(WS_PORT);
-  registerIpc();
+  initDb(path.join(dataDir, 'messages.db'));
+
+  config = loadConfig(configDir);
+  configWatcher = watchConfig(configDir, (next) => {
+    config = next;
+    mainWindow?.webContents.send('config:macros-changed', config.macros);
+  });
+
+  startServer(WS_PORT);
+  registerIpc(() => config);
   createWindow();
 
-  // macOS: dock 아이콘 클릭 시 창 재생성
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 });
 
 app.on('window-all-closed', () => {
-  // 실사용 환경은 Windows. macOS 외에는 창을 모두 닫으면 종료.
   if (process.platform !== 'darwin') app.quit();
 });
 
 app.on('before-quit', () => {
-  stopEchoServer();
+  configWatcher?.close();
+  stopServer();
+  closeDb();
 });

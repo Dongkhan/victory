@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import MacroGrid from './components/MacroGrid.jsx';
 
 const STATUS_LABEL = {
   connecting: '연결 중…',
@@ -9,58 +10,43 @@ const STATUS_LABEL = {
 
 export default function App() {
   const [appInfo, setAppInfo] = useState(null);
+  const [macros, setMacros] = useState([]);
   const [status, setStatus] = useState('connecting');
-  const [log, setLog] = useState([]);
-  const [draft, setDraft] = useState('');
 
   const wsRef = useRef(null);
-  const idRef = useRef(0);
-
-  const append = (kind, text) =>
-    setLog((prev) => [...prev, { id: ++idRef.current, kind, text }]);
 
   useEffect(() => {
     let cancelled = false;
     let ws = null;
+    let offMacros = null;
 
-    async function connect() {
+    async function init() {
       const info = await window.dhtalk.getAppInfo();
       if (cancelled) return;
       setAppInfo(info);
+      setMacros(await window.dhtalk.getMacros());
 
       ws = new WebSocket(`ws://127.0.0.1:${info.wsPort}`);
       wsRef.current = ws;
-      setStatus('connecting');
-
       ws.onopen = () => !cancelled && setStatus('open');
       ws.onclose = () => !cancelled && setStatus('closed');
       ws.onerror = () => !cancelled && setStatus('error');
-      ws.onmessage = (ev) => {
-        if (cancelled) return;
-        try {
-          append('recv', JSON.parse(ev.data).body);
-        } catch {
-          append('recv', String(ev.data));
-        }
-      };
     }
 
-    connect();
+    init();
+    offMacros = window.dhtalk.onMacrosChanged((next) => !cancelled && setMacros(next));
 
     return () => {
       cancelled = true;
       if (ws) ws.close();
       wsRef.current = null;
+      offMacros?.();
     };
   }, []);
 
-  const send = () => {
-    const text = draft.trim();
-    const ws = wsRef.current;
-    if (!text || !ws || ws.readyState !== WebSocket.OPEN) return;
-    ws.send(text);
-    append('sent', text);
-    setDraft('');
+  const triggerMacro = (macro) => {
+    // Day 2: 클릭 동작 확인용 콘솔 로그. Day 4 에서 실제 메시지 전송으로 연결한다.
+    console.log('[macro]', macro.id, '→', macro.text);
   };
 
   return (
@@ -70,35 +56,12 @@ export default function App() {
         <span className={`status status--${status}`}>{STATUS_LABEL[status]}</span>
       </header>
 
-      <p className="app__note">
-        Day 1 — Electron + Vite + React 부팅 및 WebSocket echo 확인 화면.
-      </p>
-
-      <div className="echo">
-        <div className="echo__log">
-          {log.length === 0 && (
-            <p className="echo__empty">메시지를 보내면 서버가 그대로 echo 합니다.</p>
-          )}
-          {log.map((entry) => (
-            <div key={entry.id} className={`bubble bubble--${entry.kind}`}>
-              <span className="bubble__tag">{entry.kind === 'sent' ? '보냄' : 'echo'}</span>
-              <span className="bubble__text">{entry.text}</span>
-            </div>
-          ))}
-        </div>
-        <div className="echo__input">
-          <input
-            type="text"
-            value={draft}
-            placeholder="메시지 입력 후 Enter"
-            onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && send()}
-          />
-          <button onClick={send} disabled={status !== 'open'}>
-            전송
-          </button>
-        </div>
-      </div>
+      <main className="app__main">
+        <section className="panel">
+          <h2 className="panel__title">매크로</h2>
+          <MacroGrid macros={macros} onTrigger={triggerMacro} />
+        </section>
+      </main>
 
       <footer className="app__footer">
         {appInfo

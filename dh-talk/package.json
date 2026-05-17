@@ -16,10 +16,14 @@
     "dev:electron": "wait-on tcp:127.0.0.1:5173 && electron .",
     "build": "vite build",
     "build:win": "vite build && electron-builder --win",
-    "start": "electron ."
+    "start": "electron .",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
-    "ws": "^8.18.0"
+    "better-sqlite3": "^12.10.0",
+    "chokidar": "^5.0.0",
+    "ws": "^8.18.0",
+    "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",

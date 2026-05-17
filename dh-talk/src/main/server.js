@@ -5,7 +5,7 @@ import { WebSocketServer } from 'ws';
 
 let wss = null;
 
-export function startEchoServer(port) {
+export function startServer(port) {
   wss = new WebSocketServer({ port });
 
   wss.on('listening', () => {
@@ -31,7 +31,7 @@ export function startEchoServer(port) {
   return wss;
 }
 
-export function stopEchoServer() {
+export function stopServer() {
   if (wss) {
     wss.close();
     wss = null;
