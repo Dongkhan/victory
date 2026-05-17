@@ -7,6 +7,13 @@ import { getDb } from './db.js';
 const DAY_MS = 86_400_000;
 const RETENTION_DAYS = 30;
 
+let lastRun = null;
+
+// 진단 패널용 — 마지막 cleanup 실행 정보.
+export function getLastCleanup() {
+  return lastRun;
+}
+
 // 30일 지난 메시지 행 + 첨부 폴더(YYYY-MM-DD)를 삭제한다.
 // FTS5 인덱스는 트리거로 자동 동기화된다.
 export function runCleanup(attachmentsDir, retentionDays = RETENTION_DAYS) {
@@ -28,7 +35,8 @@ export function runCleanup(attachmentsDir, retentionDays = RETENTION_DAYS) {
   console.log(
     `[cleanup] 메시지 ${result.changes}행 · 첨부 폴더 ${folders}개 삭제 (보관 ${retentionDays}일)`,
   );
-  return { messages: result.changes, folders };
+  lastRun = { at: Date.now(), messages: result.changes, folders, retentionDays };
+  return lastRun;
 }
 
 // 매일 지정 시각(hour)에 task 를 실행한다. setTimeout 자체 구현 (node-cron 미사용).

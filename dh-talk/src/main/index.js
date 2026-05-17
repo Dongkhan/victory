@@ -5,9 +5,9 @@ import { WS_PORT } from '../shared/types.js';
 import { startServer, stopServer } from './server.js';
 import { registerIpc } from './ipc.js';
 import { initDb, closeDb, clearPatients } from './db.js';
-import { loadConfig, watchConfig } from './config.js';
+import { loadConfig, watchConfig, ensureUserConfig } from './config.js';
 import { configureAlertWindow, showAlert, closeAlert } from './alert-window.js';
-import { runCleanup, scheduleDailyAt } from './cleanup.js';
+import { runCleanup, scheduleDailyAt, getLastCleanup } from './cleanup.js';
 import { loadEnv } from './env.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -19,9 +19,11 @@ const DEV_SERVER_URL = 'http://localhost:5173';
 const dataDir = app.isPackaged
   ? path.join(app.getPath('documents'), 'DH Talk')
   : path.join(projectRoot, 'data');
+// packaged: 사용자 편집 가능한 userData/config (resources/config 기본값을 1회 복사)
 const configDir = app.isPackaged
-  ? path.join(process.resourcesPath, 'config')
+  ? path.join(app.getPath('userData'), 'config')
   : path.join(projectRoot, 'config');
+const bundledConfigDir = path.join(process.resourcesPath, 'config');
 const attachmentsDir = path.join(dataDir, 'attachments');
 
 let mainWindow = null;
@@ -80,6 +82,7 @@ app.whenReady().then(() => {
 
   initDb(path.join(dataDir, 'messages.db'));
 
+  if (app.isPackaged) ensureUserConfig(bundledConfigDir, configDir);
   config = loadConfig(configDir);
   configWatcher = watchConfig(configDir, (next) => {
     config = next;
@@ -104,10 +107,26 @@ app.whenReady().then(() => {
   registerIpc(() => config);
   configureAlertWindow({ isPackaged: app.isPackaged, devUrl: DEV_SERVER_URL, projectRoot });
   wireAlertIpc();
+
+  // 진단 패널용 운영 정보 (개선분석 9순위).
+  ipcMain.handle('app:get-diagnostics', () => ({
+    isServer: !!meUser?.is_server,
+    me: config.settings.me,
+    serverHost: config.settings.server?.host ?? null,
+    wsPort: WS_PORT,
+    dbPath: path.join(dataDir, 'messages.db'),
+    attachmentsDir,
+    configDir,
+    retentionDays: config.settings.retention_days ?? 30,
+    lastCleanup: getLastCleanup(),
+  }));
+
   createWindow();
 
   // 정기 작업: 02:00 메시지/첨부 30일 정리, 00:00 환자 큐 리셋 (CLAUDE.md §11, §9).
-  scheduled.push(scheduleDailyAt(2, () => runCleanup(attachmentsDir)));
+  scheduled.push(
+    scheduleDailyAt(2, () => runCleanup(attachmentsDir, config.settings.retention_days ?? 30)),
+  );
   scheduled.push(
     scheduleDailyAt(0, () => {
       clearPatients();

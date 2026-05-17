@@ -3,6 +3,7 @@ import MacroGrid from './components/MacroGrid.jsx';
 import PatientQueue from './components/PatientQueue.jsx';
 import ChatPane from './components/ChatPane.jsx';
 import FileDropZone from './components/FileDropZone.jsx';
+import DiagnosticsPanel from './components/DiagnosticsPanel.jsx';
 import { resolveMacroText, macroTextNeeds, matchesHotkey } from './lib/macro.js';
 import { shouldPulse, shouldPulseOnEscalate } from './lib/alert.js';
 import { readFileAsDataURL, splitDataUrl, MAX_FILE_BYTES, formatBytes } from './lib/file.js';
@@ -25,6 +26,7 @@ export default function App() {
   const [searchResults, setSearchResults] = useState(null); // null = 검색 안 함
   const [status, setStatus] = useState('connecting');
   const [lastReceivedAt, setLastReceivedAt] = useState(null);
+  const [diag, setDiag] = useState(null);
   const [pendingMacro, setPendingMacro] = useState(null);
   const [promptName, setPromptName] = useState('');
 
@@ -218,6 +220,8 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [macros, patients, me]);
 
+  const openDiagnostics = async () => setDiag(await window.dhtalk.getDiagnostics());
+
   const bulkAdd = async (text) => setPatients(await window.dhtalk.bulkAddPatients(text));
   const addWalkin = async (name) => setPatients(await window.dhtalk.addWalkin(name));
   const clearQueue = async () => setPatients(await window.dhtalk.clearPatients());
@@ -232,6 +236,13 @@ export default function App() {
         <h1>DH Talk</h1>
         {me && <span className="app__me">{me}</span>}
         <span className={`status status--${status}`}>{STATUS_LABEL[status]}</span>
+        <button
+          type="button"
+          className="btn btn--ghost btn--sm app__diag"
+          onClick={openDiagnostics}
+        >
+          진단
+        </button>
       </header>
 
       <FileDropZone onFiles={onDropFiles}>
@@ -293,6 +304,17 @@ export default function App() {
             </div>
           </div>
         </div>
+      )}
+
+      {diag && (
+        <DiagnosticsPanel
+          diag={diag}
+          status={status}
+          lastReceivedAt={lastReceivedAt}
+          me={me}
+          myRole={myRole}
+          onClose={() => setDiag(null)}
+        />
       )}
     </div>
   );

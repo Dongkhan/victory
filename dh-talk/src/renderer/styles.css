@@ -544,6 +544,54 @@ body {
   word-break: break-all;
 }
 
+.app__diag {
+  margin-left: auto;
+}
+
+.btn--danger {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: #fff;
+}
+
+.modal__warn {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fca5a5;
+}
+
+.modal__box--wide {
+  width: 540px;
+}
+
+/* --- 진단 패널 --- */
+
+.diag {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.diag__row {
+  display: flex;
+  gap: 12px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  background: var(--panel-2);
+  font-size: 13px;
+}
+
+.diag__row dt {
+  flex-shrink: 0;
+  width: 130px;
+  color: var(--muted);
+}
+
+.diag__row dd {
+  margin: 0;
+  word-break: break-all;
+}
+
 .app__footer {
   font-size: 12px;
   color: var(--muted);
