@@ -27,13 +27,13 @@ export default function AlertPulse() {
   const dingRef = useRef(null);
   const escalateRef = useRef(null);
 
-  useEffect(() => window.dhtalkAlert.onData((next) => setMsg(next)), []);
+  useEffect(() => window.dhtalkAlert?.onData?.((next) => setMsg(next)), []);
 
   useEffect(() => {
     if (!msg) return undefined;
     const urgent = msg.alert_level === 'urgent';
     dingRef.current = setTimeout(() => playDing(urgent), DING_AFTER_MS);
-    escalateRef.current = setTimeout(() => window.dhtalkAlert.escalate(msg), ESCALATE_AFTER_MS);
+    escalateRef.current = setTimeout(() => window.dhtalkAlert?.escalate(msg), ESCALATE_AFTER_MS);
     return () => {
       clearTimeout(dingRef.current);
       clearTimeout(escalateRef.current);
@@ -47,7 +47,7 @@ export default function AlertPulse() {
   const ack = () => {
     clearTimeout(dingRef.current);
     clearTimeout(escalateRef.current);
-    window.dhtalkAlert.ack(msg);
+    window.dhtalkAlert?.ack(msg);
   };
 
   return (
