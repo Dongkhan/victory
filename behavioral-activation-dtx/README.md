@@ -9,8 +9,8 @@
 ## 바로 보기
 
 - 프로젝트 페이지: [`behavioral-activation-dtx/index.html`](./index.html)
-- 프로토타입 v0.1: [`behavioral-activation-dtx/prototype/index.html`](./prototype/)
-- 버전 고정 파일: [`behavioral-activation-dtx/prototype/v0.1.html`](./prototype/v0.1.html)
+- 프로토타입 v0.2: [`behavioral-activation-dtx/prototype/index.html`](./prototype/)
+- 버전 고정 파일: [`behavioral-activation-dtx/prototype/v0.2.html`](./prototype/v0.2.html)
 
 ---
 
@@ -871,12 +871,23 @@ type ActionAttempt = {
 
 ## 17. 다음 작업
 
-1. 단일 HTML 모바일 프로토타입 제작
-2. Today / Action Lab / Life Map 3개 화면 우선 구현
-3. 행동 처방 카드 UX 설계
-4. ADHD 모드 UX 별도 설계
-5. 의사용 주간 요약 카드 mock 작성
-6. Obsidian 근거 파일에서 임상근거 표를 별도 `evidence-map.md`로 분리
+v0.2에서 단일 HTML 모바일 프로토타입은 치료 루프가 닫히는 형태로 확장되었다.
+
+구현된 축:
+
+1. Today: 실행 전 체크 → 타이머 → 실행 후 체크아웃
+2. Life Map: 삶의 영역 선택 후 2분 행동 후보를 Today 처방으로 연결
+3. Action Lab: 병목별 모드, TRAP/TRAC, 행동 크기 조절
+4. Review: 예상 난이도와 실제 난이도 차이, 실패 재설계 기록
+5. Clinic: localStorage 기록 기반 외래 요약과 안전 체크
+
+다음 단계:
+
+1. `evidence-map.md`로 임상근거 표 분리
+2. 사용자 온보딩을 독립 화면으로 확장
+3. ADHD 모드의 행동 축소 알고리즘 고도화
+4. 위기 안전 플로우를 별도 화면으로 분리
+5. 실제 MVP 전환 시 상태관리·데이터 모델·PWA 구조 설계
 
 ---
 
