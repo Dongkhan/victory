@@ -36,6 +36,8 @@ npm run dev      # Vite dev 서버 + Electron 동시 기동
 
 `npm run dev` 실행 시 창이 뜨고, 메시지는 HMAC 인증을 통과한 클라이언트 사이에서만 송수신된다.
 
+처음 Windows 4대에 설치할 때는 [`docs/windows-first-run.md`](./docs/windows-first-run.md)를 따른다. 핵심은 데스크1을 서버 PC로 먼저 켜고, 4대 모두 같은 `auth.shared_key`, 같은 `server.host`, 같은 `server.ws_port`를 쓰되 `me`만 `desk1`/`desk2`/`desk3`/`doctor`로 다르게 두는 것이다.
+
 ## 스크립트
 
 | 명령 | 설명 |

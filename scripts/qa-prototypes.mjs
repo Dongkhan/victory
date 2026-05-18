@@ -58,7 +58,7 @@ ok('Relax Routine allows zoom in embedded viewport', !/content=\\"[^\\"]*(maximu
 ok('Relax Routine loading state is announced accessibly', relax.includes('id="__bundler_loading" role="status" aria-live="polite"'));
 ok('Relax Routine runtime strips stale zoom lock from bundled templates', relax.includes('Runtime accessibility guard') && relax.includes('user-scalable=no'));
 ok('Relax Routine has safe-area handling', relax.includes('safe-area-inset-bottom'));
-ok('Relax Routine has accessibility labels', relax.includes('aria-label'));
+ok('Relax Routine runtime adds main and navigation landmarks', relax.includes('ensureRuntimeLandmarks') && relax.includes("setAttribute('role', 'main')") && relax.includes("setAttribute('role', 'navigation')"));
 ok('Relax Routine contains crisis/help policy copy', /위기|crisis|119/.test(relax));
 ok('Relax Routine hides bottom nav during active sessions', relax.includes('__hideNav') && relax.includes('!__hideNav'));
 ok('Relax Routine distinguishes stop from completed session', relax.includes('ex_session_end_hint') && relax.includes('Will not be recorded as completed'));

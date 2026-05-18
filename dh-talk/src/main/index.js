@@ -29,6 +29,7 @@ const attachmentsDir = path.join(dataDir, 'attachments');
 let mainWindow = null;
 let config = { macros: [], settings: {}, users: [] };
 let configWatcher = null;
+let wsPort = WS_PORT;
 const scheduled = [];
 
 function isAllowedNavigation(url) {
@@ -105,9 +106,10 @@ app.whenReady().then(() => {
   });
 
   // WebSocket 허브는 데스크1(is_server) PC 에서만 기동한다.
+  wsPort = Number(config.settings.server?.ws_port ?? WS_PORT) || WS_PORT;
   const meUser = config.users.find((u) => u.id === config.settings.me);
   if (meUser?.is_server) {
-    startServer(WS_PORT, {
+    startServer(wsPort, {
       attachmentsDir,
       // 핫리로드 반영을 위해 getter 로 전달
       getSecurity: () => ({
@@ -119,7 +121,7 @@ app.whenReady().then(() => {
     console.log(`[main] 이 PC(${config.settings.me})는 서버가 아님 — 허브 미기동`);
   }
 
-  registerIpc(() => config);
+  registerIpc(() => config, () => wsPort);
   configureAlertWindow({ isPackaged: app.isPackaged, devUrl: DEV_SERVER_URL, projectRoot });
   wireAlertIpc();
 
@@ -128,7 +130,7 @@ app.whenReady().then(() => {
     isServer: !!meUser?.is_server,
     me: config.settings.me,
     serverHost: config.settings.server?.host ?? null,
-    wsPort: WS_PORT,
+    wsPort,
     dbPath: path.join(dataDir, 'messages.db'),
     attachmentsDir,
     configDir,

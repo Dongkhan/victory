@@ -181,8 +181,23 @@ function broadcast(payload) {
 }
 
 export function stopServer() {
-  if (wss) {
-    wss.close();
-    wss = null;
+  if (!wss) return Promise.resolve();
+  const server = wss;
+  wss = null;
+
+  for (const client of server.clients) {
+    try {
+      client.close(1001, 'server shutting down');
+      setTimeout(() => {
+        if (client.readyState !== client.CLOSED) client.terminate();
+      }, 250).unref?.();
+    } catch {
+      client.terminate?.();
+    }
   }
+
+  return new Promise((resolve) => {
+    server.close(() => resolve());
+    if (server.clients.size === 0) resolve();
+  });
 }

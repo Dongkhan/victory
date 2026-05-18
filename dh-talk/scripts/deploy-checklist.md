@@ -10,7 +10,7 @@ Day 7(Windows 빌드/설치) 작업 시 채워 나간다.
 
 - [ ] 설치본 실행, 설치 경로 확인
 - [ ] `config/settings.yaml` 의 `server.host` 를 데스크1 LAN IP 로 설정
-- [ ] Windows 방화벽에서 WebSocket 포트(기본 8123) 인바운드 허용
+- [ ] Windows 방화벽에서 WebSocket 포트(기본 8123, `settings.yaml`의 `server.ws_port`) 인바운드 허용
 - [ ] 첨부 저장 경로 `%USERPROFILE%\Documents\DH Talk\attachments\` 확인
 
 ## 데스크2 / 데스크3 / 원장 PC (클라이언트)
