@@ -41,6 +41,9 @@ ok('CBT-I crisis block has persistent inline panel', cbti.includes('crisisPanel'
 ok('CBT-I has clinic summary export', cbti.includes('clinicSummary') && cbti.includes('data-copy-summary'));
 ok('CBT-I clinic summary copy has fallback', cbti.includes('copyText') && cbti.includes('execCommand'));
 ok('CBT-I diary date is not hard-coded', cbti.includes('diaryDate') && !cbti.includes('value="2026-05-18"'));
+ok('CBT-I OSA caution blocks sleep restriction auto-guidance', cbti.includes('hasOsaCaution') && cbti.includes("dataset.modal==='restriction'"));
+ok('CBT-I diary validation includes driving and medication risk warnings', cbti.includes('운전·기계작업') && cbti.includes('낙상·주간졸림'));
+ok('CBT-I diary validation announces changes accessibly', /id="diaryValidation"[^>]+aria-live="polite"/.test(cbti));
 ok('CBT-I route cards can start selected intake step', /data-start-step/.test(cbti) && /startStep/.test(cbti));
 
 const relax = read('prototype/v0.5.html');
