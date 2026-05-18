@@ -98,6 +98,11 @@ body {
   color: #fde68a;
 }
 
+.connection-banner__retry {
+  grid-column: 2;
+  font-weight: 700;
+}
+
 .connection-banner--error {
   border-color: #f87171;
   background: rgba(248, 113, 113, 0.12);

@@ -68,13 +68,23 @@ export default function App() {
   const [diag, setDiag] = useState(null);
   const [pendingMacro, setPendingMacro] = useState(null);
   const [promptName, setPromptName] = useState('');
+  const [reconnectMeta, setReconnectMeta] = useState(null);
+  const [sendError, setSendError] = useState('');
 
   const wsRef = useRef(null);
+  const reconnectNowRef = useRef(() => {});
 
   useEffect(() => {
     let cancelled = false;
     let ws = null;
+    let retry = 0;
+    let reconnectTimer = null;
     const cleanups = [];
+
+    const clearReconnectTimer = () => {
+      if (reconnectTimer) clearTimeout(reconnectTimer);
+      reconnectTimer = null;
+    };
 
     async function init() {
       const info = await window.dhtalk.getAppInfo();
@@ -102,58 +112,97 @@ export default function App() {
         return;
       }
 
-      ws = new WebSocket(`ws://${host}:${info.wsPort}`);
-      wsRef.current = ws;
+      const scheduleReconnect = (reason = '연결 끊김') => {
+        if (cancelled) return;
+        clearReconnectTimer();
+        const delay = Math.min(30000, 1000 * 2 ** Math.min(retry, 5));
+        retry += 1;
+        setReconnectMeta({ reason, delayMs: delay, nextAt: Date.now() + delay });
+        reconnectTimer = setTimeout(() => connect(), delay);
+      };
 
-      // 인증 핸드셰이크: 서버 challenge → HMAC 응답 → authorized 후 'open'
-      ws.onopen = () => !cancelled && setStatus('connecting');
-      ws.onclose = (ev) => {
+      const connect = () => {
         if (cancelled) return;
-        const closeInfo = { code: ev.code, reason: ev.reason || 'reason 없음', at: Date.now() };
-        setLastClose(closeInfo);
-        const nextStatus = ev.code === 4001 ? 'error' : 'closed';
-        setStatus(nextStatus);
-        setConnectionIssue(getConnectionIssue({ settings, users, myId, host, status: nextStatus, lastClose: closeInfo }));
-      };
-      ws.onerror = () => {
-        if (cancelled) return;
-        setStatus('error');
-        setConnectionIssue(getConnectionIssue({ settings, users, myId, host, status: 'error', lastClose: null }));
-      };
-      ws.onmessage = (ev) => {
-        if (cancelled) return;
-        let msg;
-        try {
-          msg = JSON.parse(ev.data);
-        } catch {
-          return;
+        clearReconnectTimer();
+        if (ws && ws.readyState !== WebSocket.CLOSED) {
+          ws.onclose = null;
+          ws.onerror = null;
+          ws.onmessage = null;
+          ws.close();
         }
-        if (msg.kind === 'challenge') {
-          computeHmac(sharedKey, msg.nonce).then((hmac) => {
-            if (!cancelled) ws.send(JSON.stringify({ kind: 'auth', userId: myId, hmac }));
-          });
-        } else if (msg.kind === 'authorized') {
-          setStatus('open');
-          setConnectionIssue(null);
-        } else if (msg.kind === 'message') {
-          setMessages((prev) => [...prev, msg]);
-          setLastReceivedAt(Date.now());
-          if (shouldPulse(msg, { me: myId, role })) window.dhtalk.showAlert(msg);
-        } else if (msg.kind === 'ack') {
-          window.dhtalk.closeAlert();
-        } else if (msg.kind === 'escalate') {
-          if (shouldPulseOnEscalate(msg.original, { me: myId, role })) {
-            window.dhtalk.showAlert(msg.original);
+        setStatus('connecting');
+        setReconnectMeta(null);
+        const nextWs = new WebSocket(`ws://${host}:${info.wsPort}`);
+        ws = nextWs;
+        wsRef.current = nextWs;
+
+        // 인증 핸드셰이크: 서버 challenge → HMAC 응답 → authorized 후 'open'
+        nextWs.onopen = () => !cancelled && setStatus('connecting');
+        nextWs.onclose = (ev) => {
+          if (cancelled || wsRef.current !== nextWs) return;
+          wsRef.current = null;
+          const closeInfo = { code: ev.code, reason: ev.reason || 'reason 없음', at: Date.now() };
+          setLastClose(closeInfo);
+          const nextStatus = ev.code === 4001 ? 'error' : 'closed';
+          setStatus(nextStatus);
+          setConnectionIssue(getConnectionIssue({ settings, users, myId, host, status: nextStatus, lastClose: closeInfo }));
+          if (ev.code !== 4001) scheduleReconnect(closeInfo.reason);
+        };
+        nextWs.onerror = () => {
+          if (cancelled || wsRef.current !== nextWs) return;
+          setStatus('error');
+          setConnectionIssue(getConnectionIssue({ settings, users, myId, host, status: 'error', lastClose: null }));
+        };
+        nextWs.onmessage = (ev) => {
+          if (cancelled || wsRef.current !== nextWs) return;
+          let msg;
+          try {
+            msg = JSON.parse(ev.data);
+          } catch {
+            return;
           }
-        }
+          if (msg.kind === 'challenge') {
+            computeHmac(sharedKey, msg.nonce).then((hmac) => {
+              if (!cancelled && nextWs.readyState === WebSocket.OPEN && wsRef.current === nextWs) {
+                nextWs.send(JSON.stringify({ kind: 'auth', userId: myId, hmac }));
+              }
+            });
+          } else if (msg.kind === 'authorized') {
+            retry = 0;
+            setStatus('open');
+            setReconnectMeta(null);
+            setSendError('');
+            setConnectionIssue(null);
+          } else if (msg.kind === 'message') {
+            setMessages((prev) => [...prev, msg]);
+            setLastReceivedAt(Date.now());
+            if (shouldPulse(msg, { me: myId, role })) window.dhtalk.showAlert(msg);
+          } else if (msg.kind === 'ack') {
+            window.dhtalk.closeAlert();
+          } else if (msg.kind === 'escalate') {
+            if (shouldPulseOnEscalate(msg.original, { me: myId, role })) {
+              window.dhtalk.showAlert(msg.original);
+            }
+          }
+        };
       };
+
+      reconnectNowRef.current = () => {
+        retry = 0;
+        connect();
+      };
+      connect();
 
       cleanups.push(
         window.dhtalk.onAlertAcked((m) => {
-          wsRef.current?.send(JSON.stringify({ kind: 'ack', id: m.id, by: myId }));
+          if (wsRef.current?.readyState === WebSocket.OPEN) {
+            wsRef.current.send(JSON.stringify({ kind: 'ack', id: m.id, by: myId }));
+          }
         }),
         window.dhtalk.onAlertEscalateRequest((m) => {
-          wsRef.current?.send(JSON.stringify({ kind: 'escalate', id: m.id, original: m }));
+          if (wsRef.current?.readyState === WebSocket.OPEN) {
+            wsRef.current.send(JSON.stringify({ kind: 'escalate', id: m.id }));
+          }
         }),
       );
     }
@@ -173,7 +222,9 @@ export default function App() {
 
     return () => {
       cancelled = true;
+      clearReconnectTimer();
       if (ws) ws.close();
+      reconnectNowRef.current = () => {};
       wsRef.current = null;
       cleanups.forEach((fn) => fn?.());
       window.removeEventListener('dragover', preventNav);
@@ -183,12 +234,15 @@ export default function App() {
 
   const currentPatient = patients.find((p) => p.status === 'current') || null;
 
+  const reconnectNow = () => reconnectNowRef.current?.();
+
   const sendMessage = (payload) => {
     const ws = wsRef.current;
     if (!ws || ws.readyState !== WebSocket.OPEN) {
-      console.error('[ws] 연결되지 않아 전송할 수 없습니다.');
+      setSendError('전송 대기: 서버 연결이 복구된 뒤 다시 보내세요. 현재 메시지는 전송되지 않았습니다.');
       return;
     }
+    setSendError('');
     ws.send(JSON.stringify({ kind: 'message', ts: Date.now(), recipient: 'all', ...payload }));
   };
 
@@ -211,9 +265,10 @@ export default function App() {
     }
     const ws = wsRef.current;
     if (!ws || ws.readyState !== WebSocket.OPEN) {
-      console.error('[ws] 연결되지 않아 파일을 전송할 수 없습니다.');
+      setSendError('전송 대기: 서버 연결이 복구된 뒤 파일을 다시 보내세요. 현재 파일은 전송되지 않았습니다.');
       return;
     }
+    setSendError('');
     const { mime, base64 } = splitDataUrl(await readFileAsDataURL(file));
     ws.send(
       JSON.stringify({
@@ -308,6 +363,20 @@ export default function App() {
             <strong>{connectionIssue.title}</strong>
             <span>{connectionIssue.body}</span>
             <code>{connectionIssue.action}</code>
+            {reconnectMeta && (
+              <span className="connection-banner__retry">
+                자동 재연결 대기: {Math.ceil(reconnectMeta.delayMs / 1000)}초 · 사유: {reconnectMeta.reason}
+              </span>
+            )}
+            <button type="button" className="btn btn--ghost btn--sm" onClick={reconnectNow}>
+              다시 연결
+            </button>
+          </section>
+        )}
+        {sendError && (
+          <section className="connection-banner connection-banner--warn" aria-live="assertive">
+            <strong>전송 실패</strong>
+            <span>{sendError}</span>
           </section>
         )}
         <main className="app__main">

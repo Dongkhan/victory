@@ -51,6 +51,10 @@ ok('CBT-I route cards can start selected intake step', /data-start-step/.test(cb
 
 const relax = read('prototype/v0.5.html');
 ok('Relax Routine has emergency phone link', relax.includes('tel:'));
+ok('Relax Routine has Korean language root', /<html lang="ko">/.test(relax));
+ok('Relax Routine allows zoom in embedded viewport', !/content=\\"[^\\"]*(maximum-scale=1(?:\\.0)?|user-scalable=no)/i.test(relax));
+ok('Relax Routine loading state is announced accessibly', relax.includes('id="__bundler_loading" role="status" aria-live="polite"'));
+ok('Relax Routine runtime strips stale zoom lock from bundled templates', relax.includes('Runtime accessibility guard') && relax.includes('user-scalable=no'));
 ok('Relax Routine has safe-area handling', relax.includes('safe-area-inset-bottom'));
 ok('Relax Routine has accessibility labels', relax.includes('aria-label'));
 ok('Relax Routine contains crisis/help policy copy', /위기|crisis|119/.test(relax));

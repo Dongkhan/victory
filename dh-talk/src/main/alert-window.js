@@ -45,6 +45,11 @@ function createAlertWindow(urgent) {
 
   win.setAlwaysOnTop(true, 'floating');
   win.setSkipTaskbar(true);
+  win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
+  win.webContents.on('will-navigate', (event, url) => {
+    const allowedDev = target?.devUrl && (url === `${target.devUrl}/alert.html` || url.startsWith(`${target.devUrl}/`));
+    if (!url.startsWith('file://') && !allowedDev) event.preventDefault();
+  });
 
   if (target.isPackaged) {
     win.loadFile(path.join(target.projectRoot, 'dist', 'renderer', 'alert.html'));

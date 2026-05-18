@@ -2,7 +2,7 @@ import { WebSocketServer } from 'ws';
 import fs from 'node:fs';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
-import { insertMessage, acknowledgeMessage } from './db.js';
+import { insertMessage, acknowledgeMessage, getMessageById } from './db.js';
 import { mirror } from './hermes-mirror.js';
 import { makeNonce, verifyHmac } from './auth.js';
 import { validateInbound } from './validate.js';
@@ -124,9 +124,15 @@ function handleIncoming(socket, raw) {
       break;
     }
 
-    case 'escalate':
-      broadcast({ ...msg, kind: 'escalate', by: socket.userId });
+    case 'escalate': {
+      const payload = createEscalationPayload({ id: msg.id, by: socket.userId });
+      if (!payload) {
+        console.error(`[server] 에스컬레이션 거부 (${socket.userId}): 원본 메시지 없음 또는 알림 대상 아님 id=${msg.id}`);
+        break;
+      }
+      broadcast(payload);
       break;
+    }
 
     default:
       console.error('[server] 처리할 수 없는 kind:', msg.kind);
@@ -159,6 +165,12 @@ function saveAttachment(msg, ts) {
     console.error('[server] 첨부 저장 실패:', err.message);
     return null;
   }
+}
+
+export function createEscalationPayload({ id, by }) {
+  const original = getMessageById(id);
+  if (!original || !original.alert_level) return null;
+  return { kind: 'escalate', id, by, original };
 }
 
 function broadcast(payload) {

@@ -23,3 +23,10 @@ test('connection issue banner has visible styles', () => {
   assert.match(css, /\.connection-banner/);
   assert.match(css, /\.connection-banner--error/);
 });
+
+test('renderer exposes reconnect and blocked-send UX', () => {
+  assert.match(app, /reconnectNow/);
+  assert.match(app, /다시 연결/);
+  assert.match(app, /전송 대기/);
+  assert.match(app, /setSendError/);
+});

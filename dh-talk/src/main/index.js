@@ -31,6 +31,19 @@ let config = { macros: [], settings: {}, users: [] };
 let configWatcher = null;
 const scheduled = [];
 
+function isAllowedNavigation(url) {
+  if (url === DEV_SERVER_URL || url.startsWith(`${DEV_SERVER_URL}/`)) return true;
+  if (url.startsWith('file://')) return true;
+  return false;
+}
+
+function hardenWindowNavigation(win) {
+  win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
+  win.webContents.on('will-navigate', (event, url) => {
+    if (!isAllowedNavigation(url)) event.preventDefault();
+  });
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1100,
@@ -46,6 +59,8 @@ function createWindow() {
       sandbox: true,
     },
   });
+
+  hardenWindowNavigation(mainWindow);
 
   if (app.isPackaged) {
     mainWindow.loadFile(path.join(projectRoot, 'dist', 'renderer', 'index.html'));

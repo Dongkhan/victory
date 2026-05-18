@@ -122,6 +122,10 @@ export function listRecentMessages(limit = 200) {
     .reverse();
 }
 
+export function getMessageById(id) {
+  return getDb().prepare('SELECT * FROM messages WHERE id = ?').get(id) ?? null;
+}
+
 // 첫 ack 만 기록한다 (중복 ack 무시). 변경된 행 수를 반환.
 export function acknowledgeMessage(id, by, at = Date.now()) {
   return getDb()
