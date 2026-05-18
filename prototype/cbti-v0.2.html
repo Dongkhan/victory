@@ -299,7 +299,7 @@
           <button class="cta section screen-cta-sticky" data-go="intake" data-start-step="0">시작하기</button>
           <small class="cta-note">약 3분 소요</small>
         </div>
-        <div class="card notice danger section">심한 코골이, 무호흡 의심, 조증, 급성 자살위험, 중증 의학적 수면장애가 의심되면 앱 단독 사용보다 진료 평가가 우선입니다.</div>
+        <div class="card notice danger section">심한 코골이, 무호흡 의심, 조증, 급성 자살위험, 중증 의학적 수면장애가 의심되면 앱 단독 사용보다 진료 평가가 우선입니다. 자살위험이 현재 있으면 보호자와 함께 119/응급실 또는 지역 보건소 생명존중사업 등 즉시 도움을 먼저 연결합니다.</div>
       </section>
 
       <!-- ===================== INTAKE STEPS ===================== -->
@@ -625,7 +625,7 @@
       document.getElementById('prevIntake').textContent=intakeStep===0?'평가 소개':'이전';
       document.getElementById('nextIntake').textContent=intakeStep===5?'수면일기 시작하기':'다음';
       let route='표준 8주 CBT-I · 7일 수면일기 먼저';
-      if(answers[2]==='crisis')route='앱 단독 진행 중지 · 오늘 진료실/보호자/응급 도움 우선';
+      if(answers[2]==='crisis')route='앱 단독 진행 중지 · 오늘 진료실/보호자/119·응급실/보건소 생명존중사업 도움 우선';
       else if(answers[3]==='osa')route='수면무호흡 평가 우선 · 수면일기 병행';
       else{
         if(answers[1]==='taper')route+=' · 수면제 점감 보조 모드';
@@ -633,7 +633,7 @@
         if(answers[2]==='mild')route+=' · PHQ-9·GAD-7 동반 추적';
       }
       document.getElementById('routeText').textContent=route;
-      document.getElementById('weekPlan').textContent=answers[2]==='crisis'?'CBT-I 자동 진행 중단. 진료실에 즉시 공유하고 필요 시 보호자/응급 도움을 연결합니다.':answers[3]==='osa'?'수면무호흡 평가를 먼저 확인하고 수면일기는 참고자료로만 유지합니다.':'수면일기 작성, 자극조절 규칙 2개, 수면제한은 7일 기록 후 계산';
+      document.getElementById('weekPlan').textContent=answers[2]==='crisis'?'CBT-I 자동 진행 중단. 진료실에 즉시 공유하고, 현재 위험이면 보호자와 함께 119/응급실 또는 보건소 생명존중사업 도움을 먼저 연결합니다.':answers[3]==='osa'?'수면무호흡 평가를 먼저 확인하고 수면일기는 참고자료로만 유지합니다.':'수면일기 작성, 자극조절 규칙 2개, 수면제한은 7일 기록 후 계산';
     }
     function renderKnowledge(filter='all'){
       document.getElementById('knowledgeList').innerHTML=knowledgeData

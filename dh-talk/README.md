@@ -32,7 +32,7 @@ npm run build
 npm run dev      # Vite dev 서버 + Electron 동시 기동
 ```
 
-`config/settings.yaml`의 `auth.shared_key`는 기본값이 비어 있다. 데스크1에서 임의의 긴 키를 생성한 뒤 원장 PC와 데스크 PC 3대에 같은 값을 넣어야 연결된다. 빈 값이면 WebSocket 인증이 차단된다.
+`config/settings.yaml`의 `auth.shared_key`는 기본값이 비어 있다. 데스크1에서 `npm --silent run key`로 긴 키를 생성한 뒤 원장 PC와 데스크 PC 3대에 같은 값을 넣어야 연결된다. 빈 값이면 WebSocket 인증이 차단된다.
 
 `npm run dev` 실행 시 창이 뜨고, 메시지는 HMAC 인증을 통과한 클라이언트 사이에서만 송수신된다.
 
@@ -41,7 +41,8 @@ npm run dev      # Vite dev 서버 + Electron 동시 기동
 | 명령 | 설명 |
 |---|---|
 | `npm run dev` | 개발 모드 (Vite + Electron) |
-| `npm test` | 인증/스키마/파일 제한 단위 테스트 |
+| `npm run key` | 4대 PC에 넣을 WebSocket shared key 생성 |
+| `npm test` | 인증/스키마/파일 제한/매크로/환자 큐/첨부 파일명 단위 테스트 |
 | `npm run build` | renderer 빌드 (`dist/renderer`) |
 | `npm run build:win` | Windows 설치본(.exe) 빌드 |
 | `npm start` | 빌드된 renderer로 Electron 실행 |

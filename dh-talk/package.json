@@ -18,7 +18,8 @@
     "build:win": "vite build && electron-builder --win",
     "start": "electron .",
     "postinstall": "electron-builder install-app-deps",
-    "test": "node --test"
+    "test": "node --test",
+    "key": "node scripts/generate-shared-key.js"
   },
   "dependencies": {
     "better-sqlite3": "^12.10.0",

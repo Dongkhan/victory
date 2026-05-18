@@ -1,6 +1,7 @@
 import { WebSocketServer } from 'ws';
 import fs from 'node:fs';
 import path from 'node:path';
+import { randomUUID } from 'node:crypto';
 import { insertMessage, acknowledgeMessage } from './db.js';
 import { mirror } from './hermes-mirror.js';
 import { makeNonce, verifyHmac } from './auth.js';
@@ -134,18 +135,24 @@ function handleIncoming(socket, raw) {
 
 const pad = (n) => String(n).padStart(2, '0');
 
-// 첨부를 data/attachments/YYYY-MM-DD/HH-mm_<sender>_<filename> 에 저장.
+export function makeAttachmentFilename(msg, ts, uniqueId = randomUUID()) {
+  const d = new Date(ts);
+  const hm = `${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}`;
+  const safe = String(msg.filename || 'file').replace(/[^\w.가-힣-]/g, '_');
+  const suffix = String(uniqueId).slice(0, 8);
+  return `${hm}_${msg.sender}_${suffix}_${safe}`;
+}
+
+// 첨부를 data/attachments/YYYY-MM-DD/HH-mm-ss_<sender>_<uuid>_<filename> 에 저장.
 function saveAttachment(msg, ts) {
   if (!attachmentsDir || !msg.dataBase64) return null;
   try {
     const d = new Date(ts);
     const day = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-    const hm = `${pad(d.getHours())}-${pad(d.getMinutes())}`;
     const dir = path.join(attachmentsDir, day);
     fs.mkdirSync(dir, { recursive: true });
 
-    const safe = String(msg.filename || 'file').replace(/[^\w.가-힣-]/g, '_');
-    const filename = `${hm}_${msg.sender}_${safe}`;
+    const filename = makeAttachmentFilename(msg, ts);
     fs.writeFileSync(path.join(dir, filename), Buffer.from(msg.dataBase64, 'base64'));
     return path.posix.join('attachments', day, filename);
   } catch (err) {
