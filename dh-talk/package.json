@@ -8,7 +8,7 @@
   "author": "Dongkhan",
   "license": "UNLICENSED",
   "engines": {
-    "node": ">=20"
+    "node": ">=20 <23"
   },
   "scripts": {
     "dev": "concurrently -k -n vite,electron -c cyan,green \"npm:dev:renderer\" \"npm:dev:electron\"",
@@ -28,7 +28,7 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^9.1.0",
-    "electron": "^33.2.1",
+    "electron": "33.4.11",
     "electron-builder": "^25.1.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

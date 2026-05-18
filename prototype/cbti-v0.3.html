@@ -27,11 +27,11 @@
     .phone{width:min(390px,100vw);height:min(844px,100vh);height:min(844px,100dvh);border-radius:30px;overflow:hidden;position:relative;
       background:var(--ivory);box-shadow:0 34px 90px rgba(0,0,0,.42),inset 0 0 0 1px rgba(255,255,255,.12)}
     @media(max-width:480px){body{background:var(--ivory)}.phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}}
-    :root{--bottom-nav-h:82px}
+    :root{--bottom-nav-h:82px;--screen-bottom-pad:112px}
     .status{height:30px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 22px 6px;font-size:11px;font-weight:800;letter-spacing:.02em;opacity:.85}
     .status .pill{width:74px;height:18px;border-radius:999px;background:rgba(31,31,31,.07);display:grid;place-items:center;font-size:10px}
     .screen-wrap{position:absolute;inset:30px 0 0;overflow:hidden}
-    .screen{position:absolute;inset:0 0 calc(var(--bottom-nav-h) + env(safe-area-inset-bottom,0px));padding:14px 20px 32px;overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(10px) scale(.995);
+    .screen{position:absolute;inset:0 0 calc(var(--bottom-nav-h) + env(safe-area-inset-bottom,0px));padding:14px 20px calc(var(--screen-bottom-pad) + env(safe-area-inset-bottom,0px));overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(10px) scale(.995);
       pointer-events:none;transition:opacity .24s ease,transform .24s ease,visibility 0s linear .24s;scrollbar-width:none}
     .screen::-webkit-scrollbar{display:none}
     .screen.active{opacity:1;visibility:visible;transform:none;pointer-events:auto;transition:opacity .24s ease,transform .24s ease}
@@ -75,7 +75,7 @@
     .cta:active,.secondary-btn:active,.nav-item:active,.quick:active,.chip-btn:active,.route-card:active,.knowledge-card:active,.measure-card:active,.session-card:active{transform:scale(.985)}
     .cta-note{display:block;color:var(--subtle);font-size:11.5px;font-weight:800;margin-top:8px}
     .secondary-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:11px}
-    .screen-cta-sticky{position:sticky;bottom:12px;z-index:5;margin-top:14px}
+    .screen-cta-sticky{position:sticky;bottom:18px;z-index:5;margin-top:14px}
     .secondary-btn{min-height:46px;border-radius:999px;background:rgba(255,255,255,.7);border:1px solid var(--line);color:var(--accent-deep);font-weight:850;padding:0 10px;font-size:13px}
     .back-btn{width:84px;min-height:38px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--line);color:var(--muted);font-weight:850;font-size:13px}
     /* metrics */
@@ -205,7 +205,7 @@
     .nav-item{border-radius:18px;display:grid;place-items:center;gap:2px;color:var(--subtle);background:transparent;font-size:10px;font-weight:850;min-width:0}
     .nav-item svg{width:19px;height:19px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
     .nav-item.active{background:var(--soft);color:var(--accent-deep)}
-    .nav-item[aria-disabled="true"]{opacity:.46}
+    .nav-item[data-safety-advisory="true"]{box-shadow:inset 0 0 0 1px rgba(199,90,77,.22)}
     .hidden{display:none!important}
     /* modal */
     .modal-backdrop{position:absolute;inset:0;display:none;align-items:flex-end;padding:14px;background:rgba(31,31,31,.3);z-index:30}
@@ -256,7 +256,7 @@
 
         <div class="card notice danger section hidden" id="homeCrisisBanner">
           <h3>위기 신호가 선택됨</h3>
-          <p>CBT-I 자동 진행보다 즉시 안전 연결이 우선입니다. 혼자 앱을 계속 진행하지 말고 보호자, 진료실, 119/응급실, 보건소 생명존중사업 중 바로 가능한 도움을 선택합니다.</p>
+          <p>CBT-I Care는 전문의 진료를 대체하지 않는 보조 수단입니다. 자살사고, 급격한 기분 상승, 충동성 증가, 수면욕구 감소가 있으면 앱 기록보다 진료 평가와 안전 연결을 우선합니다.</p>
           <div class="safety-actions">
             <a class="safety-link" href="tel:119">119 전화</a>
             <button class="safety-link" data-toast="진료실 또는 보호자에게 현재 위험 신호를 바로 공유하세요.">보호자·진료실 연결</button>
@@ -319,7 +319,7 @@
           <button class="cta section screen-cta-sticky" data-go="intake" data-start-step="0">시작하기</button>
           <small class="cta-note">약 3분 소요</small>
         </div>
-        <div class="card notice danger section">심한 코골이, 무호흡 의심, 조증, 급성 자살위험, 중증 의학적 수면장애가 의심되면 앱 단독 사용보다 진료 평가가 우선입니다. 자살위험이 현재 있으면 보호자와 함께 119/응급실 또는 지역 보건소 생명존중사업 등 즉시 도움을 먼저 연결합니다.</div>
+        <div class="card notice danger section">심한 코골이, 무호흡 의심, 조증, 급성 자살위험, 중증 의학적 수면장애가 의심되면 앱은 보조 수단으로만 사용하고 전문의 진료 평가가 우선입니다. 자살위험이 현재 있으면 보호자와 함께 119/응급실 또는 지역 보건소 생명존중사업 등 즉시 도움을 먼저 연결합니다.</div>
       </section>
 
       <!-- ===================== INTAKE STEPS ===================== -->
@@ -363,7 +363,7 @@
             <div class="plan-row"><b>추천 경로</b><span id="routeText">표준 8주 CBT-I · 7일 수면일기 먼저</span></div>
             <div class="plan-row"><b>이번 주</b><span id="weekPlan">수면일기 작성, 자극조절 규칙 2개, 수면제한은 7일 기록 후 계산</span></div>
             <div class="plan-row"><b>외래 공유</b><span>ISI, 수면효율, 총침대시간, 복약일, 위험 신호만 요약</span></div>
-          </div><div class="card notice danger section hidden" id="crisisPanel">현재 위기 신호가 선택되어 CBT-I 일기·세션 자동 진행을 막았습니다. 혼자 앱을 계속 사용하지 말고 보호자, 진료실, 119/응급실, 지역 보건소 생명존중사업 중 즉시 연결 가능한 도움을 먼저 선택합니다.<div class="safety-actions" style="margin-top:12px"><a class="safety-link" href="tel:119">119 전화</a><a class="safety-link" href="tel:109">자살예방 109</a></div></div></div>
+          </div><div class="card notice danger section hidden" id="crisisPanel">현재 위기 신호가 선택되었습니다. CBT-I Care는 전문의 진료를 대체하지 않는 보조 수단이며, 위험 신호가 있으면 앱 기록보다 진료 평가와 안전 연결이 우선입니다. 필요 시 보호자, 진료실, 119/응급실, 지역 보건소 생명존중사업 중 즉시 연결 가능한 도움을 선택합니다.<div class="safety-actions" style="margin-top:12px"><a class="safety-link" href="tel:119">119 전화</a><a class="safety-link" href="tel:109">자살예방 109</a></div></div></div>
 
           <div class="sheet-actions"><button class="link-btn" id="prevIntake">이전</button><button class="cta" id="nextIntake">다음</button></div>
         </div>
@@ -566,7 +566,7 @@
     const toast=document.getElementById('toast');
     const root=document.documentElement;
     const tabOf={home:'home',intakeIntro:'home',intake:'home',diary:'diary',sessions:'sessions',progress:'progress',knowledge:'knowledge',article:'knowledge',settings:'knowledge'};
-    const blockedTargets=new Set(['diary','sessions']);
+    const advisoryTargets=new Set(['diary','sessions']);
     const today=new Date();
     const diaryDate=document.getElementById('diaryDate');
     diaryDate.value=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
@@ -574,7 +574,7 @@
     function hasCrisisBlock(){return answers[2]==='crisis';}
     function hasOsaCaution(){return answers[3]==='osa';}
     function showCrisisBlock(){
-      showToast('위기 신호가 선택되어 CBT-I 자동 진행을 중단합니다. 보호자·진료실·119/응급실·보건소 생명존중사업 연결이 우선입니다.');
+      showToast('위기 신호가 선택되었습니다. 앱은 보조 수단이며 전문의 진료와 안전 연결이 우선입니다.');
     }
     function showOsaCaution(){
       showToast('수면무호흡 위험 신호가 선택되어 수면제한 자동 안내를 보류합니다. 코골이·무호흡·심한 주간졸림은 진료 평가가 우선입니다.');
@@ -587,8 +587,9 @@
     }
     function updateBlockedNav(){
       navItems.forEach(n=>{
-        const blocked=hasCrisisBlock()&&blockedTargets.has(n.dataset.go);
-        n.setAttribute('aria-disabled',blocked?'true':'false');
+        const advisory=hasCrisisBlock()&&advisoryTargets.has(n.dataset.go);
+        n.setAttribute('aria-describedby',advisory?'homeCrisisBanner':'');
+        n.setAttribute('data-safety-advisory',advisory?'true':'false');
       });
       document.getElementById('crisisPanel')?.classList.toggle('hidden',!hasCrisisBlock());
       document.getElementById('homeCrisisBanner')?.classList.toggle('hidden',!hasCrisisBlock());
@@ -596,7 +597,7 @@
     }
     function go(id){
       if(!document.getElementById(id))return;
-      if(hasCrisisBlock()&&blockedTargets.has(id)){showCrisisBlock();id='intake';intakeStep=5;renderIntake();}
+      if(hasCrisisBlock()&&advisoryTargets.has(id))showCrisisBlock();
       screens.forEach(s=>s.classList.toggle('active',s.id===id));
       const tab=tabOf[id];
       navItems.forEach(n=>{const active=n.dataset.go===tab;n.classList.toggle('active',active);n.setAttribute('aria-current',active?'page':'false');});
@@ -682,9 +683,9 @@
       document.querySelectorAll('.intake-panel').forEach(p=>p.classList.toggle('active',Number(p.dataset.step)===intakeStep));
       document.querySelectorAll('.step-dot').forEach((d,i)=>d.classList.toggle('on',i<=Math.min(intakeStep,4)));
       document.getElementById('prevIntake').textContent=intakeStep===0?'평가 소개':'이전';
-      document.getElementById('nextIntake').textContent=intakeStep===5?(hasCrisisBlock()?'안전 안내 확인':'수면일기 시작하기'):'다음';
+      document.getElementById('nextIntake').textContent=intakeStep===5?(hasCrisisBlock()?'안전 안내 확인 후 일기 작성':'수면일기 시작하기'):'다음';
       let route='표준 8주 CBT-I · 7일 수면일기 먼저';
-      if(answers[2]==='crisis')route='앱 단독 진행 중지 · 오늘 진료실/보호자/119·응급실/보건소 생명존중사업 도움 우선';
+      if(answers[2]==='crisis')route='전문의 진료 평가 우선 · 앱은 기록 보조로만 사용';
       else if(answers[3]==='osa')route='수면무호흡 평가 우선 · 수면일기 병행';
       else{
         if(answers[1]==='taper')route+=' · 수면제 점감 보조 모드';
@@ -692,7 +693,7 @@
         if(answers[2]==='mild')route+=' · PHQ-9·GAD-7 동반 추적';
       }
       document.getElementById('routeText').textContent=route;
-      document.getElementById('weekPlan').textContent=answers[2]==='crisis'?'CBT-I 자동 진행 중단. 진료실에 즉시 공유하고, 현재 위험이면 보호자와 함께 119/응급실 또는 보건소 생명존중사업 도움을 먼저 연결합니다.':answers[3]==='osa'?'수면무호흡 평가를 먼저 확인하고 수면일기는 참고자료로만 유지합니다.':'수면일기 작성, 자극조절 규칙 2개, 수면제한은 7일 기록 후 계산';
+      document.getElementById('weekPlan').textContent=answers[2]==='crisis'?'진료실에 위험 신호를 공유하고, 현재 위험이면 보호자와 함께 119/응급실 또는 보건소 생명존중사업 도움을 먼저 연결합니다. 수면일기는 진료 공유용 보조 기록으로 작성할 수 있습니다.':answers[3]==='osa'?'수면무호흡 평가를 먼저 확인하고 수면일기는 참고자료로만 유지합니다.':'수면일기 작성, 자극조절 규칙 2개, 수면제한은 7일 기록 후 계산';
       updateBlockedNav();
     }
     function renderKnowledge(filter='all'){
@@ -727,7 +728,7 @@
       if(!summary)return;
       const s=lastDiaryStats;
       const risks=[];
-      if(answers[2]==='crisis')risks.push('위기 신호: CBT-I 자동 진행 중단, 119/응급실/보호자/보건소 생명존중사업 우선');
+      if(answers[2]==='crisis')risks.push('위기 신호: 앱은 보조 수단, 전문의 진료와 119/응급실/보호자/보건소 생명존중사업 연결 우선');
       if(answers[3]==='osa')risks.push('수면무호흡 위험: 평가 우선');
       if(s.med==='taper')risks.push('수면제 감량 중: 감량 속도/중단은 진료에서만 결정');
       if(s.tst>0&&s.tst<240)risks.push('추정 총수면 4시간 미만: 운전·기계작업 위험 확인');
@@ -805,7 +806,7 @@
 
       const ses=e.target.closest('[data-session]');
       if(ses){
-        if(hasCrisisBlock()){showCrisisBlock();return;}
+        if(hasCrisisBlock())showCrisisBlock();
         if(hasOsaCaution()&&Number(ses.dataset.session)===2){showOsaCaution();return;}
         const[title,goal,time,status,steps]=sessionData[Number(ses.dataset.session)];
         document.getElementById('modal-title').textContent='WEEK '+(Number(ses.dataset.session)+1)+' · '+title;
@@ -816,7 +817,7 @@
 
       const md=e.target.closest('[data-modal]');
       if(md){
-        if(hasCrisisBlock()){showCrisisBlock();return;}
+        if(hasCrisisBlock())showCrisisBlock();
         if(hasOsaCaution()&&md.dataset.modal==='restriction'){showOsaCaution();return;}
         const[t,body,steps]=modalCopy[md.dataset.modal];
         document.getElementById('modal-title').textContent=t;
@@ -873,7 +874,7 @@
 
     document.getElementById('nextIntake').addEventListener('click',()=>{
       if(intakeStep<5){intakeStep++;renderIntake();}
-      else if(hasCrisisBlock()){showCrisisBlock();go('home');}
+      else if(hasCrisisBlock()){showCrisisBlock();go('diary');}
       else go('diary');
     });
     document.getElementById('prevIntake').addEventListener('click',()=>{

@@ -25,6 +25,8 @@ npm install
 npm run dev      # Vite dev 서버 + Electron 동시 기동
 ```
 
+권장 런타임은 **Node 20 LTS + Electron 33.4.11 고정**이다. Electron 42 계열은 Node 22.12 이상을 요구해 현재 배포·빌드 환경과 충돌하므로, 클리닉 Windows 배포 안정성을 우선해 Electron을 LTS 안정 버전으로 낮춰 고정한다.
+
 `npm run dev` 실행 시 창이 뜨고, echo 입력창에 메시지를 보내면 main process의
 WebSocket 서버가 그대로 되돌려준다.
 
