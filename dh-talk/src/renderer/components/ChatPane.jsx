@@ -34,8 +34,7 @@ export default function ChatPane({ messages, me, isSearching, onSendText, onSend
   const send = () => {
     const body = draft.trim();
     if (!body) return;
-    onSendText(body);
-    setDraft('');
+    if (onSendText(body)) setDraft('');
   };
 
   // 입력창에 이미지 붙여넣기 → 파일 전송

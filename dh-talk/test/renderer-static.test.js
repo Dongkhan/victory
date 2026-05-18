@@ -24,9 +24,19 @@ test('connection issue banner has visible styles', () => {
   assert.match(css, /\.connection-banner--error/);
 });
 
-test('renderer exposes reconnect and blocked-send UX', () => {
+test('renderer exposes reconnect, authorized-send gate, draft preservation, and blocked-send UX', () => {
   assert.match(app, /reconnectNow/);
   assert.match(app, /다시 연결/);
   assert.match(app, /전송 대기/);
   assert.match(app, /setSendError/);
+  assert.match(app, /status !== 'open'/);
+  assert.match(app, /return false/);
+  assert.match(app, /환자 큐는 변경하지 않았습니다/);
+  const chatPane = fs.readFileSync(path.join(root, 'src/renderer/components/ChatPane.jsx'), 'utf8');
+  assert.match(chatPane, /if \(onSendText\(body\)\) setDraft\(''\)/);
+});
+
+test('renderer only closes the active alert id on ack broadcasts', () => {
+  assert.match(app, /activeAlertIdRef/);
+  assert.match(app, /msg\.id === activeAlertIdRef\.current/);
 });

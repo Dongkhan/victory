@@ -73,6 +73,7 @@ export default function App() {
 
   const wsRef = useRef(null);
   const reconnectNowRef = useRef(() => {});
+  const activeAlertIdRef = useRef(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -176,11 +177,18 @@ export default function App() {
           } else if (msg.kind === 'message') {
             setMessages((prev) => [...prev, msg]);
             setLastReceivedAt(Date.now());
-            if (shouldPulse(msg, { me: myId, role })) window.dhtalk.showAlert(msg);
+            if (shouldPulse(msg, { me: myId, role })) {
+              activeAlertIdRef.current = msg.id;
+              window.dhtalk.showAlert(msg);
+            }
           } else if (msg.kind === 'ack') {
-            window.dhtalk.closeAlert();
+            if (msg.id && msg.id === activeAlertIdRef.current) {
+              activeAlertIdRef.current = null;
+              window.dhtalk.closeAlert();
+            }
           } else if (msg.kind === 'escalate') {
             if (shouldPulseOnEscalate(msg.original, { me: myId, role })) {
+              activeAlertIdRef.current = msg.original?.id;
               window.dhtalk.showAlert(msg.original);
             }
           }
@@ -238,12 +246,13 @@ export default function App() {
 
   const sendMessage = (payload) => {
     const ws = wsRef.current;
-    if (!ws || ws.readyState !== WebSocket.OPEN) {
-      setSendError('전송 대기: 서버 연결이 복구된 뒤 다시 보내세요. 현재 메시지는 전송되지 않았습니다.');
-      return;
+    if (!ws || ws.readyState !== WebSocket.OPEN || status !== 'open') {
+      setSendError('전송 대기: 서버 인증과 연결이 완료된 뒤 다시 보내세요. 현재 메시지는 전송되지 않았습니다.');
+      return false;
     }
     setSendError('');
     ws.send(JSON.stringify({ kind: 'message', ts: Date.now(), recipient: 'all', ...payload }));
+    return true;
   };
 
   const sendText = (body) => sendMessage({ sender: me, type: 'text', body });
@@ -264,9 +273,9 @@ export default function App() {
       return;
     }
     const ws = wsRef.current;
-    if (!ws || ws.readyState !== WebSocket.OPEN) {
-      setSendError('전송 대기: 서버 연결이 복구된 뒤 파일을 다시 보내세요. 현재 파일은 전송되지 않았습니다.');
-      return;
+    if (!ws || ws.readyState !== WebSocket.OPEN || status !== 'open') {
+      setSendError('전송 대기: 서버 인증과 연결이 완료된 뒤 파일을 다시 보내세요. 현재 파일은 전송되지 않았습니다.');
+      return false;
     }
     setSendError('');
     const { mime, base64 } = splitDataUrl(await readFileAsDataURL(file));
@@ -281,6 +290,7 @@ export default function App() {
         dataBase64: base64,
       }),
     );
+    return true;
   };
 
   const onDropFiles = (files) => files.forEach(sendFile);
@@ -295,6 +305,11 @@ export default function App() {
 
   const triggerMacro = async (macro) => {
     let patientName = currentPatient?.name ?? '';
+
+    if (macro.action_after === 'advance_queue' && status !== 'open') {
+      setSendError('전송 대기: 서버 인증과 연결이 완료된 뒤 다음 환자 호출을 다시 시도하세요. 환자 큐는 변경하지 않았습니다.');
+      return;
+    }
 
     if (macro.action_after === 'advance_queue') {
       const result = await window.dhtalk.advancePatients();

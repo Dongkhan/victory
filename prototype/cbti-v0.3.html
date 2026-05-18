@@ -269,7 +269,7 @@
         </div>
 
         <div class="mini-grid section">
-          <div class="metric"><span>권장 수면창</span><strong>00:30–06:30</strong><em>초기 예시 · 7일 기록 후 확정</em></div>
+          <div class="metric" id="homeSleepWindow"><span>권장 수면창</span><strong>00:30–06:30</strong><em>초기 예시 · 7일 기록 후 확정</em></div>
           <div class="metric"><span>이번 주 세션</span><strong>Week 2</strong><em>자극조절 · 진행 중</em></div>
         </div>
 
@@ -363,7 +363,7 @@
             <div class="plan-row"><b>추천 경로</b><span id="routeText">표준 8주 CBT-I · 7일 수면일기 먼저</span></div>
             <div class="plan-row"><b>이번 주</b><span id="weekPlan">수면일기 작성, 자극조절 규칙 2개, 수면제한은 7일 기록 후 계산</span></div>
             <div class="plan-row"><b>외래 공유</b><span>ISI, 수면효율, 총침대시간, 복약일, 위험 신호만 요약</span></div>
-          </div><div class="card notice danger section hidden" id="crisisPanel">현재 위기 신호가 선택되어 CBT-I 일기·세션 자동 진행을 막았습니다. 혼자 앱을 계속 사용하지 말고 보호자, 진료실, 119/응급실, 지역 보건소 생명존중사업 중 즉시 연결 가능한 도움을 먼저 선택합니다.</div></div>
+          </div><div class="card notice danger section hidden" id="crisisPanel">현재 위기 신호가 선택되어 CBT-I 일기·세션 자동 진행을 막았습니다. 혼자 앱을 계속 사용하지 말고 보호자, 진료실, 119/응급실, 지역 보건소 생명존중사업 중 즉시 연결 가능한 도움을 먼저 선택합니다.<div class="safety-actions" style="margin-top:12px"><a class="safety-link" href="tel:119">119 전화</a><a class="safety-link" href="tel:109">자살예방 109</a></div></div></div>
 
           <div class="sheet-actions"><button class="link-btn" id="prevIntake">이전</button><button class="cta" id="nextIntake">다음</button></div>
         </div>
@@ -579,6 +579,12 @@
     function showOsaCaution(){
       showToast('수면무호흡 위험 신호가 선택되어 수면제한 자동 안내를 보류합니다. 코골이·무호흡·심한 주간졸림은 진료 평가가 우선입니다.');
     }
+    function updateOsaHome(){
+      const box=document.getElementById('homeSleepWindow');
+      if(!box)return;
+      if(hasOsaCaution())box.innerHTML='<span>수면창 안내</span><strong>OSA 평가 우선</strong><em>수면제한·침대시간 축소 보류</em>';
+      else box.innerHTML='<span>권장 수면창</span><strong>00:30–06:30</strong><em>초기 예시 · 7일 기록 후 확정</em>';
+    }
     function updateBlockedNav(){
       navItems.forEach(n=>{
         const blocked=hasCrisisBlock()&&blockedTargets.has(n.dataset.go);
@@ -586,6 +592,7 @@
       });
       document.getElementById('crisisPanel')?.classList.toggle('hidden',!hasCrisisBlock());
       document.getElementById('homeCrisisBanner')?.classList.toggle('hidden',!hasCrisisBlock());
+      updateOsaHome();
     }
     function go(id){
       if(!document.getElementById(id))return;
@@ -855,7 +862,12 @@
         const panel=choice.closest('.intake-panel');
         answers[Number(panel.dataset.step)]=choice.dataset.choice;
         panel.querySelectorAll('.choice').forEach(c=>c.classList.toggle('selected',c===choice));
-        renderIntake();updateClinicSummary();
+        renderIntake();updateClinicSummary();recalcDiary();
+        if(Number(panel.dataset.step)===2&&choice.dataset.choice==='crisis'){
+          intakeStep=5;
+          renderIntake();
+          showCrisisBlock();
+        }
       }
     });
 
