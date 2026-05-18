@@ -11,6 +11,7 @@ contextBridge.exposeInMainWorld('dhtalk', {
 
   getRecentMessages: () => ipcRenderer.invoke('messages:recent'),
   searchMessages: (query) => ipcRenderer.invoke('messages:search', query),
+  getDiagnostics: () => ipcRenderer.invoke('app:get-diagnostics'),
 
   // 환자 큐 — 변경 작업은 갱신된 큐 목록을 반환한다.
   listPatients: () => ipcRenderer.invoke('patients:list'),

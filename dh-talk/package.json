@@ -1,6 +1,6 @@
 {
   "name": "dh-talk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "동행 정신건강의학과의원 원장↔데스크 LAN 메신저",
   "private": true,
   "type": "module",
@@ -8,7 +8,7 @@
   "author": "Dongkhan",
   "license": "UNLICENSED",
   "engines": {
-    "node": ">=20"
+    "node": ">=20.19.0 <23"
   },
   "scripts": {
     "dev": "concurrently -k -n vite,electron -c cyan,green \"npm:dev:renderer\" \"npm:dev:electron\"",
@@ -17,7 +17,8 @@
     "build": "vite build",
     "build:win": "vite build && electron-builder --win",
     "start": "electron .",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "test": "node --test"
   },
   "dependencies": {
     "better-sqlite3": "^12.10.0",
@@ -28,8 +29,8 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^9.1.0",
-    "electron": "^33.2.1",
-    "electron-builder": "^25.1.8",
+    "electron": "^39.8.6",
+    "electron-builder": "^26.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "vite": "^6.0.7",

@@ -22,6 +22,17 @@ export function loadConfig(configDir) {
   };
 }
 
+// 패키지 배포 시 — 번들 기본 설정을 사용자 편집 가능 위치(userData)로 1회 복사.
+export function ensureUserConfig(bundledDir, userDir) {
+  if (fs.existsSync(userDir)) return;
+  fs.mkdirSync(userDir, { recursive: true });
+  if (!fs.existsSync(bundledDir)) return;
+  for (const name of fs.readdirSync(bundledDir)) {
+    fs.copyFileSync(path.join(bundledDir, name), path.join(userDir, name));
+  }
+  console.log(`[config] 기본 설정을 ${userDir} 로 복사했습니다.`);
+}
+
 export function watchConfig(configDir, onChange) {
   const watcher = chokidar.watch(configDir, { ignoreInitial: true });
   const reload = (file) => {

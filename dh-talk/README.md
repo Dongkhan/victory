@@ -20,19 +20,28 @@ PHI 외부 유출)를 해결하기 위한 1인 클리닉 전용 도구다. 자�
 
 ## 개발
 
+요구 버전:
+
+- Node.js `>=20.19.0 <23`
+- Electron `39.8.6+` 계열 사용. 현재 Node 20 개발 환경에서 `better-sqlite3` native rebuild가 통과하고, Electron 42의 Node 22.12+ 요구를 피한다.
+
 ```bash
 npm install
+npm test
+npm run build
 npm run dev      # Vite dev 서버 + Electron 동시 기동
 ```
 
-`npm run dev` 실행 시 창이 뜨고, echo 입력창에 메시지를 보내면 main process의
-WebSocket 서버가 그대로 되돌려준다.
+`config/settings.yaml`의 `auth.shared_key`는 기본값이 비어 있다. 데스크1에서 임의의 긴 키를 생성한 뒤 원장 PC와 데스크 PC 3대에 같은 값을 넣어야 연결된다. 빈 값이면 WebSocket 인증이 차단된다.
+
+`npm run dev` 실행 시 창이 뜨고, 메시지는 HMAC 인증을 통과한 클라이언트 사이에서만 송수신된다.
 
 ## 스크립트
 
 | 명령 | 설명 |
 |---|---|
 | `npm run dev` | 개발 모드 (Vite + Electron) |
+| `npm test` | 인증/스키마/파일 제한 단위 테스트 |
 | `npm run build` | renderer 빌드 (`dist/renderer`) |
 | `npm run build:win` | Windows 설치본(.exe) 빌드 |
 | `npm start` | 빌드된 renderer로 Electron 실행 |
@@ -64,7 +73,12 @@ dh-talk/
 | 6 | 파일 드래그앤드롭/붙여넣기, 검색, 30일 cleanup |
 | 7 | Hermes 텔레그램 미러링, Windows 빌드 설정 |
 
-비-GUI 로직(DB·파서·메시지 허브·매크로 치환·검색·cleanup·미러링)은 단위
-검증을 마쳤다. **남은 검증**: `npm run dev`로 실제 창·펄스 알람 창·핫키
-동작 확인, 다PC LAN 환경 메시지 왕복, `npm run build:win` 으로 Windows
-설치본 생성 및 데스크 PC 설치 테스트 (`scripts/deploy-checklist.md`).
+**v0.1.1 보강** (배포 전 보안·운영) — WebSocket HMAC 인증, sender 위장
+방지, 메시지 스키마 검증, ack 위조 방지, `retention_days` 실제 반영,
+packaged 설정을 userData 로 이동, 큐 비우기 확인창, 운영 진단 패널.
+
+비-GUI 로직(DB·파서·메시지 허브·인증·검증·매크로 치환·검색·cleanup·
+미러링)은 단위 검증을 마쳤다. **남은 검증**: `npm run dev`로 실제 창·
+펄스 알람 창·핫키 동작 확인, 다PC LAN 환경 메시지 왕복, `npm run
+build:win` 으로 Windows 설치본 생성 및 데스크 PC 설치 테스트
+(`scripts/deploy-checklist.md`).

@@ -27,10 +27,11 @@
     .phone{width:min(390px,100vw);height:min(844px,100vh);height:min(844px,100dvh);border-radius:30px;overflow:hidden;position:relative;
       background:var(--ivory);box-shadow:0 34px 90px rgba(0,0,0,.42),inset 0 0 0 1px rgba(255,255,255,.12)}
     @media(max-width:480px){body{background:var(--ivory)}.phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}}
+    :root{--bottom-nav-h:82px}
     .status{height:30px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 22px 6px;font-size:11px;font-weight:800;letter-spacing:.02em;opacity:.85}
     .status .pill{width:74px;height:18px;border-radius:999px;background:rgba(31,31,31,.07);display:grid;place-items:center;font-size:10px}
-    .screen-wrap{position:absolute;inset:30px 0 78px;overflow:hidden}
-    .screen{position:absolute;inset:0;padding:14px 20px 44px;overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(10px) scale(.995);
+    .screen-wrap{position:absolute;inset:30px 0 0;overflow:hidden}
+    .screen{position:absolute;inset:0;padding:14px 20px calc(var(--bottom-nav-h) + 88px + env(safe-area-inset-bottom,0px));overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(10px) scale(.995);
       pointer-events:none;transition:opacity .24s ease,transform .24s ease,visibility 0s linear .24s;scrollbar-width:none}
     .screen::-webkit-scrollbar{display:none}
     .screen.active{opacity:1;visibility:visible;transform:none;pointer-events:auto;transition:opacity .24s ease,transform .24s ease}
@@ -74,6 +75,7 @@
     .cta:active,.secondary-btn:active,.nav-item:active,.quick:active,.chip-btn:active,.route-card:active,.knowledge-card:active,.measure-card:active,.session-card:active{transform:scale(.985)}
     .cta-note{display:block;color:var(--subtle);font-size:11.5px;font-weight:800;margin-top:8px}
     .secondary-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:11px}
+    .screen-cta-sticky{position:sticky;bottom:calc(var(--bottom-nav-h) + 12px);z-index:5;margin-top:14px}
     .secondary-btn{min-height:46px;border-radius:999px;background:rgba(255,255,255,.7);border:1px solid var(--line);color:var(--accent-deep);font-weight:850;padding:0 10px;font-size:13px}
     .back-btn{width:84px;min-height:38px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--line);color:var(--muted);font-weight:850;font-size:13px}
     /* metrics */
@@ -112,7 +114,7 @@
     .choice.selected .radio{background:var(--accent);box-shadow:inset 0 0 0 5px #fff}
     /* forms */
     .form-grid{display:grid;gap:10px}
-    .field{display:grid;grid-template-columns:1fr minmax(104px,128px);align-items:center;gap:12px;padding:11px 14px;
+    .field{display:grid;grid-template-columns:1fr minmax(132px,168px);align-items:center;gap:12px;padding:11px 14px;
       background:rgba(255,255,255,.66);border:1px solid var(--line);border-radius:18px}
     .field label{font-size:13px;color:var(--ink);font-weight:800}
     .field input,.field select{min-height:38px;border:0;border-radius:13px;padding:0 10px;background:var(--surface-2);color:var(--ink);outline:none;width:100%}
@@ -193,7 +195,7 @@
     .nav-card{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;color:var(--ink)}
     .nav-card .go{color:var(--accent-deep);font-size:18px;font-weight:700}
     /* bottom nav */
-    .bottom-nav{position:absolute;left:12px;right:12px;bottom:12px;height:58px;display:grid;grid-template-columns:repeat(5,1fr);gap:2px;
+    .bottom-nav{position:absolute;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));height:58px;display:grid;grid-template-columns:repeat(5,1fr);gap:2px;
       padding:6px;border-radius:24px;background:rgba(250,248,240,.94);border:1px solid var(--line);
       box-shadow:0 12px 30px rgba(31,31,31,.12);backdrop-filter:blur(16px)}
     .nav-item{border-radius:18px;display:grid;place-items:center;gap:2px;color:var(--subtle);background:transparent;font-size:10px;font-weight:850;min-width:0}
@@ -289,12 +291,12 @@
           <div class="app-name">초기 평가</div>
           <h2>나에게 맞는 수면 회복 경로를<br>함께 찾아봐요</h2>
           <p class="lead">몇 가지 질문과 수면일기를 바탕으로 CBT-I 시작 경로를 추천합니다. 결과는 진료와 7일 기록으로 보정됩니다.</p>
-          <button class="route-card" data-go="intake"><span class="route-icon">ISI</span><span><b>불면 심각도</b><small>최근 2주의 수면 어려움 정도</small></span><span class="arr">›</span></button>
-          <button class="route-card" data-go="intake"><span class="route-icon">Rx</span><span><b>수면제 사용 여부</b><small>복용·유지·감량 상태 확인</small></span><span class="arr">›</span></button>
-          <button class="route-card" data-go="intake"><span class="route-icon">M</span><span><b>우울·불안 동반 여부</b><small>공존 증상을 함께 추적</small></span><span class="arr">›</span></button>
-          <button class="route-card" data-go="intake"><span class="route-icon">OSA</span><span><b>수면무호흡 위험 신호</b><small>코골이·호흡 멈춤·주간졸림</small></span><span class="arr">›</span></button>
-          <button class="route-card" data-go="intake"><span class="route-icon">⟳</span><span><b>교대근무·불규칙 생활</b><small>생활 리듬에 맞춘 수면창</small></span><span class="arr">›</span></button>
-          <button class="cta section" data-go="intake">시작하기</button>
+          <button class="route-card" data-go="intake" data-start-step="0"><span class="route-icon">ISI</span><span><b>불면 심각도</b><small>최근 2주의 수면 어려움 정도</small></span><span class="arr">›</span></button>
+          <button class="route-card" data-go="intake" data-start-step="1"><span class="route-icon">Rx</span><span><b>수면제 사용 여부</b><small>복용·유지·감량 상태 확인</small></span><span class="arr">›</span></button>
+          <button class="route-card" data-go="intake" data-start-step="2"><span class="route-icon">M</span><span><b>우울·불안 동반 여부</b><small>공존 증상을 함께 추적</small></span><span class="arr">›</span></button>
+          <button class="route-card" data-go="intake" data-start-step="3"><span class="route-icon">OSA</span><span><b>수면무호흡 위험 신호</b><small>코골이·호흡 멈춤·주간졸림</small></span><span class="arr">›</span></button>
+          <button class="route-card" data-go="intake" data-start-step="4"><span class="route-icon">⟳</span><span><b>교대근무·불규칙 생활</b><small>생활 리듬에 맞춘 수면창</small></span><span class="arr">›</span></button>
+          <button class="cta section screen-cta-sticky" data-go="intake" data-start-step="0">시작하기</button>
           <small class="cta-note">약 3분 소요</small>
         </div>
         <div class="card notice danger section">심한 코골이, 무호흡 의심, 조증, 급성 자살위험, 중증 의학적 수면장애가 의심되면 앱 단독 사용보다 진료 평가가 우선입니다.</div>
@@ -339,7 +341,7 @@
 
           <div class="intake-panel" data-step="5"><div class="plan-box">
             <div class="plan-row"><b>추천 경로</b><span id="routeText">표준 8주 CBT-I · 7일 수면일기 먼저</span></div>
-            <div class="plan-row"><b>이번 주</b><span>수면일기 작성, 자극조절 규칙 2개, 수면제한은 7일 기록 후 계산</span></div>
+            <div class="plan-row"><b>이번 주</b><span id="weekPlan">수면일기 작성, 자극조절 규칙 2개, 수면제한은 7일 기록 후 계산</span></div>
             <div class="plan-row"><b>외래 공유</b><span>ISI, 수면효율, 총침대시간, 복약일, 위험 신호만 요약</span></div>
           </div></div>
 
@@ -623,7 +625,7 @@
       document.getElementById('prevIntake').textContent=intakeStep===0?'평가 소개':'이전';
       document.getElementById('nextIntake').textContent=intakeStep===5?'수면일기 시작하기':'다음';
       let route='표준 8주 CBT-I · 7일 수면일기 먼저';
-      if(answers[2]==='crisis')route='앱 단독 진행 중지 · 진료/위기 평가 우선';
+      if(answers[2]==='crisis')route='앱 단독 진행 중지 · 오늘 진료실/보호자/응급 도움 우선';
       else if(answers[3]==='osa')route='수면무호흡 평가 우선 · 수면일기 병행';
       else{
         if(answers[1]==='taper')route+=' · 수면제 점감 보조 모드';
@@ -631,6 +633,7 @@
         if(answers[2]==='mild')route+=' · PHQ-9·GAD-7 동반 추적';
       }
       document.getElementById('routeText').textContent=route;
+      document.getElementById('weekPlan').textContent=answers[2]==='crisis'?'CBT-I 자동 진행 중단. 진료실에 즉시 공유하고 필요 시 보호자/응급 도움을 연결합니다.':answers[3]==='osa'?'수면무호흡 평가를 먼저 확인하고 수면일기는 참고자료로만 유지합니다.':'수면일기 작성, 자극조절 규칙 2개, 수면제한은 7일 기록 후 계산';
     }
     function renderKnowledge(filter='all'){
       document.getElementById('knowledgeList').innerHTML=knowledgeData
@@ -684,7 +687,10 @@
     /* ---- global click ---- */
     document.addEventListener('click',e=>{
       const goEl=e.target.closest('[data-go]');
-      if(goEl){go(goEl.dataset.go);return;}
+      if(goEl){
+        if(goEl.dataset.startStep!=null){intakeStep=Number(goEl.dataset.startStep)||0;renderIntake();}
+        go(goEl.dataset.go);return;
+      }
 
       const art=e.target.closest('[data-article]');
       if(art){openArticle(Number(art.dataset.article));return;}

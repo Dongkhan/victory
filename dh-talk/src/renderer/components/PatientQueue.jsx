@@ -11,8 +11,10 @@ export default function PatientQueue({ patients, onBulkAdd, onAddWalkin, onAdvan
   const [showPaste, setShowPaste] = useState(false);
   const [pasteText, setPasteText] = useState('');
   const [walkin, setWalkin] = useState('');
+  const [confirmClear, setConfirmClear] = useState(false);
 
   const waitingCount = patients.filter((p) => p.status === 'waiting').length;
+  const hasCurrent = patients.some((p) => p.status === 'current');
 
   const submitPaste = () => {
     if (pasteText.trim()) onBulkAdd(pasteText);
@@ -25,6 +27,11 @@ export default function PatientQueue({ patients, onBulkAdd, onAddWalkin, onAdvan
     if (!name) return;
     onAddWalkin(name);
     setWalkin('');
+  };
+
+  const submitClear = () => {
+    onClear();
+    setConfirmClear(false);
   };
 
   return (
@@ -69,7 +76,11 @@ export default function PatientQueue({ patients, onBulkAdd, onAddWalkin, onAdvan
       </div>
 
       {patients.length > 0 && (
-        <button type="button" className="btn btn--ghost btn--sm" onClick={onClear}>
+        <button
+          type="button"
+          className="btn btn--ghost btn--sm"
+          onClick={() => setConfirmClear(true)}
+        >
           큐 비우기
         </button>
       )}
@@ -97,6 +108,31 @@ export default function PatientQueue({ patients, onBulkAdd, onAddWalkin, onAdvan
               </button>
               <button type="button" className="btn" onClick={submitPaste}>
                 추가
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {confirmClear && (
+        <div
+          className="modal"
+          onClick={(e) => e.target === e.currentTarget && setConfirmClear(false)}
+        >
+          <div className="modal__box">
+            <h3>환자 큐 비우기</h3>
+            <p className="modal__hint">
+              오늘 환자 {patients.length}명을 모두 삭제합니다. 되돌릴 수 없습니다.
+            </p>
+            {hasCurrent && (
+              <p className="modal__warn">⚠ 진료중인 환자가 있습니다. 정말 비우시겠습니까?</p>
+            )}
+            <div className="modal__actions">
+              <button type="button" className="btn btn--ghost" onClick={() => setConfirmClear(false)}>
+                취소
+              </button>
+              <button type="button" className="btn btn--danger" onClick={submitClear}>
+                모두 삭제
               </button>
             </div>
           </div>

@@ -3,6 +3,11 @@
 # 이 PC 의 사용자 id. users.yaml 의 id 중 하나로, 설치 PC 마다 수정한다.
 me: desk1
 
+# WebSocket 인증 — 4대 PC 모두 동일한 값이어야 한다.
+# 빈 값이면 앱이 연결을 차단한다. 데스크1에서 생성한 키를 4대 PC에 동일하게 입력한다.
+auth:
+  shared_key: ""
+
 server:
   host: "192.168.0.10"   # 데스크1 PC 의 LAN IP (실제 값으로 수정)
   ws_port: 8123

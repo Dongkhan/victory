@@ -1,6 +1,6 @@
 // 파일 전송 보조 (renderer 전용).
 
-export const MAX_FILE_BYTES = 5 * 1024 * 1024; // 5MB — WebSocket 전송 상한
+export { MAX_FILE_BYTES } from '../../shared/limits.js';
 
 // File/Blob → data URL ("data:image/png;base64,...")
 export function readFileAsDataURL(file) {
