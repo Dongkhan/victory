@@ -1,0 +1,95 @@
+from pathlib import Path
+import re
+
+ROOT = Path(__file__).resolve().parents[1]
+HTML = ROOT / "prototype" / "cbti-v0.5.html"
+INDEX = ROOT / "index.html"
+
+
+def read_html() -> str:
+    assert HTML.exists(), "CBT-I v0.5 release-quality app must exist"
+    return HTML.read_text(encoding="utf-8")
+
+
+def test_latest_index_points_to_release_quality_v05():
+    index = INDEX.read_text(encoding="utf-8")
+    assert 'prototype/cbti-v0.5.html' in index
+    assert '출시 직전 앱 수준' in index
+    assert re.search(r'cbti-v0\.5\.html.*<small>\(latest\)</small>', index)
+
+
+def test_release_app_has_non_prototype_product_surfaces():
+    html = read_html()
+    required = [
+        'CBT-I Care v0.5',
+        '출시 직전 앱 수준',
+        '오늘의 실행 플랜',
+        '7일 수면 데이터',
+        '데이터 내보내기',
+        '개인정보·동의',
+        '오프라인 저장',
+        '임상 안전 가드레일',
+        '진료 공유 리포트',
+        '릴리즈 체크리스트',
+    ]
+    for text in required:
+        assert text in html
+
+
+def test_release_app_persists_state_and_exports_clinic_report():
+    html = read_html()
+    required_js = [
+        'localStorage.setItem(STORAGE_KEY',
+        'localStorage.getItem(STORAGE_KEY',
+        'function saveDiaryEntry',
+        'function generateClinicReport',
+        'function exportClinicReport',
+        'function resetDemoData',
+        'navigator.onLine',
+        'beforeinstallprompt',
+    ]
+    for text in required_js:
+        assert text in html
+
+
+def test_release_app_removes_dummy_language_and_marks_sample_data():
+    html = read_html().lower()
+    banned = ['lorem ipsum', 'dummy', 'todo:', 'placeholder patient']
+    for text in banned:
+        assert text not in html
+    assert '샘플 데이터' in read_html()
+    assert '실제 저장 데이터' in read_html()
+
+
+def test_release_app_contains_accessible_detail_routes_for_all_primary_cards():
+    html = read_html()
+    for route in [
+        'screen-dashboard',
+        'screen-diary',
+        'screen-plan',
+        'screen-report',
+        'screen-learn',
+        'screen-settings',
+        'screen-session-detail',
+        'screen-measure-detail',
+        'screen-consent-detail',
+        'screen-safety-detail',
+    ]:
+        assert f'id="{route}"' in html
+    assert html.count('data-route=') >= 20
+    assert 'aria-live="polite"' in html
+
+
+def test_release_app_has_clinical_safety_copy():
+    html = read_html()
+    required = [
+        '의료진 상담을 대체하지 않습니다',
+        '수면제 감량 속도와 중단은 진료에서 결정',
+        '수면무호흡',
+        '조증',
+        '자살예방 109',
+        '보건소 생명존중사업',
+        '운전·기계작업',
+    ]
+    for text in required:
+        assert text in html
