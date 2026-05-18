@@ -37,7 +37,10 @@ ok('CBT-I diary save button is not sticky-overlay', !/saveDiary[^\n]*position\s*
 ok('CBT-I crisis copy includes 119', cbti.includes('119'));
 ok('CBT-I crisis copy includes 생명존중사업', cbti.includes('생명존중사업'));
 ok('CBT-I crisis selection blocks CBT-I progression', cbti.includes('hasCrisisBlock') && cbti.includes('blockedTargets'));
+ok('CBT-I crisis block has persistent inline panel', cbti.includes('crisisPanel') && /aria-disabled/.test(cbti));
 ok('CBT-I has clinic summary export', cbti.includes('clinicSummary') && cbti.includes('data-copy-summary'));
+ok('CBT-I clinic summary copy has fallback', cbti.includes('copyText') && cbti.includes('execCommand'));
+ok('CBT-I diary date is not hard-coded', cbti.includes('diaryDate') && !cbti.includes('value="2026-05-18"'));
 ok('CBT-I route cards can start selected intake step', /data-start-step/.test(cbti) && /startStep/.test(cbti));
 
 const relax = read('prototype/v0.5.html');

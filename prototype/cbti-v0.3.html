@@ -31,7 +31,7 @@
     .status{height:30px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 22px 6px;font-size:11px;font-weight:800;letter-spacing:.02em;opacity:.85}
     .status .pill{width:74px;height:18px;border-radius:999px;background:rgba(31,31,31,.07);display:grid;place-items:center;font-size:10px}
     .screen-wrap{position:absolute;inset:30px 0 0;overflow:hidden}
-    .screen{position:absolute;inset:0;padding:14px 20px calc(var(--bottom-nav-h) + 88px + env(safe-area-inset-bottom,0px));overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(10px) scale(.995);
+    .screen{position:absolute;inset:0 0 calc(var(--bottom-nav-h) + env(safe-area-inset-bottom,0px));padding:14px 20px 32px;overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(10px) scale(.995);
       pointer-events:none;transition:opacity .24s ease,transform .24s ease,visibility 0s linear .24s;scrollbar-width:none}
     .screen::-webkit-scrollbar{display:none}
     .screen.active{opacity:1;visibility:visible;transform:none;pointer-events:auto;transition:opacity .24s ease,transform .24s ease}
@@ -75,7 +75,7 @@
     .cta:active,.secondary-btn:active,.nav-item:active,.quick:active,.chip-btn:active,.route-card:active,.knowledge-card:active,.measure-card:active,.session-card:active{transform:scale(.985)}
     .cta-note{display:block;color:var(--subtle);font-size:11.5px;font-weight:800;margin-top:8px}
     .secondary-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:11px}
-    .screen-cta-sticky{position:sticky;bottom:calc(var(--bottom-nav-h) + 12px);z-index:5;margin-top:14px}
+    .screen-cta-sticky{position:sticky;bottom:12px;z-index:5;margin-top:14px}
     .secondary-btn{min-height:46px;border-radius:999px;background:rgba(255,255,255,.7);border:1px solid var(--line);color:var(--accent-deep);font-weight:850;padding:0 10px;font-size:13px}
     .back-btn{width:84px;min-height:38px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--line);color:var(--muted);font-weight:850;font-size:13px}
     /* metrics */
@@ -203,6 +203,8 @@
     .nav-item{border-radius:18px;display:grid;place-items:center;gap:2px;color:var(--subtle);background:transparent;font-size:10px;font-weight:850;min-width:0}
     .nav-item svg{width:19px;height:19px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
     .nav-item.active{background:var(--soft);color:var(--accent-deep)}
+    .nav-item[aria-disabled="true"]{opacity:.46}
+    .hidden{display:none!important}
     /* modal */
     .modal-backdrop{position:absolute;inset:0;display:none;align-items:flex-end;padding:14px;background:rgba(31,31,31,.3);z-index:30}
     .modal-backdrop.show{display:flex}
@@ -217,6 +219,11 @@
       background:var(--ink);color:#fbfaf3;font-size:12.5px;font-weight:800;padding:11px 18px;border-radius:999px;
       box-shadow:0 12px 28px rgba(0,0,0,.32);opacity:0;pointer-events:none;transition:opacity .22s ease,translate .22s ease;z-index:35;max-width:84%;text-align:center}
     .toast.show{opacity:1;translate:-50% 0}
+    @media(max-height:700px){
+      .hero{padding:16px 17px}.hero .lead{margin-bottom:10px}
+      h1{font-size:27px;margin-bottom:7px}.bullets{gap:6px;margin:4px 0 11px}.bullet{font-size:12.5px}
+      .cta{min-height:50px}.secondary-btn{min-height:42px}.secondary-actions{margin-top:9px}
+    }
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
   </style>
 </head>
@@ -345,7 +352,7 @@
             <div class="plan-row"><b>추천 경로</b><span id="routeText">표준 8주 CBT-I · 7일 수면일기 먼저</span></div>
             <div class="plan-row"><b>이번 주</b><span id="weekPlan">수면일기 작성, 자극조절 규칙 2개, 수면제한은 7일 기록 후 계산</span></div>
             <div class="plan-row"><b>외래 공유</b><span>ISI, 수면효율, 총침대시간, 복약일, 위험 신호만 요약</span></div>
-          </div></div>
+          </div><div class="card notice danger section hidden" id="crisisPanel">현재 위기 신호가 선택되어 CBT-I 일기·세션 자동 진행을 막았습니다. 혼자 앱을 계속 사용하지 말고 보호자, 진료실, 119/응급실, 지역 보건소 생명존중사업 중 즉시 연결 가능한 도움을 먼저 선택합니다.</div></div>
 
           <div class="sheet-actions"><button class="link-btn" id="prevIntake">이전</button><button class="cta" id="nextIntake">다음</button></div>
         </div>
@@ -358,7 +365,7 @@
         <h2>수면창 계산의 원자료</h2>
         <p class="lead">수면제한은 최소 1주 기록 후 안전하게 계산합니다. 아래 값은 입력 즉시 재계산됩니다.</p>
         <div class="card form-grid">
-          <div class="field"><label>오늘 날짜</label><input type="date" value="2026-05-18"></div>
+          <div class="field"><label>오늘 날짜</label><input id="diaryDate" type="date"></div>
           <div class="field"><label>취침 시간</label><input id="bedTime" type="time" value="23:30"></div>
           <div class="field"><label>불 끈 시간</label><input id="lightsOff" type="time" value="00:10"></div>
           <div class="field"><label>잠든 시간 추정</label><input id="sleepOnset" type="time" value="00:45"></div>
@@ -549,17 +556,28 @@
     const root=document.documentElement;
     const tabOf={home:'home',intakeIntro:'home',intake:'home',diary:'diary',sessions:'sessions',progress:'progress',knowledge:'knowledge',article:'knowledge',settings:'knowledge'};
     const blockedTargets=new Set(['diary','sessions']);
+    const today=new Date();
+    const diaryDate=document.getElementById('diaryDate');
+    diaryDate.value=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
 
     function hasCrisisBlock(){return answers[2]==='crisis';}
     function showCrisisBlock(){
       showToast('위기 신호가 선택되어 CBT-I 자동 진행을 중단합니다. 보호자·진료실·119/응급실·보건소 생명존중사업 연결이 우선입니다.');
+    }
+    function updateBlockedNav(){
+      navItems.forEach(n=>{
+        const blocked=hasCrisisBlock()&&blockedTargets.has(n.dataset.go);
+        n.setAttribute('aria-disabled',blocked?'true':'false');
+      });
+      document.getElementById('crisisPanel')?.classList.toggle('hidden',!hasCrisisBlock());
     }
     function go(id){
       if(!document.getElementById(id))return;
       if(hasCrisisBlock()&&blockedTargets.has(id)){showCrisisBlock();id='intake';intakeStep=5;renderIntake();}
       screens.forEach(s=>s.classList.toggle('active',s.id===id));
       const tab=tabOf[id];
-      navItems.forEach(n=>n.classList.toggle('active',n.dataset.go===tab));
+      navItems.forEach(n=>{const active=n.dataset.go===tab;n.classList.toggle('active',active);n.setAttribute('aria-current',active?'page':'false');});
+      updateBlockedNav();
       document.querySelector('.screen.active')?.scrollTo({top:0,behavior:'smooth'});
     }
     let toastTimer;
@@ -573,6 +591,7 @@
     function dismissSplash(){splash.classList.add('hide');setTimeout(()=>splash.style.display='none',520);}
     splash.addEventListener('click',dismissSplash);
     splash.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')dismissSplash();});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('show'))modal.classList.remove('show');});
     setTimeout(dismissSplash,2200);
 
     /* ---- session data ---- */
@@ -651,6 +670,7 @@
       }
       document.getElementById('routeText').textContent=route;
       document.getElementById('weekPlan').textContent=answers[2]==='crisis'?'CBT-I 자동 진행 중단. 진료실에 즉시 공유하고, 현재 위험이면 보호자와 함께 119/응급실 또는 보건소 생명존중사업 도움을 먼저 연결합니다.':answers[3]==='osa'?'수면무호흡 평가를 먼저 확인하고 수면일기는 참고자료로만 유지합니다.':'수면일기 작성, 자극조절 규칙 2개, 수면제한은 7일 기록 후 계산';
+      updateBlockedNav();
     }
     function renderKnowledge(filter='all'){
       document.getElementById('knowledgeList').innerHTML=knowledgeData
@@ -732,6 +752,16 @@
     document.addEventListener('input',e=>{if(e.target.closest('#diary'))recalcDiary();});
     recalcDiary();
 
+    async function copyText(text){
+      try{
+        if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(text);return true;}
+      }catch(_err){}
+      const ta=document.createElement('textarea');
+      ta.value=text;ta.setAttribute('readonly','');ta.style.position='absolute';ta.style.left='-9999px';
+      document.body.appendChild(ta);ta.select();
+      let ok=false;try{ok=document.execCommand('copy');}catch(_err){}ta.remove();return ok;
+    }
+
     /* ---- global click ---- */
     document.addEventListener('click',e=>{
       const goEl=e.target.closest('[data-go]');
@@ -782,8 +812,7 @@
       const cp=e.target.closest('[data-copy-summary]');
       if(cp){
         const text=document.getElementById('clinicSummary')?.textContent||'';
-        navigator.clipboard?.writeText(text);
-        showToast('진료용 요약을 복사했습니다.');
+        copyText(text).then(ok=>showToast(ok?'진료용 요약을 복사했습니다.':'복사를 지원하지 않는 환경입니다. 요약 상자를 길게 눌러 직접 복사하세요.'));
       }
 
       const sw=e.target.closest('[data-accent]');
