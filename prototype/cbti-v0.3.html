@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#8e7cc3">
+  <meta name="description" content="DH Mind Clinic CBT-I Care — 라벤더 테마 수면일기 기반 8주 CBT-I care extension prototype v0.3">
+  <title>CBT-I Care v0.3 — DH Mind Clinic</title>
+  <style>
+    :root{
+      --ivory:#f4f0fa;--phone-bg:#e9e2f3;--surface:#fffcf7;--surface-2:#ece6f6;
+      --ink:#24212a;--muted:#746d7e;--subtle:#9a91a8;--line:#ded6eb;
+      --accent:#8e7cc3;--accent-light:#e7dff5;--accent-deep:#5b4b8a;
+      --sage:#8aab7b;--soft:#e7dff5;
+      --danger:#c75a4d;--danger-bg:#f5e2de;--warn:#9c8a4d;--warn-bg:#efe9cb;
+      --shadow:0 18px 45px rgba(31,31,31,.16);--radius-xl:30px;--radius-lg:24px;--radius-md:18px;--tap:54px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{width:100%;min-height:100%}
+    body{min-height:100vh;min-height:100dvh;display:grid;place-items:center;
+      padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0);
+      background:radial-gradient(circle at top,#51496c 0%,#332d46 56%,#24212a 100%);
+      color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;line-height:1.45;overflow:hidden}
+    button,input,select,textarea{font:inherit}
+    button{border:0;cursor:pointer}
+    button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:3px solid rgba(142,124,195,.62);outline-offset:2px}
+    .phone{width:min(390px,100vw);height:min(844px,100vh);height:min(844px,100dvh);border-radius:30px;overflow:hidden;position:relative;
+      background:var(--ivory);box-shadow:0 34px 90px rgba(0,0,0,.42),inset 0 0 0 1px rgba(255,255,255,.12)}
+    @media(max-width:480px){body{background:var(--ivory)}.phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}}
+    :root{--bottom-nav-h:82px}
+    .status{height:30px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 22px 6px;font-size:11px;font-weight:800;letter-spacing:.02em;opacity:.85}
+    .status .pill{width:74px;height:18px;border-radius:999px;background:rgba(31,31,31,.07);display:grid;place-items:center;font-size:10px}
+    .screen-wrap{position:absolute;inset:30px 0 0;overflow:hidden}
+    .screen{position:absolute;inset:0;padding:14px 20px calc(var(--bottom-nav-h) + 88px + env(safe-area-inset-bottom,0px));overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(10px) scale(.995);
+      pointer-events:none;transition:opacity .24s ease,transform .24s ease,visibility 0s linear .24s;scrollbar-width:none}
+    .screen::-webkit-scrollbar{display:none}
+    .screen.active{opacity:1;visibility:visible;transform:none;pointer-events:auto;transition:opacity .24s ease,transform .24s ease}
+    /* splash */
+    .splash{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+      background:radial-gradient(circle at 50% 34%,#f7f5ed 0%,var(--ivory) 60%);transition:opacity .5s ease}
+    .splash.hide{opacity:0;pointer-events:none}
+    .splash-logo{width:104px;height:104px;animation:pulse 1.5s ease-in-out infinite}
+    .splash-name{font-family:Georgia,"Times New Roman","Noto Serif KR",serif;font-size:27px;letter-spacing:.01em;color:var(--ink);margin-top:22px}
+    .splash-sub{color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.22em;margin-top:7px}
+    .splash-tap{position:absolute;bottom:54px;color:var(--subtle);font-size:12px;font-weight:700}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.055)}}
+    /* brand + headings */
+    .brand-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;min-height:30px}
+    .brand{display:inline-flex;align-items:center;gap:9px;color:var(--muted);font-size:11px;font-weight:900;letter-spacing:.16em;text-transform:uppercase}
+    .logo{width:27px;height:27px;border-radius:9px;background:var(--accent);box-shadow:0 6px 12px rgba(91,75,138,.24);position:relative;flex:none}
+    .logo:before,.logo:after{content:"";position:absolute;background:#fff}
+    .logo:before{width:13px;height:13px;border-radius:50%;left:7px;top:5px;box-shadow:6px 0 0 #fff,3px -4px 0 #fff}
+    .logo:after{width:5px;height:10px;border-radius:3px;left:11px;top:13px}
+    .version{color:var(--subtle);font-size:11px;font-weight:800}
+    .app-name{font-family:Georgia,"Times New Roman","Noto Serif KR",serif;font-size:17px;color:var(--accent-deep);margin-bottom:4px}
+    h1{font-family:Georgia,"Times New Roman","Noto Serif KR",serif;font-size:30px;letter-spacing:-.03em;line-height:1.12;text-wrap:pretty;margin-bottom:10px}
+    h2{font-size:21px;letter-spacing:-.02em;line-height:1.22;margin-bottom:8px}
+    h3{font-size:15.5px;letter-spacing:-.01em;margin-bottom:6px}
+    p{color:var(--muted);font-size:14px}
+    .lead{font-size:14.5px;color:var(--muted);margin-bottom:15px}
+    .soft{color:var(--subtle);font-size:12px;line-height:1.5}
+    .section{margin-top:13px}
+    .center{text-align:center}
+    /* cards */
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:17px;box-shadow:0 8px 22px rgba(31,31,31,.05)}
+    .hero{display:flex;flex-direction:column;text-align:center;padding:22px 19px;
+      background:radial-gradient(circle at 28% 16%,rgba(142,124,195,.25),transparent 30%),linear-gradient(180deg,#fffcf7,#f4f0fa)}
+    .hero .lead{max-width:300px;margin:0 auto 15px}
+    .bullets{display:grid;gap:8px;margin:6px 0 16px;text-align:left}
+    .bullet{display:grid;grid-template-columns:24px 1fr;gap:9px;align-items:start;font-size:13px;color:var(--ink)}
+    .dot{width:21px;height:21px;border-radius:50%;background:var(--soft);color:var(--accent-deep);display:grid;place-items:center;font-size:12px;font-weight:900}
+    /* buttons */
+    .cta{min-height:var(--tap);width:100%;border-radius:999px;background:var(--accent);color:#fff;font-weight:900;font-size:15.5px;
+      box-shadow:0 13px 26px rgba(91,75,138,.30);transition:transform .15s ease,filter .15s ease}
+    .cta:active,.secondary-btn:active,.nav-item:active,.quick:active,.chip-btn:active,.route-card:active,.knowledge-card:active,.measure-card:active,.session-card:active{transform:scale(.985)}
+    .cta-note{display:block;color:var(--subtle);font-size:11.5px;font-weight:800;margin-top:8px}
+    .secondary-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:11px}
+    .screen-cta-sticky{position:sticky;bottom:calc(var(--bottom-nav-h) + 12px);z-index:5;margin-top:14px}
+    .secondary-btn{min-height:46px;border-radius:999px;background:rgba(255,255,255,.7);border:1px solid var(--line);color:var(--accent-deep);font-weight:850;padding:0 10px;font-size:13px}
+    .back-btn{width:84px;min-height:38px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--line);color:var(--muted);font-weight:850;font-size:13px}
+    /* metrics */
+    .mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .metric{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:14px;min-height:90px}
+    .metric strong{display:block;font-size:20px;letter-spacing:-.02em;color:var(--ink);margin-top:3px}
+    .metric span{color:var(--subtle);font-size:12px;font-weight:800}
+    .metric em{display:block;font-style:normal;color:var(--muted);font-size:11px;margin-top:4px;line-height:1.4}
+    /* banners / notices */
+    .banner{display:grid;grid-template-columns:36px 1fr;gap:11px;align-items:start;background:linear-gradient(180deg,#fdfcf6,#f1efe3)}
+    .banner-icon{width:36px;height:36px;border-radius:14px;background:var(--soft);display:grid;place-items:center;color:var(--accent-deep);font-weight:900;font-size:13px}
+    .notice{font-size:12px;line-height:1.6}
+    .notice.warn{background:var(--warn-bg);border-color:rgba(156,138,77,.26);color:#6e5f2f}
+    .notice.danger{background:var(--danger-bg);border-color:rgba(199,90,77,.26);color:#8e3d33}
+    .summary-box{white-space:pre-wrap;background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:18px;padding:13px;font-size:12px;line-height:1.62;color:var(--ink);margin-top:10px}
+    .blocked-note{border-color:rgba(199,90,77,.34);background:#fff7f5;color:#8e3d33}
+    /* route cards */
+    .route-card{display:grid;grid-template-columns:42px 1fr auto;gap:12px;align-items:center;padding:13px;border-radius:18px;
+      background:rgba(255,255,255,.66);border:1px solid var(--line);width:100%;text-align:left;color:var(--ink)}
+    .route-card+.route-card{margin-top:9px}
+    .route-icon{width:42px;height:42px;border-radius:15px;background:var(--soft);display:grid;place-items:center;color:var(--accent-deep);font-weight:950;font-size:13px;flex:none}
+    .route-card b{display:block;font-size:14px}
+    .route-card small{display:block;color:var(--subtle);font-size:12px;margin-top:2px;line-height:1.4}
+    .route-card .arr{color:var(--subtle);font-size:18px;font-weight:700}
+    /* intake */
+    .stepper{display:flex;gap:5px;margin:11px 0 15px}
+    .step-dot{height:6px;flex:1;border-radius:999px;background:rgba(31,31,31,.1)}
+    .step-dot.on{background:var(--accent)}
+    .intake-panel{display:none}
+    .intake-panel.active{display:block}
+    .choice-list{display:grid;gap:10px}
+    .choice{width:100%;text-align:left;display:grid;grid-template-columns:24px 1fr;gap:11px;align-items:start;padding:14px;
+      border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.66);color:var(--ink)}
+    .choice .radio{width:22px;height:22px;border-radius:50%;border:2px solid rgba(31,31,31,.2);background:#fff;margin-top:1px}
+    .choice b{font-size:14px}
+    .choice small{color:var(--subtle);font-size:12px;line-height:1.45}
+    .choice.selected{border-color:rgba(142,124,195,.5);background:#f4f0fa}
+    .choice.selected .radio{background:var(--accent);box-shadow:inset 0 0 0 5px #fff}
+    /* forms */
+    .form-grid{display:grid;gap:10px}
+    .field{display:grid;grid-template-columns:1fr minmax(132px,168px);align-items:center;gap:12px;padding:11px 14px;
+      background:rgba(255,255,255,.66);border:1px solid var(--line);border-radius:18px}
+    .field label{font-size:13px;color:var(--ink);font-weight:800}
+    .field input,.field select{min-height:38px;border:0;border-radius:13px;padding:0 10px;background:var(--surface-2);color:var(--ink);outline:none;width:100%}
+    .field.wide{grid-template-columns:1fr}
+    .field.wide textarea{border:0;border-radius:13px;padding:10px;background:var(--surface-2);color:var(--ink);min-height:66px;resize:vertical;outline:none}
+    .range-row{display:flex;align-items:center;gap:12px}
+    .range-row input[type=range]{flex:1;accent-color:var(--accent);height:30px}
+    .range-val{width:40px;text-align:center;font-weight:900;color:var(--accent-deep)}
+    .hint{background:linear-gradient(180deg,#fdfcf6,#f1efe3)}
+    .hint p{font-size:13px;line-height:1.6}
+    /* sessions */
+    .session-card{display:grid;gap:10px;width:100%;text-align:left;color:var(--ink)}
+    .session-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .week{color:var(--accent-deep);font-size:11px;font-weight:950;letter-spacing:.06em}
+    .status-chip{padding:6px 10px;border-radius:999px;font-size:11px;font-weight:900;white-space:nowrap;background:var(--soft);color:var(--accent-deep)}
+    .status-chip.todo{background:#eceadf;color:var(--muted)}
+    .status-chip.done{background:#dcebbf;background:#deeec4;color:#4d7a1c}
+    .meta{display:flex;gap:7px;flex-wrap:wrap}
+    .tag,.chip-btn{display:inline-flex;min-height:25px;align-items:center;padding:0 9px;border-radius:999px;
+      background:rgba(138,171,123,.14);color:var(--muted);font-size:11px;font-weight:850;border:0}
+    .chip-btn.active{background:var(--soft);color:var(--accent-deep);box-shadow:inset 0 0 0 1px rgba(123,168,52,.18)}
+    .quick-list{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .quick{min-height:88px;text-align:left;border-radius:20px;padding:13px;background:var(--surface);border:1px solid var(--line);color:var(--ink);font-weight:850;font-size:13.5px}
+    .quick span{display:block;margin-top:6px;color:var(--subtle);font-size:11px;font-weight:700}
+    /* progress */
+    .bars{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;min-height:128px;padding-top:12px}
+    .bar-col{display:grid;gap:7px;justify-items:center;color:var(--subtle);font-size:10px;font-weight:850}
+    .bar{width:100%;max-width:24px;border-radius:999px;background:linear-gradient(180deg,var(--accent),var(--sage));min-height:34px;box-shadow:0 6px 12px rgba(123,168,52,.14)}
+    .progress-row{display:grid;gap:9px}
+    .line-item{display:grid;grid-template-columns:88px 1fr 48px;gap:10px;align-items:center;font-size:12px;color:var(--muted);font-weight:850}
+    .track{height:10px;border-radius:999px;background:rgba(31,31,31,.07);overflow:hidden}
+    .fill{height:100%;border-radius:inherit;background:var(--accent)}
+    .line-item .num{text-align:right;color:var(--ink)}
+    .measure-card{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;width:100%;text-align:left;
+      border-radius:20px;padding:15px;background:var(--surface);border:1px solid var(--line);color:var(--ink)}
+    .measure-card+.measure-card{margin-top:9px}
+    .measure-card p{margin-top:3px;font-size:12px}
+    .measure-card .go{color:var(--accent-deep);font-size:18px;font-weight:700}
+    /* knowledge */
+    .knowledge-card{display:block;text-align:left;width:100%;border-radius:20px;padding:15px;background:var(--surface);border:1px solid var(--line);color:var(--ink)}
+    .knowledge-card+.knowledge-card{margin-top:10px}
+    .knowledge-card p{margin-top:4px;font-size:12px;line-height:1.5}
+    .knowledge-meta{display:flex;justify-content:space-between;gap:10px;margin-bottom:7px;align-items:center}
+    .knowledge-meta .tag{color:var(--accent-deep);background:var(--soft)}
+    .read-time{color:var(--subtle);font-size:11px;font-weight:850}
+    .article-body p{font-size:14px;line-height:1.72;color:var(--ink)}
+    .article-body p+p{margin-top:12px}
+    /* plan / detail rows */
+    .plan-box{display:grid;gap:0}
+    .plan-row{display:grid;grid-template-columns:78px 1fr;gap:10px;align-items:start;padding:11px 0;border-top:1px solid var(--line)}
+    .plan-row:first-child{border-top:0;padding-top:2px}
+    .plan-row b{font-size:12px;color:var(--accent-deep)}
+    .plan-row span{font-size:13px;color:var(--muted);line-height:1.5}
+    /* AI cards / chips */
+    .ai-card{background:linear-gradient(180deg,#fbfaf3,#edf1e4)}
+    .ai-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+    .ai-badge{font-size:10px;font-weight:900;letter-spacing:.04em;padding:3px 8px;border-radius:999px;background:var(--soft);color:var(--accent-deep)}
+    .memo-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+    .memo-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.78);
+      border:1px solid var(--line);color:var(--ink);font-size:12px;font-weight:800}
+    .memo-chip.add{background:transparent;border-style:dashed;color:var(--accent-deep)}
+    .checkin-msg{display:grid;grid-template-columns:34px 1fr;gap:11px;align-items:start;margin:4px 0 12px}
+    .checkin-msg .av{width:34px;height:34px;border-radius:12px;background:var(--accent);position:relative}
+    .checkin-msg .av:before{content:"";position:absolute;inset:9px;border-radius:50%;border:2.5px solid #fff;border-right-color:transparent;transform:rotate(40deg)}
+    .checkin-msg p{font-size:13px;color:var(--ink);line-height:1.55}
+    /* settings */
+    .set-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-top:1px solid var(--line)}
+    .set-row:first-child{border-top:0}
+    .set-row .lbl b{font-size:14px;color:var(--ink)}
+    .set-row .lbl small{display:block;color:var(--subtle);font-size:11.5px;margin-top:2px;line-height:1.45}
+    .toggle{width:48px;height:28px;border-radius:999px;background:var(--surface-2);position:relative;border:1px solid var(--line);transition:background .18s;flex:none}
+    .toggle:before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;background:#fff;top:2px;left:2px;box-shadow:0 2px 5px rgba(0,0,0,.2);transition:transform .18s}
+    .toggle.on{background:var(--accent);border-color:var(--accent)}
+    .toggle.on:before{transform:translateX(20px)}
+    .swatches{display:flex;gap:9px;flex-wrap:wrap}
+    .swatch{width:30px;height:30px;border-radius:999px;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
+    .swatch.active{box-shadow:0 0 0 2px var(--ink)}
+    .nav-card{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;color:var(--ink)}
+    .nav-card .go{color:var(--accent-deep);font-size:18px;font-weight:700}
+    /* bottom nav */
+    .bottom-nav{position:absolute;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));height:58px;display:grid;grid-template-columns:repeat(5,1fr);gap:2px;
+      padding:6px;border-radius:24px;background:rgba(250,248,240,.94);border:1px solid var(--line);
+      box-shadow:0 12px 30px rgba(31,31,31,.12);backdrop-filter:blur(16px)}
+    .nav-item{border-radius:18px;display:grid;place-items:center;gap:2px;color:var(--subtle);background:transparent;font-size:10px;font-weight:850;min-width:0}
+    .nav-item svg{width:19px;height:19px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .nav-item.active{background:var(--soft);color:var(--accent-deep)}
+    /* modal */
+    .modal-backdrop{position:absolute;inset:0;display:none;align-items:flex-end;padding:14px;background:rgba(31,31,31,.3);z-index:30}
+    .modal-backdrop.show{display:flex}
+    .sheet{width:100%;border-radius:28px;background:var(--surface);border:1px solid rgba(255,255,255,.55);box-shadow:var(--shadow);padding:21px}
+    .sheet h2{margin-bottom:6px}
+    .sheet ul{margin:12px 0 4px;padding-left:18px}
+    .sheet li{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:4px}
+    .sheet-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+    .link-btn{min-height:48px;border-radius:999px;background:#edeae0;color:var(--muted);font-weight:850}
+    /* toast */
+    .toast{position:absolute;left:50%;bottom:88px;translate:-50% 12px;
+      background:var(--ink);color:#fbfaf3;font-size:12.5px;font-weight:800;padding:11px 18px;border-radius:999px;
+      box-shadow:0 12px 28px rgba(0,0,0,.32);opacity:0;pointer-events:none;transition:opacity .22s ease,translate .22s ease;z-index:35;max-width:84%;text-align:center}
+    .toast.show{opacity:1;translate:-50% 0}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <main class="phone" aria-label="CBT-I Care 모바일 프로토타입">
+    <div class="status"><span>9:41</span><span class="pill">CBT-I Care</span><span>●●●</span></div>
+
+    <div class="screen-wrap">
+      <!-- ===================== HOME ===================== -->
+      <section class="screen active" id="home" data-title="홈">
+        <div class="brand-row"><div class="brand"><span class="logo"></span>DH MIND CLINIC</div><div class="version">v0.3</div></div>
+        <div class="card hero">
+          <div class="app-name">CBT-I Care</div>
+          <h1>잠을 다시 배우는<br>8주 CBT-I</h1>
+          <p class="lead">정신건강의학과 전문의가 설계한 수면일기 기반 불면증 관리 프로그램</p>
+          <div class="bullets">
+            <div class="bullet"><span class="dot">1</span><span>ISI·수면일기 기반으로 시작 경로를 개인화</span></div>
+            <div class="bullet"><span class="dot">2</span><span>수면제 점감 보조 모드로 기록과 확인을 지원</span></div>
+            <div class="bullet"><span class="dot">3</span><span>외래 진료와 연결되는 care extension</span></div>
+          </div>
+          <button class="cta" data-go="intakeIntro">오늘 수면 패턴 확인하기</button>
+          <small class="cta-note">초기 평가 약 3분 · 7일 수면일기와 함께 보정</small>
+          <div class="secondary-actions">
+            <button class="secondary-btn" data-go="diary">수면일기 바로 쓰기</button>
+            <button class="secondary-btn" data-go="sessions">이번 주 세션 보기</button>
+          </div>
+        </div>
+
+        <div class="card banner section">
+          <div class="banner-icon">오늘</div>
+          <div><h3>오늘 우선순위</h3><p>어제 수면효율 74%. 졸릴 때만 침대에 눕고, 20분 넘게 깨어 있으면 침대 밖으로 나와 졸음을 기다립니다.</p></div>
+        </div>
+
+        <div class="mini-grid section">
+          <div class="metric"><span>권장 수면창</span><strong>00:30–06:30</strong><em>초기 예시 · 7일 기록 후 확정</em></div>
+          <div class="metric"><span>이번 주 세션</span><strong>Week 2</strong><em>자극조절 · 진행 중</em></div>
+        </div>
+
+        <div class="card ai-card section">
+          <div class="ai-head"><span class="ai-badge">Proactive Check-In</span><span class="soft" style="margin-left:auto;font-weight:800">오후 9:30</span></div>
+          <div class="checkin-msg">
+            <span class="av" aria-hidden="true"></span>
+            <p>오늘은 자극조절 규칙을 지키셨나요? 침대는 졸릴 때만, 깨어 있는 시간은 침대 밖에서 보내요.</p>
+          </div>
+          <button class="cta" data-checkin>오늘 확인 완료</button>
+          <small class="cta-note">앱이 먼저 보내는 부드러운 확인입니다. 의료 판단을 대신하지 않습니다.</small>
+        </div>
+
+        <div class="card ai-card section">
+          <div class="ai-head"><span class="ai-badge">AI Memory</span></div>
+          <h3>내 수면 메모리</h3>
+          <p>수면일기, 약물 변화, 걱정 패턴을 사용자가 직접 확인하고 수정할 수 있는 개인 수면 메모리입니다.</p>
+          <div class="memo-chips">
+            <span class="memo-chip">잠이 안 오면 침대에서 버티는 편</span>
+            <span class="memo-chip">졸피뎀 감량 2주차</span>
+            <span class="memo-chip">일요일 밤 예측불안</span>
+            <button class="memo-chip add" data-toast="메모 추가는 진료·CBT-I 수행을 보조하는 용도로 설계됩니다.">+ 메모 추가</button>
+          </div>
+          <small class="cta-note" style="text-align:left">기록은 진료와 CBT-I 프로토콜 수행을 보조하는 용도입니다.</small>
+        </div>
+
+        <button class="card nav-card section" data-go="settings">
+          <div><h3>설정</h3><p class="soft">테마 컬러 · 알림 · 점감 보조 모드 · 진료 연결</p></div>
+          <span class="go">›</span>
+        </button>
+
+        <div class="card notice warn section">이 앱은 의료진 상담을 대체하지 않습니다. 수면제 완전대체나 치료 보장을 약속하지 않으며, 약물 조정은 진료에서 결정합니다.</div>
+      </section>
+
+      <!-- ===================== INTAKE INTRO ===================== -->
+      <section class="screen" id="intakeIntro" data-title="초기 평가">
+        <div class="brand-row"><button class="back-btn" data-go="home">← 홈</button><div class="version">초기 평가</div></div>
+        <div class="card">
+          <div class="app-name">초기 평가</div>
+          <h2>나에게 맞는 수면 회복 경로를<br>함께 찾아봐요</h2>
+          <p class="lead">몇 가지 질문과 수면일기를 바탕으로 CBT-I 시작 경로를 추천합니다. 결과는 진료와 7일 기록으로 보정됩니다.</p>
+          <button class="route-card" data-go="intake" data-start-step="0"><span class="route-icon">ISI</span><span><b>불면 심각도</b><small>최근 2주의 수면 어려움 정도</small></span><span class="arr">›</span></button>
+          <button class="route-card" data-go="intake" data-start-step="1"><span class="route-icon">Rx</span><span><b>수면제 사용 여부</b><small>복용·유지·감량 상태 확인</small></span><span class="arr">›</span></button>
+          <button class="route-card" data-go="intake" data-start-step="2"><span class="route-icon">M</span><span><b>우울·불안 동반 여부</b><small>공존 증상을 함께 추적</small></span><span class="arr">›</span></button>
+          <button class="route-card" data-go="intake" data-start-step="3"><span class="route-icon">OSA</span><span><b>수면무호흡 위험 신호</b><small>코골이·호흡 멈춤·주간졸림</small></span><span class="arr">›</span></button>
+          <button class="route-card" data-go="intake" data-start-step="4"><span class="route-icon">⟳</span><span><b>교대근무·불규칙 생활</b><small>생활 리듬에 맞춘 수면창</small></span><span class="arr">›</span></button>
+          <button class="cta section screen-cta-sticky" data-go="intake" data-start-step="0">시작하기</button>
+          <small class="cta-note">약 3분 소요</small>
+        </div>
+        <div class="card notice danger section">심한 코골이, 무호흡 의심, 조증, 급성 자살위험, 중증 의학적 수면장애가 의심되면 앱 단독 사용보다 진료 평가가 우선입니다. 자살위험이 현재 있으면 보호자와 함께 119/응급실 또는 지역 보건소 생명존중사업 등 즉시 도움을 먼저 연결합니다.</div>
+      </section>
+
+      <!-- ===================== INTAKE STEPS ===================== -->
+      <section class="screen" id="intake" data-title="초기 평가">
+        <div class="brand-row"><button class="back-btn" data-go="intakeIntro">← 이전</button><div class="version" id="intakeCount">1 / 5</div></div>
+        <div class="card">
+          <div class="app-name">초기 평가</div>
+          <h2 id="intakeTitle">최근 2주 불면 심각도</h2>
+          <p class="lead" id="intakeLead">진입 경로를 정하기 위한 간단한 선별입니다.</p>
+          <div class="stepper" aria-label="평가 진행"><span class="step-dot on"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span></div>
+
+          <div class="intake-panel active" data-step="0"><div class="choice-list">
+            <button class="choice" data-choice="mild"><span class="radio"></span><span><b>가벼움</b><br><small>잠은 불편하지만 낮 기능 저하는 크지 않음</small></span></button>
+            <button class="choice" data-choice="moderate"><span class="radio"></span><span><b>중등도</b><br><small>주간 기능과 기분에 분명한 영향이 있음</small></span></button>
+            <button class="choice" data-choice="severe"><span class="radio"></span><span><b>심함</b><br><small>반복 결근·사고 위험·심한 피로를 동반</small></span></button>
+          </div></div>
+
+          <div class="intake-panel" data-step="1"><div class="choice-list">
+            <button class="choice" data-choice="none"><span class="radio"></span><span><b>사용하지 않음</b><br><small>행동 처방 중심으로 시작</small></span></button>
+            <button class="choice" data-choice="stable"><span class="radio"></span><span><b>복용 중, 유지</b><br><small>복약 기록과 졸림·낙상 위험을 함께 점검</small></span></button>
+            <button class="choice" data-choice="taper"><span class="radio"></span><span><b>감량 희망 또는 감량 중</b><br><small>수면제 점감 보조 모드로 기록·확인을 지원</small></span></button>
+          </div></div>
+
+          <div class="intake-panel" data-step="2"><div class="choice-list">
+            <button class="choice" data-choice="none"><span class="radio"></span><span><b>특별한 기분 증상 없음</b><br><small>표준 CBT-I 경로</small></span></button>
+            <button class="choice" data-choice="mild"><span class="radio"></span><span><b>가벼운 우울·불안 동반</b><br><small>PHQ-9·GAD-7을 함께 모니터링</small></span></button>
+            <button class="choice" data-choice="crisis"><span class="radio"></span><span><b>심한 기분 변화·위기 상황</b><br><small>앱 단독 진행보다 진료·위기 평가가 우선</small></span></button>
+          </div></div>
+
+          <div class="intake-panel" data-step="3"><div class="choice-list">
+            <button class="choice" data-choice="none"><span class="radio"></span><span><b>특별한 신호 없음</b><br><small>표준 CBT-I 경로</small></span></button>
+            <button class="choice" data-choice="osa"><span class="radio"></span><span><b>코골이·호흡 멈춤·심한 주간졸림</b><br><small>수면무호흡 평가를 먼저 안내</small></span></button>
+          </div></div>
+
+          <div class="intake-panel" data-step="4"><div class="choice-list">
+            <button class="choice" data-choice="regular"><span class="radio"></span><span><b>비교적 규칙적인 생활</b><br><small>표준 수면창 설정</small></span></button>
+            <button class="choice" data-choice="shift"><span class="radio"></span><span><b>교대근무·잦은 불규칙</b><br><small>리듬을 고려한 맞춤 수면창 설계</small></span></button>
+          </div></div>
+
+          <div class="intake-panel" data-step="5"><div class="plan-box">
+            <div class="plan-row"><b>추천 경로</b><span id="routeText">표준 8주 CBT-I · 7일 수면일기 먼저</span></div>
+            <div class="plan-row"><b>이번 주</b><span id="weekPlan">수면일기 작성, 자극조절 규칙 2개, 수면제한은 7일 기록 후 계산</span></div>
+            <div class="plan-row"><b>외래 공유</b><span>ISI, 수면효율, 총침대시간, 복약일, 위험 신호만 요약</span></div>
+          </div></div>
+
+          <div class="sheet-actions"><button class="link-btn" id="prevIntake">이전</button><button class="cta" id="nextIntake">다음</button></div>
+        </div>
+        <div class="card notice warn section">초기 결과는 임시이며 의료기기 허가를 받은 진단이 아닙니다. 정확한 평가는 진료와 7일 수면일기로 보정합니다.</div>
+      </section>
+
+      <!-- ===================== DIARY ===================== -->
+      <section class="screen" id="diary" data-title="일기">
+        <div class="brand-row"><div class="brand"><span class="logo"></span>수면일기</div><div class="version">오늘</div></div>
+        <h2>수면창 계산의 원자료</h2>
+        <p class="lead">수면제한은 최소 1주 기록 후 안전하게 계산합니다. 아래 값은 입력 즉시 재계산됩니다.</p>
+        <div class="card form-grid">
+          <div class="field"><label>오늘 날짜</label><input type="date" value="2026-05-18"></div>
+          <div class="field"><label>취침 시간</label><input id="bedTime" type="time" value="23:30"></div>
+          <div class="field"><label>불 끈 시간</label><input id="lightsOff" type="time" value="00:10"></div>
+          <div class="field"><label>잠든 시간 추정</label><input id="sleepOnset" type="time" value="00:45"></div>
+          <div class="field"><label>한밤중 깬 횟수</label><input id="wakeCount" type="number" min="0" value="2"></div>
+          <div class="field"><label>깨어 있던 총 시간(분)</label><input id="waso" type="number" min="0" value="45"></div>
+          <div class="field"><label>최종 기상 시간</label><input id="wakeTime" type="time" value="06:40"></div>
+          <div class="field"><label>침대에서 나온 시간</label><input id="outTime" type="time" value="07:05"></div>
+          <div class="field"><label>낮잠</label><select id="nap"><option value="0">없음</option><option value="20">20분 이하</option><option value="45">20분 초과</option></select></div>
+          <div class="field"><label>카페인 / 음주</label><select id="caf"><option value="none">없음</option><option value="caf">오후 카페인</option><option value="alc">음주</option><option value="both">둘 다</option></select></div>
+          <div class="field"><label>수면제 복용</label><select id="med"><option value="no">복용하지 않음</option><option value="yes">복용</option><option value="taper">감량 중</option></select></div>
+          <div class="field wide"><label>주관적 수면 질 (0–10)</label><div class="range-row"><input id="quality" type="range" min="0" max="10" value="5"><span class="range-val" id="qualityVal">5</span></div></div>
+          <div class="field wide"><label>걱정 / 반추 메모</label><textarea placeholder="예: 내일 일정 때문에 잠을 못 잘 것 같다는 생각이 반복됨"></textarea></div>
+        </div>
+        <div class="mini-grid section">
+          <div class="metric"><span>총 침대 시간</span><strong id="tib">7h 35m</strong><em>취침–침대에서 나온 시간</em></div>
+          <div class="metric"><span>추정 총 수면</span><strong id="tst">5h 10m</strong><em>잠들기·각성 시간 제외</em></div>
+          <div class="metric"><span>수면효율</span><strong id="se">68%</strong><em>총수면 / 총침대시간</em></div>
+          <div class="metric"><span>권장 피드백</span><strong id="diaryFlag">관찰</strong><em>7일 누적 후 처방</em></div>
+        </div>
+        <div class="card hint section"><h3>오늘의 CBT-I 힌트</h3><p id="diaryHint">20분 이상 깨어 있으면 침대 밖으로 나와 낮은 조도의 단조로운 활동을 한 뒤 졸릴 때 다시 눕습니다.</p></div>
+        <div class="card notice warn section" id="diaryValidation">계산식: 총침대시간(TIB)=취침–침대에서 나온 시간, 총수면시간(TST)=TIB-SOL-WASO, 수면효율(SE)=TST/TIB.</div>
+        <button class="cta section" data-toast="수면일기가 저장되었습니다. 7일이 모이면 수면창을 계산합니다.">오늘 일기 저장</button>
+      </section>
+
+      <!-- ===================== SESSIONS ===================== -->
+      <section class="screen" id="sessions" data-title="세션">
+        <div class="brand-row"><div class="brand"><span class="logo"></span>8주 CBT-I</div><div class="version">Week 2</div></div>
+        <h2>진료와 연결되는 주차별 세션</h2>
+        <p class="lead">수면제한·자극조절·인지재구조·수면위생·이완을 모바일 수행 단위로 나눈 다성분 CBT-I입니다.</p>
+        <div id="sessionList"></div>
+        <h3 class="section">빠른 세션</h3>
+        <div class="quick-list">
+          <button class="quick" data-modal="stimulus">오늘의 자극조절 체크<span>2분 · 침대 규칙</span></button>
+          <button class="quick" data-modal="restriction">수면제한 시간 확인<span>7일 기록 기반</span></button>
+          <button class="quick" data-modal="thought">수면 걱정 기록하기<span>인지재구조 준비</span></button>
+          <button class="quick" data-modal="breathing">복식호흡 3분<span>이완 보조</span></button>
+        </div>
+        <div class="card ai-card section">
+          <div class="ai-head"><span class="ai-badge">수면제 점감 보조 모드</span></div>
+          <h3>감량은 진료에서, 기록은 앱에서</h3>
+          <p>점감 일정·복약일·졸림 신호를 기록하고 외래에서 공유합니다. 감량 속도와 중단 시점은 진료에서 결정하며, 앱은 결정을 내리지 않습니다.</p>
+        </div>
+      </section>
+
+      <!-- ===================== PROGRESS ===================== -->
+      <section class="screen" id="progress" data-title="진도">
+        <div class="brand-row"><div class="brand"><span class="logo"></span>진도</div><div class="version">최근 7일</div></div>
+        <h2>치료 반응과 안전 신호를 나눠서 봅니다</h2>
+        <div class="mini-grid section">
+          <div class="metric"><span>이번 주 수면효율</span><strong>82%</strong><em>목표 85% 부근</em></div>
+          <div class="metric"><span>평균 총 수면</span><strong>6h 12m</strong><em>지난주 +37m</em></div>
+          <div class="metric"><span>ISI 변화</span><strong>21 → 16</strong><em>중등도 잔존</em></div>
+          <div class="metric"><span>수면제 복용일</span><strong>4 / 7일</strong><em>진료 공유 항목</em></div>
+        </div>
+        <div class="card section"><h3>7일 수면효율</h3>
+          <div class="bars" aria-label="7일 수면효율 막대 그래프">
+            <div class="bar-col"><div class="bar" style="height:62px"></div><span>월</span></div>
+            <div class="bar-col"><div class="bar" style="height:76px"></div><span>화</span></div>
+            <div class="bar-col"><div class="bar" style="height:54px"></div><span>수</span></div>
+            <div class="bar-col"><div class="bar" style="height:82px"></div><span>목</span></div>
+            <div class="bar-col"><div class="bar" style="height:90px"></div><span>금</span></div>
+            <div class="bar-col"><div class="bar" style="height:74px"></div><span>토</span></div>
+            <div class="bar-col"><div class="bar" style="height:96px"></div><span>일</span></div>
+          </div>
+        </div>
+        <div class="card section progress-row">
+          <div class="line-item"><span>ISI baseline→now</span><div class="track"><div class="fill" style="width:58%"></div></div><span class="num">21→16</span></div>
+          <div class="line-item"><span>PHQ-9 (보조)</span><div class="track"><div class="fill" style="width:42%"></div></div><span class="num">9</span></div>
+          <div class="line-item"><span>GAD-7 (보조)</span><div class="track"><div class="fill" style="width:36%"></div></div><span class="num">7</span></div>
+          <div class="line-item"><span>일기 작성률</span><div class="track"><div class="fill" style="width:71%"></div></div><span class="num">5/7</span></div>
+        </div>
+        <div class="card ai-card section">
+          <div class="ai-head"><span class="ai-badge">진료용 요약</span></div>
+          <h3>외래 공유용 7일 요약 초안</h3>
+          <p>수면일기 원자료 전체가 아니라 핵심 지표와 안전 플래그만 복사합니다.</p>
+          <pre class="summary-box" id="clinicSummary"></pre>
+          <button class="secondary-btn" data-copy-summary>요약 복사</button>
+        </div>
+        <h3 class="section">측정 카드</h3>
+        <button class="measure-card" data-toast="ISI 7문항 평가 화면으로 이동합니다."><div><b>ISI 불면 심각도</b><p>7문항 · 약 2분 · 주 1회</p></div><span class="go">›</span></button>
+        <button class="measure-card" data-toast="PHQ-9 평가. 자살사고 문항 양성 시 진료·위기 평가가 우선입니다."><div><b>PHQ-9 우울 척도</b><p>9문항 · 약 2분 · 보조 지표</p></div><span class="go">›</span></button>
+        <button class="measure-card" data-toast="GAD-7 평가 화면으로 이동합니다."><div><b>GAD-7 불안 척도</b><p>7문항 · 약 2분 · 야간 반추 추적</p></div><span class="go">›</span></button>
+        <button class="measure-card" data-toast="ESS 평가. 과도한 주간졸림은 수면무호흡 선별이 필요합니다."><div><b>ESS 주간졸림</b><p>8문항 · 약 2분 · 감별 선별</p></div><span class="go">›</span></button>
+        <div class="card notice warn section">지표 변화는 치료 반응의 참고 정보이며, 진단·완치를 의미하지 않습니다. 해석은 진료에서 함께 확인합니다.</div>
+      </section>
+
+      <!-- ===================== KNOWLEDGE ===================== -->
+      <section class="screen" id="knowledge" data-title="지식">
+        <div class="brand-row"><div class="brand"><span class="logo"></span>지식</div><div class="version">Care extension</div></div>
+        <h2>짧게 배우고 바로 실행합니다</h2>
+        <p class="lead">약물 조정은 진료에서 다루고, 앱은 불면을 유지시키는 요인을 다시 배우는 과정을 보조합니다.</p>
+        <div class="meta" style="margin-bottom:12px">
+          <button class="chip-btn active" data-filter="all">전체</button>
+          <button class="chip-btn" data-filter="core">핵심</button>
+          <button class="chip-btn" data-filter="rx">약물</button>
+          <button class="chip-btn" data-filter="safety">감별</button>
+        </div>
+        <div id="knowledgeList"></div>
+        <div class="card ai-card section"><h3>외래 공유 요약</h3><p>앱은 원자료 전체가 아니라 지난 7일 수면효율, 총수면시간, 복약 변화, 위험 신호, 환자가 동의한 걱정 패턴만 요약해 진료와 공유하도록 설계됩니다.</p></div>
+        <button class="card nav-card section" data-go="settings"><div><h3>설정</h3><p class="soft">테마 컬러 · 알림 · 점감 보조 모드</p></div><span class="go">›</span></button>
+        <div class="card notice warn section">웰니스 선행 MVP를 가정합니다. SaMD/MFDS 전환 가능성은 고려하되, 현재 화면은 의료기기 허가를 받은 제품처럼 표현하지 않습니다.</div>
+      </section>
+
+      <!-- ===================== ARTICLE ===================== -->
+      <section class="screen" id="article" data-title="지식">
+        <div class="brand-row"><button class="back-btn" data-go="knowledge">← 지식</button><div class="version" id="articleTime">읽기</div></div>
+        <div class="knowledge-meta"><span class="tag" id="articleTag">기초</span><span class="read-time" id="articleTime2">4분</span></div>
+        <h1 id="articleTitle" style="font-size:25px;margin-bottom:14px">제목</h1>
+        <div class="article-body" id="articleBody"></div>
+        <div class="card notice warn section">이 글은 일반적인 교육 정보이며 개별 의료 상담을 대체하지 않습니다.</div>
+        <button class="cta section" data-go="knowledge">지식 목록으로</button>
+      </section>
+
+      <!-- ===================== SETTINGS ===================== -->
+      <section class="screen" id="settings" data-title="설정">
+        <div class="brand-row"><button class="back-btn" data-go="home">← 홈</button><div class="version">설정</div></div>
+        <h2>설정</h2>
+        <p class="lead">수면·야간 안정감에 맞춘 라벤더 톤을 유지하면서 진료 연결과 알림을 조정합니다.</p>
+
+        <div class="card section">
+          <h3>테마 컬러</h3>
+          <p class="soft" style="margin-bottom:13px">아이보리 배경에 어울리는 저자극 포인트 컬러를 선택합니다.</p>
+          <div class="swatches">
+            <button class="swatch active" style="background:#8e7cc3" data-accent="#8e7cc3" data-light="#e7dff5" data-deep="#5b4b8a" aria-label="라벤더"></button>
+            <button class="swatch" style="background:#a8cc4d" data-accent="#a8cc4d" data-light="#e4f0bc" data-deep="#7ba834" aria-label="라임"></button>
+            <button class="swatch" style="background:#8aab7b" data-accent="#8aab7b" data-light="#dce7d5" data-deep="#5e7e50" aria-label="세이지"></button>
+            <button class="swatch" style="background:#3a6b57" data-accent="#3a6b57" data-light="#c9ddd0" data-deep="#2a4f40" aria-label="포레스트"></button>
+            <button class="swatch" style="background:#7ba8c4" data-accent="#7ba8c4" data-light="#d6e5ee" data-deep="#4a7a98" aria-label="스카이"></button>
+            <button class="swatch" style="background:#c9a875" data-accent="#c9a875" data-light="#eee2cb" data-deep="#8e7448" aria-label="샌드"></button>
+          </div>
+        </div>
+
+        <div class="card section">
+          <div class="set-row"><div class="lbl"><b>Proactive Check-In</b><small>앱이 먼저 수면제한·자극조절·취침 일관성을 부드럽게 확인</small></div><button class="toggle on" data-toggle aria-label="Proactive Check-In"></button></div>
+          <div class="set-row"><div class="lbl"><b>취침 리마인더</b><small>권장 수면창 시작 30분 전 알림</small></div><button class="toggle on" data-toggle aria-label="취침 리마인더"></button></div>
+          <div class="set-row"><div class="lbl"><b>수면제 점감 보조 모드</b><small>점감 일정·복약일 기록. 감량 결정은 진료에서</small></div><button class="toggle" data-toggle aria-label="수면제 점감 보조 모드"></button></div>
+          <div class="set-row"><div class="lbl"><b>외래 공유 요약</b><small>동의한 요약 지표만 진료와 공유</small></div><button class="toggle on" data-toggle aria-label="외래 공유 요약"></button></div>
+        </div>
+
+        <button class="card nav-card section" data-toast="DH Mind Clinic 정신건강의학과 외래와 연결되는 care extension입니다."><div><h3>DH Mind Clinic 진료 연결</h3><p class="soft">정신과 외래 진료의 디지털 확장</p></div><span class="go">›</span></button>
+
+        <div class="card section">
+          <div class="set-row"><div class="lbl"><b>앱 정보</b><small>CBT-I Care 프로토타입</small></div><span class="version">v0.3</span></div>
+        </div>
+
+        <div class="card notice warn section">이 앱은 의료진 상담을 대체하지 않으며, 수면제 완전대체나 치료 보장을 약속하지 않습니다. 우울·불안을 동반한 만성 불면증도 진료와 함께 다룹니다.</div>
+      </section>
+    </div>
+
+    <nav class="bottom-nav" aria-label="하단 탭">
+      <button class="nav-item active" data-go="home" aria-label="홈"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/></svg><span>홈</span></button>
+      <button class="nav-item" data-go="diary" aria-label="일기"><svg viewBox="0 0 24 24"><path d="M6 3.5h12A2 2 0 0 1 20 5.5v15l-4-2-4 2-4-2-4 2v-15a2 2 0 0 1 2-2Z"/><path d="M8 8h8M8 12h8"/></svg><span>일기</span></button>
+      <button class="nav-item" data-go="sessions" aria-label="세션"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>세션</span></button>
+      <button class="nav-item" data-go="progress" aria-label="진도"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="M8 16v-5M12 16V8M16 16v-9"/></svg><span>진도</span></button>
+      <button class="nav-item" data-go="knowledge" aria-label="지식"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22V5.5Z"/><path d="M8 7h8M8 11h7"/></svg><span>지식</span></button>
+    </nav>
+
+    <div class="modal-backdrop" id="modal">
+      <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <h2 id="modal-title">세션</h2>
+        <p id="modalBody">앱은 의료진 상담을 대체하지 않습니다.</p>
+        <ul id="modalList"></ul>
+        <div class="sheet-actions"><button class="link-btn" data-close>닫기</button><button class="cta" data-close>확인</button></div>
+      </div>
+    </div>
+
+    <div class="splash" id="splash" role="button" tabindex="0" aria-label="시작">
+      <svg class="splash-logo" viewBox="0 0 120 120" aria-hidden="true">
+        <rect width="120" height="120" rx="32" fill="#8e7cc3"/>
+        <g fill="#fff" transform="translate(60 64)">
+          <circle cx="-19" cy="-10" r="20"/><circle cx="19" cy="-10" r="20"/><circle cx="0" cy="-28" r="20"/>
+          <rect x="-6" y="-2" width="12" height="36" rx="4"/>
+        </g>
+      </svg>
+      <div class="splash-name">CBT-I Care</div>
+      <div class="splash-sub">DH MIND CLINIC</div>
+      <div class="splash-tap">화면을 탭하여 시작</div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </main>
+
+  <script>
+    const screens=[...document.querySelectorAll('.screen')];
+    const navItems=[...document.querySelectorAll('.nav-item')];
+    const modal=document.getElementById('modal');
+    const toast=document.getElementById('toast');
+    const root=document.documentElement;
+    const tabOf={home:'home',intakeIntro:'home',intake:'home',diary:'diary',sessions:'sessions',progress:'progress',knowledge:'knowledge',article:'knowledge',settings:'knowledge'};
+    const blockedTargets=new Set(['diary','sessions']);
+
+    function hasCrisisBlock(){return answers[2]==='crisis';}
+    function showCrisisBlock(){
+      showToast('위기 신호가 선택되어 CBT-I 자동 진행을 중단합니다. 보호자·진료실·119/응급실·보건소 생명존중사업 연결이 우선입니다.');
+    }
+    function go(id){
+      if(!document.getElementById(id))return;
+      if(hasCrisisBlock()&&blockedTargets.has(id)){showCrisisBlock();id='intake';intakeStep=5;renderIntake();}
+      screens.forEach(s=>s.classList.toggle('active',s.id===id));
+      const tab=tabOf[id];
+      navItems.forEach(n=>n.classList.toggle('active',n.dataset.go===tab));
+      document.querySelector('.screen.active')?.scrollTo({top:0,behavior:'smooth'});
+    }
+    let toastTimer;
+    function showToast(msg){
+      toast.textContent=msg;toast.classList.add('show');
+      clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),2600);
+    }
+
+    /* ---- splash ---- */
+    const splash=document.getElementById('splash');
+    function dismissSplash(){splash.classList.add('hide');setTimeout(()=>splash.style.display='none',520);}
+    splash.addEventListener('click',dismissSplash);
+    splash.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')dismissSplash();});
+    setTimeout(dismissSplash,2200);
+
+    /* ---- session data ---- */
+    const sessionData=[
+      ['수면 이해와 수면일기','수면압과 각성 시스템을 이해하고 수면일기 작성을 습관으로 만듭니다.','약 18분','완료',['수면을 만드는 두 시스템 이해하기','수면일기 입력 항목 익히기','첫 7일 기록 목표 세우기']],
+      ['자극조절','침대를 다시 잠과 연결하고 깨어 있는 시간을 침대 밖으로 분리합니다.','약 16분','진행 중',['졸릴 때만 침대에 눕기','20분 규칙 적용하기','기상 시간 고정하기']],
+      ['수면제한','7일 기록을 바탕으로 수면창을 안전하게 조정하는 원리를 익힙니다.','약 20분','시작 전',['총수면시간 기준 수면창 계산','과도한 졸림·운전 위험 점검','주 단위 조정 규칙']],
+      ['수면위생 재정렬','카페인·빛·운동·낮잠 규칙을 현실적으로 다시 정리합니다.','약 14분','시작 전',['오후 카페인·음주 점검','빛 노출과 기상 루틴','낮잠 규칙 정하기']],
+      ['수면 관련 걱정 다루기','야간 반추를 낮 시간 걱정 기록으로 옮기는 연습을 합니다.','약 15분','시작 전',['걱정 시간 정해두기','반추를 종이로 옮기기','잠자리 전 마음 내려놓기']],
+      ['인지재구조','잠을 방해하는 자동사고를 더 정확한 문장으로 바꿉니다.','약 18분','시작 전',['수면 재앙화 사고 찾기','근거 점검하기','대안 문장 만들기']],
+      ['이완과 재발 방지','복식호흡·점진적 근육이완을 재발 방지 계획에 연결합니다.','약 13분','시작 전',['복식호흡 연습','점진적 근육이완','재발 신호 대응 계획']],
+      ['나만의 수면 유지 계획','외래 진료와 공유할 수 있는 개인 수면 유지 계획을 완성합니다.','약 17분','시작 전',['핵심 규칙 3가지 정리','재발 시 대응 카드','진료 공유 요약 만들기']]
+    ];
+    const modalCopy={
+      stimulus:['오늘의 자극조절 체크','침대는 잠과 휴식 이외 활동에서 분리합니다. 20분 이상 깨어 있으면 침대 밖으로 나와 졸릴 때 다시 눕습니다.',['졸릴 때만 침대에 눕기','깨어 있는 시간은 침대 밖에서','기상 시간은 매일 고정']],
+      restriction:['수면제한 시간 확인','수면제한은 7일 이상 수면일기 기반으로 계산합니다. 과도한 졸림, 운전 위험, 조증 위험이 있으면 보수적으로 조정합니다.',['7일 평균 총수면시간 확인','수면창 초안 만들기','다음 진료에서 함께 점검']],
+      thought:['수면 걱정 기록하기','잠에 대한 재앙화 예측을 기록하고, 다음 세션에서 더 정확한 대안 문장으로 바꿉니다.',['지금 떠오른 걱정 적기','걱정의 근거 살펴보기','대안 문장 메모하기']],
+      breathing:['복식호흡 3분','복식호흡은 각성도를 낮추는 보조 전략입니다. 잠을 억지로 만들기보다 몸의 긴장을 낮추는 목적으로 사용합니다.',['편한 자세로 앉기','4초 들이쉬고 6초 내쉬기','3분간 천천히 반복']]
+    };
+    const knowledgeData=[
+      ['core','기초','CBT-I란 무엇인가','불면을 유지시키는 행동·인지 습관을 다시 배우는 구조화된 프로그램입니다.','4분',
+        ['CBT-I는 잠을 못 자게 만드는 일시적 원인보다, 불면을 계속 유지시키는 행동과 생각의 고리를 다룹니다. 늦게까지 침대에 누워 있기, 낮잠, 잠에 대한 불안 같은 습관이 대표적인 유지 요인입니다.',
+         '8주 동안 수면일기, 자극조절, 수면제한, 인지재구조, 수면위생, 이완을 단계적으로 익힙니다. 이 앱은 그 과정을 외래 진료와 연결해 보조하며, 진료를 대체하지 않습니다.']],
+      ['core','자극조절','침대는 잠자는 곳으로 다시 배우기','깨어 있는 시간을 침대 밖으로 분리하는 자극조절의 핵심 원칙입니다.','5분',
+        ['오래 침대에서 뒤척이면 뇌는 침대를 ‘각성하는 곳’으로 학습합니다. 자극조절은 침대를 다시 잠과 연결하는 연습입니다.',
+         '졸릴 때만 눕고, 20분 넘게 깨어 있으면 침대 밖으로 나와 낮은 조도의 단조로운 활동을 한 뒤 졸음이 올 때 돌아옵니다. 기상 시간은 매일 일정하게 유지합니다.']],
+      ['core','수면제한','수면제한은 왜 졸리게 만드는가','침대 시간을 잠시 줄여 수면압을 회복시키는 원리입니다.','5분',
+        ['침대에 머무는 시간이 실제 수면보다 길면 얕고 끊긴 잠이 이어집니다. 수면제한은 침대 시간을 실제 수면시간에 가깝게 좁혀 수면압을 높입니다.',
+         '초기에 졸림이 늘 수 있어 7일 이상 기록 후 계산하며, 운전 위험이나 조증 위험이 있으면 보수적으로 조정합니다. 시간 설정은 진료와 함께 점검합니다.']],
+      ['core','수면위생','수면위생이 전부가 아닌 이유','기본기는 맞지만 만성 불면에는 행동·인지 처방이 필요합니다.','3분',
+        ['카페인 줄이기, 빛 관리, 규칙적인 기상은 좋은 토대입니다. 하지만 수면위생만으로 만성 불면이 해결되는 경우는 많지 않습니다.',
+         'CBT-I는 수면위생 위에 자극조절·수면제한·인지재구조를 더합니다. 위생은 출발점이지 도착점이 아닙니다.']],
+      ['rx','약물','수면제 점감은 어떻게 접근해야 하나','감량 결정과 속도는 진료에서, 앱은 기록과 확인을 보조합니다.','4분',
+        ['수면제를 갑자기 끊으면 반동성 불면이 올 수 있어, 감량은 진료와 함께 천천히 계획합니다. 이 앱은 수면제를 완전히 대체한다고 말하지 않습니다.',
+         '점감 보조 모드는 복약일, 졸림 신호, 점감 단계를 기록해 외래에서 공유하도록 돕습니다. 감량 속도와 중단 시점은 의료진이 결정합니다.']],
+      ['safety','공존질환','우울·불안과 불면의 악순환','기분 증상과 불면이 서로를 키우는 고리를 이해합니다.','4분',
+        ['불면은 우울·불안을 악화시키고, 우울·불안은 다시 잠을 방해합니다. 이 고리 때문에 한쪽만 다루면 회복이 더딜 수 있습니다.',
+         'CBT-I는 우울·불안을 동반한 만성 불면증에도 활용되며, PHQ-9·GAD-7을 보조 지표로 함께 추적합니다. 증상이 심하면 진료 평가가 우선입니다.']],
+      ['core','비교','CBT-I vs 명상 앱 vs 전자약','접근 방식과 근거 수준, 역할의 차이를 정리합니다.','4분',
+        ['명상 앱은 이완과 마음챙김에 강점이 있지만 불면의 유지 요인을 직접 다루지는 않습니다. 전자약·디지털 치료기기는 허가 절차를 거친 의료기기입니다.',
+         'CBT-I는 불면의 1차 권고 비약물 치료입니다. 이 프로토타입은 웰니스 단계의 care extension이며, 의료기기 허가를 받은 제품으로 표현하지 않습니다.']],
+      ['safety','감별','수면무호흡이 의심되는 경우','코골이·호흡 멈춤·심한 주간졸림은 평가가 먼저입니다.','3분',
+        ['심한 코골이, 자다가 호흡이 멈춘다는 목격, 낮 동안 가눌 수 없는 졸림은 수면무호흡의 신호일 수 있습니다.',
+         '이런 신호가 있으면 행동 처방 전에 수면무호흡 평가가 우선입니다. 앱 단독 사용보다 진료에서 먼저 확인하시기를 권합니다.']],
+      ['core','웨어러블','웨어러블 수면점수는 어떻게 해석할까','점수 하나보다 추세와 낮 시간 기능 회복을 함께 봅니다.','3분',
+        ['웨어러블 수면점수는 참고 정보입니다. 기기마다 측정 방식이 다르고 절대값을 그대로 믿기는 어렵습니다.',
+         '하루 점수에 흔들리기보다 1–2주 추세, 그리고 낮 시간의 피로·집중 같은 기능 회복을 함께 보는 편이 더 유용합니다.']]
+    ];
+
+    /* ---- intake ---- */
+    let intakeStep=0;const answers={};
+    const intakeTitles=['최근 2주 불면 심각도','수면제·수면보조제 사용','우울·불안 동반 여부','수면무호흡 위험 신호','교대근무·불규칙 생활','권장 시작 경로'];
+    const intakeLeads=[
+      '잠들기·유지·이른 기상의 어려움을 전반적으로 떠올려 주세요.',
+      '약물 결정은 앱이 하지 않고 진료 계획 이행을 보조합니다.',
+      '공존 증상이 있으면 불면과 함께 추적합니다.',
+      '행동 처방 전에 먼저 걸러야 할 신호를 확인합니다.',
+      '생활 리듬에 따라 수면창 설정 방식을 조정합니다.',
+      '초기 결과는 임시이며 진료와 7일 기록으로 보정합니다.'
+    ];
+    function renderIntake(){
+      document.getElementById('intakeTitle').textContent=intakeTitles[intakeStep];
+      document.getElementById('intakeLead').textContent=intakeLeads[intakeStep];
+      document.getElementById('intakeCount').textContent=(intakeStep<5?(intakeStep+1)+' / 5':'결과');
+      document.querySelectorAll('.intake-panel').forEach(p=>p.classList.toggle('active',Number(p.dataset.step)===intakeStep));
+      document.querySelectorAll('.step-dot').forEach((d,i)=>d.classList.toggle('on',i<=Math.min(intakeStep,4)));
+      document.getElementById('prevIntake').textContent=intakeStep===0?'평가 소개':'이전';
+      document.getElementById('nextIntake').textContent=intakeStep===5?(hasCrisisBlock()?'안전 안내 확인':'수면일기 시작하기'):'다음';
+      let route='표준 8주 CBT-I · 7일 수면일기 먼저';
+      if(answers[2]==='crisis')route='앱 단독 진행 중지 · 오늘 진료실/보호자/119·응급실/보건소 생명존중사업 도움 우선';
+      else if(answers[3]==='osa')route='수면무호흡 평가 우선 · 수면일기 병행';
+      else{
+        if(answers[1]==='taper')route+=' · 수면제 점감 보조 모드';
+        if(answers[4]==='shift')route+=' · 교대근무 맞춤 수면창';
+        if(answers[2]==='mild')route+=' · PHQ-9·GAD-7 동반 추적';
+      }
+      document.getElementById('routeText').textContent=route;
+      document.getElementById('weekPlan').textContent=answers[2]==='crisis'?'CBT-I 자동 진행 중단. 진료실에 즉시 공유하고, 현재 위험이면 보호자와 함께 119/응급실 또는 보건소 생명존중사업 도움을 먼저 연결합니다.':answers[3]==='osa'?'수면무호흡 평가를 먼저 확인하고 수면일기는 참고자료로만 유지합니다.':'수면일기 작성, 자극조절 규칙 2개, 수면제한은 7일 기록 후 계산';
+    }
+    function renderKnowledge(filter='all'){
+      document.getElementById('knowledgeList').innerHTML=knowledgeData
+        .map((x,i)=>[x,i])
+        .filter(([x])=>filter==='all'||x[0]===filter)
+        .map(([x,i])=>`<button class="knowledge-card" data-article="${i}"><div class="knowledge-meta"><span class="tag">${x[1]}</span><span class="read-time">${x[4]}</span></div><b>${x[2]}</b><p>${x[3]}</p></button>`)
+        .join('');
+    }
+    function openArticle(i){
+      const a=knowledgeData[i];
+      document.getElementById('articleTag').textContent=a[1];
+      document.getElementById('articleTime').textContent=a[4];
+      document.getElementById('articleTime2').textContent=a[4];
+      document.getElementById('articleTitle').textContent=a[2];
+      document.getElementById('articleBody').innerHTML=a[5].map(p=>`<p>${p}</p>`).join('');
+      go('article');
+    }
+    document.getElementById('sessionList').innerHTML=sessionData.map(([title,goal,time,status],i)=>{
+      const cls=status==='완료'?'done':status==='진행 중'?'':'todo';
+      return `<button class="card session-card section" data-session="${i}"><div class="session-top"><div><div class="week">WEEK ${i+1}</div><h3>${title}</h3></div><span class="status-chip ${cls}">${status}</span></div><p>${goal}</p><div class="meta"><span class="tag">예상 ${time}</span><span class="tag">탭하여 자세히</span></div></button>`;
+    }).join('');
+    renderKnowledge();renderIntake();
+
+    /* ---- diary recalc ---- */
+    function mm(t){const[h,m]=t.split(':').map(Number);return h*60+m;}
+    function diff(a,b){let d=mm(b)-mm(a);if(d<0)d+=1440;return d;}
+    function fmt(min){min=Math.max(0,Math.round(min));return Math.floor(min/60)+'h '+String(min%60).padStart(2,'0')+'m';}
+    let lastDiaryStats={tib:0,sol:0,waso:0,tst:0,se:0,nap:0,caf:'none',med:'no',quality:5};
+    function updateClinicSummary(){
+      const summary=document.getElementById('clinicSummary');
+      if(!summary)return;
+      const s=lastDiaryStats;
+      const risks=[];
+      if(answers[2]==='crisis')risks.push('위기 신호: CBT-I 자동 진행 중단, 119/응급실/보호자/보건소 생명존중사업 우선');
+      if(answers[3]==='osa')risks.push('수면무호흡 위험: 평가 우선');
+      if(s.med==='taper')risks.push('수면제 감량 중: 감량 속도/중단은 진료에서만 결정');
+      if(s.se<75)risks.push('수면효율 저하: 7일 평균 확인 필요');
+      summary.textContent=[
+        'CBT-I Care 외래 공유 요약',
+        `- 오늘 TIB ${fmt(s.tib)} / TST ${fmt(s.tst)} / SOL ${fmt(s.sol)} / WASO ${s.waso}분 / SE ${s.se}%`,
+        `- 주관적 수면 질 ${s.quality}/10, 낮잠 ${s.nap?String(s.nap)+'분':'없음'}, 복약 ${s.med==='yes'?'복용':s.med==='taper'?'감량 중':'없음'}`,
+        `- 권장: ${s.se>=85?'현재 수면창 유지 후보':s.se>=75?'수면창 조정 후보':'관찰 및 원자료 누적'}`,
+        `- 안전 플래그: ${risks.length?risks.join(' / '):'현재 선택된 고위험 플래그 없음'}`,
+        '- 주의: 수면제 조정과 수면제한 처방은 앱이 결정하지 않고 진료에서 확정'
+      ].join('\n');
+    }
+    function recalcDiary(){
+      const tib=diff(bedTime.value,outTime.value);
+      const sol=diff(lightsOff.value,sleepOnset.value);
+      const waso=Number(document.getElementById('waso').value||0);
+      const nap=Number(document.getElementById('nap').value||0);
+      const caf=document.getElementById('caf').value;
+      const med=document.getElementById('med').value;
+      const quality=Number(document.getElementById('quality').value||0);
+      const tst=Math.max(0,tib-sol-waso);
+      const se=tib>0?Math.round(tst/tib*100):0;
+      lastDiaryStats={tib,sol,waso,nap,caf,med,quality,tst,se};
+      document.getElementById('tib').textContent=fmt(tib);
+      document.getElementById('tst').textContent=fmt(tst);
+      document.getElementById('se').textContent=se+'%';
+      document.getElementById('diaryFlag').textContent=se>=85?'유지':se>=75?'조정 후보':'관찰';
+      const warnings=[];
+      if(tib>16*60)warnings.push('총 침대 시간이 16시간을 넘습니다. 시간 입력을 확인하세요.');
+      if(sol>6*60)warnings.push('잠들기까지 시간이 6시간을 넘습니다. 불 끈 시간/잠든 시간 입력을 확인하세요.');
+      if(waso>tib)warnings.push('깨어 있던 시간이 총 침대 시간보다 깁니다. WASO 값을 확인하세요.');
+      if(tst===0)warnings.push('추정 총수면이 0입니다. 입력값 또는 당일 특이 상황을 진료에서 확인하세요.');
+      const validation=document.getElementById('diaryValidation');
+      validation.textContent=(warnings.length?warnings.join(' '):'계산식: 총침대시간(TIB)=취침–침대에서 나온 시간, 총수면시간(TST)=TIB-SOL-WASO, 수면효율(SE)=TST/TIB.')+' 수면제 감량 속도와 중단 시점은 진료에서만 결정합니다.';
+      validation.classList.toggle('danger',warnings.length>0);
+      let hint;
+      if(caf!=='none')hint='오후 카페인이나 음주는 잠을 얕게 만들 수 있습니다. 카페인은 이른 오후까지로 제한하고 잠들기 전 음주는 피합니다.';
+      else if(nap>20)hint='낮잠이 길면 밤의 수면압이 낮아질 수 있습니다. 오늘은 낮잠을 줄이고 기상 시간을 고정합니다.';
+      else if(se<80)hint='수면효율이 낮은 날은 침대에 머문 시간을 줄이는 전략이 도움이 될 수 있습니다. 정확한 제한 시간은 7일 기록 후 계산합니다.';
+      else hint='현재 패턴을 유지하면서 기상 시간을 일정하게 고정합니다.';
+      document.getElementById('diaryHint').textContent=hint;
+      updateClinicSummary();
+    }
+    document.getElementById('quality').addEventListener('input',e=>{document.getElementById('qualityVal').textContent=e.target.value;});
+    document.addEventListener('input',e=>{if(e.target.closest('#diary'))recalcDiary();});
+    recalcDiary();
+
+    /* ---- global click ---- */
+    document.addEventListener('click',e=>{
+      const goEl=e.target.closest('[data-go]');
+      if(goEl){
+        if(goEl.dataset.startStep!=null){intakeStep=Number(goEl.dataset.startStep)||0;renderIntake();}
+        go(goEl.dataset.go);return;
+      }
+
+      const art=e.target.closest('[data-article]');
+      if(art){openArticle(Number(art.dataset.article));return;}
+
+      const ses=e.target.closest('[data-session]');
+      if(ses){
+        if(hasCrisisBlock()){showCrisisBlock();return;}
+        const[title,goal,time,status,steps]=sessionData[Number(ses.dataset.session)];
+        document.getElementById('modal-title').textContent='WEEK '+(Number(ses.dataset.session)+1)+' · '+title;
+        document.getElementById('modalBody').textContent=goal+' (상태: '+status+', '+time+')';
+        document.getElementById('modalList').innerHTML=steps.map(s=>`<li>${s}</li>`).join('');
+        modal.classList.add('show');return;
+      }
+
+      const md=e.target.closest('[data-modal]');
+      if(md){
+        if(hasCrisisBlock()){showCrisisBlock();return;}
+        const[t,body,steps]=modalCopy[md.dataset.modal];
+        document.getElementById('modal-title').textContent=t;
+        document.getElementById('modalBody').textContent=body;
+        document.getElementById('modalList').innerHTML=steps.map(s=>`<li>${s}</li>`).join('');
+        modal.classList.add('show');return;
+      }
+
+      if(e.target.closest('[data-close]')||e.target===modal){modal.classList.remove('show');}
+
+      const tst=e.target.closest('[data-toast]');
+      if(tst){showToast(tst.dataset.toast);}
+
+      if(e.target.closest('[data-checkin]')){showToast('오늘 체크인이 기록되었습니다. 잘 하고 계세요.');}
+
+      const filter=e.target.closest('[data-filter]');
+      if(filter){
+        document.querySelectorAll('[data-filter]').forEach(b=>b.classList.toggle('active',b===filter));
+        renderKnowledge(filter.dataset.filter);
+      }
+
+      const tg=e.target.closest('[data-toggle]');
+      if(tg){tg.classList.toggle('on');}
+
+      const cp=e.target.closest('[data-copy-summary]');
+      if(cp){
+        const text=document.getElementById('clinicSummary')?.textContent||'';
+        navigator.clipboard?.writeText(text);
+        showToast('진료용 요약을 복사했습니다.');
+      }
+
+      const sw=e.target.closest('[data-accent]');
+      if(sw){
+        root.style.setProperty('--accent',sw.dataset.accent);
+        root.style.setProperty('--accent-light',sw.dataset.light);
+        root.style.setProperty('--soft',sw.dataset.light);
+        root.style.setProperty('--accent-deep',sw.dataset.deep);
+        document.querySelector('meta[name=theme-color]').setAttribute('content',sw.dataset.accent);
+        document.querySelectorAll('.swatch').forEach(s=>s.classList.toggle('active',s===sw));
+      }
+
+      const choice=e.target.closest('.choice');
+      if(choice){
+        const panel=choice.closest('.intake-panel');
+        answers[Number(panel.dataset.step)]=choice.dataset.choice;
+        panel.querySelectorAll('.choice').forEach(c=>c.classList.toggle('selected',c===choice));
+        renderIntake();updateClinicSummary();
+      }
+    });
+
+    document.getElementById('nextIntake').addEventListener('click',()=>{
+      if(intakeStep<5){intakeStep++;renderIntake();}
+      else if(hasCrisisBlock()){showCrisisBlock();go('home');}
+      else go('diary');
+    });
+    document.getElementById('prevIntake').addEventListener('click',()=>{
+      if(intakeStep===0)go('intakeIntro');
+      else{intakeStep--;renderIntake();}
+    });
+  </script>
+</body>
+</html>

@@ -16,6 +16,43 @@ const STATUS_LABEL = {
   error: '오류',
 };
 
+function getConnectionIssue({ settings, users, myId, host, status, lastClose }) {
+  const sharedKey = settings?.auth?.shared_key || '';
+  if (!sharedKey) {
+    return {
+      level: 'error',
+      title: 'shared key 미설정',
+      body: '4대 PC의 settings.yaml auth.shared_key에 같은 키를 넣어야 연결됩니다. 이 값은 비워둔 상태로 배포하고, 현장에서 1회 설정합니다.',
+      action: '서버 PC에서 npm run key 실행 → 생성된 키를 모든 PC settings.yaml에 동일 입력',
+    };
+  }
+  if (!users.some((u) => u.id === myId)) {
+    return {
+      level: 'error',
+      title: '내 user id가 users.yaml에 없음',
+      body: `${myId} 계정이 users.yaml에 등록되어 있지 않아 인증이 실패합니다.`,
+      action: 'settings.yaml의 me 값과 users.yaml의 id 목록을 맞추세요.',
+    };
+  }
+  if (lastClose?.code === 4001) {
+    return {
+      level: 'error',
+      title: '인증 실패',
+      body: lastClose.reason === 'no shared key' ? '서버 PC의 shared key가 비어 있습니다.' : 'shared key가 서로 다르거나 user id가 서버 허용 목록에 없습니다.',
+      action: '서버/클라이언트 settings.yaml의 auth.shared_key와 me 값을 확인하세요.',
+    };
+  }
+  if (status === 'closed' || status === 'error') {
+    return {
+      level: 'warn',
+      title: '서버 연결 실패',
+      body: `서버 ${host}에 연결하지 못했습니다. 서버 PC에서 DH Talk이 실행 중인지, 같은 LAN인지, 방화벽이 ws 포트를 막지 않는지 확인하세요.`,
+      action: '서버 PC 실행 → 같은 네트워크 확인 → Windows 방화벽 허용 → 진단 버튼 확인',
+    };
+  }
+  return null;
+}
+
 export default function App() {
   const [appInfo, setAppInfo] = useState(null);
   const [me, setMe] = useState('');
@@ -27,6 +64,7 @@ export default function App() {
   const [status, setStatus] = useState('connecting');
   const [lastReceivedAt, setLastReceivedAt] = useState(null);
   const [lastClose, setLastClose] = useState(null);
+  const [connectionIssue, setConnectionIssue] = useState(null);
   const [diag, setDiag] = useState(null);
   const [pendingMacro, setPendingMacro] = useState(null);
   const [promptName, setPromptName] = useState('');
@@ -49,6 +87,8 @@ export default function App() {
       const role = meUser?.role || 'desk';
       const host = meUser?.is_server ? '127.0.0.1' : settings.server?.host || '127.0.0.1';
       const sharedKey = settings.auth?.shared_key || '';
+      const initialIssue = getConnectionIssue({ settings, users, myId, host, status: 'connecting', lastClose: null });
+      setConnectionIssue(initialIssue);
 
       setAppInfo(info);
       setMe(myId);
@@ -57,6 +97,10 @@ export default function App() {
       setPatients(await window.dhtalk.listPatients());
       setMessages(await window.dhtalk.getRecentMessages());
       if (cancelled) return;
+      if (initialIssue?.title === 'shared key 미설정' || initialIssue?.title === '내 user id가 users.yaml에 없음') {
+        setStatus('error');
+        return;
+      }
 
       ws = new WebSocket(`ws://${host}:${info.wsPort}`);
       wsRef.current = ws;
@@ -65,10 +109,17 @@ export default function App() {
       ws.onopen = () => !cancelled && setStatus('connecting');
       ws.onclose = (ev) => {
         if (cancelled) return;
-        setLastClose({ code: ev.code, reason: ev.reason || 'reason 없음', at: Date.now() });
-        setStatus(ev.code === 4001 ? 'error' : 'closed');
+        const closeInfo = { code: ev.code, reason: ev.reason || 'reason 없음', at: Date.now() };
+        setLastClose(closeInfo);
+        const nextStatus = ev.code === 4001 ? 'error' : 'closed';
+        setStatus(nextStatus);
+        setConnectionIssue(getConnectionIssue({ settings, users, myId, host, status: nextStatus, lastClose: closeInfo }));
       };
-      ws.onerror = () => !cancelled && setStatus('error');
+      ws.onerror = () => {
+        if (cancelled) return;
+        setStatus('error');
+        setConnectionIssue(getConnectionIssue({ settings, users, myId, host, status: 'error', lastClose: null }));
+      };
       ws.onmessage = (ev) => {
         if (cancelled) return;
         let msg;
@@ -83,6 +134,7 @@ export default function App() {
           });
         } else if (msg.kind === 'authorized') {
           setStatus('open');
+          setConnectionIssue(null);
         } else if (msg.kind === 'message') {
           setMessages((prev) => [...prev, msg]);
           setLastReceivedAt(Date.now());
@@ -251,6 +303,13 @@ export default function App() {
       </header>
 
       <FileDropZone onFiles={onDropFiles}>
+        {connectionIssue && (
+          <section className={`connection-banner connection-banner--${connectionIssue.level}`}>
+            <strong>{connectionIssue.title}</strong>
+            <span>{connectionIssue.body}</span>
+            <code>{connectionIssue.action}</code>
+          </section>
+        )}
         <main className="app__main">
           <PatientQueue
             patients={patients}
