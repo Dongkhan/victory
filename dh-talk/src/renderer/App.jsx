@@ -26,6 +26,8 @@ export default function App() {
   const [searchResults, setSearchResults] = useState(null); // null = 검색 안 함
   const [status, setStatus] = useState('connecting');
   const [lastReceivedAt, setLastReceivedAt] = useState(null);
+  const [lastClose, setLastClose] = useState(null);
+  const [sharedKeySet, setSharedKeySet] = useState(true);
   const [diag, setDiag] = useState(null);
   const [pendingMacro, setPendingMacro] = useState(null);
   const [promptName, setPromptName] = useState('');
@@ -52,17 +54,29 @@ export default function App() {
       setAppInfo(info);
       setMe(myId);
       setMyRole(role);
+      setSharedKeySet(!!sharedKey);
       setMacros(await window.dhtalk.getMacros());
       setPatients(await window.dhtalk.listPatients());
       setMessages(await window.dhtalk.getRecentMessages());
       if (cancelled) return;
+
+      if (!sharedKey) {
+        // 인증 키 미설정 — 연결 시도하지 않고 진단 패널에서 원인 확인하도록 한다
+        console.error('[ws] auth.shared_key 미설정 — 연결을 시도하지 않습니다.');
+        setStatus('error');
+        return;
+      }
 
       ws = new WebSocket(`ws://${host}:${info.wsPort}`);
       wsRef.current = ws;
 
       // 인증 핸드셰이크: 서버 challenge → HMAC 응답 → authorized 후 'open'
       ws.onopen = () => !cancelled && setStatus('connecting');
-      ws.onclose = (ev) => !cancelled && setStatus(ev.code === 4001 ? 'error' : 'closed');
+      ws.onclose = (ev) => {
+        if (cancelled) return;
+        setLastClose({ code: ev.code, reason: ev.reason });
+        setStatus(ev.code === 4001 ? 'error' : 'closed');
+      };
       ws.onerror = () => !cancelled && setStatus('error');
       ws.onmessage = (ev) => {
         if (cancelled) return;
@@ -311,6 +325,8 @@ export default function App() {
           diag={diag}
           status={status}
           lastReceivedAt={lastReceivedAt}
+          lastClose={lastClose}
+          sharedKeySet={sharedKeySet}
           me={me}
           myRole={myRole}
           onClose={() => setDiag(null)}

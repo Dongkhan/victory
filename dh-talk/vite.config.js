@@ -14,6 +14,8 @@ export default defineConfig({
   server: {
     port: 5173,
     strictPort: true,
+    // src/shared (root 밖) 의 모듈을 dev 서버가 제공할 수 있도록 허용
+    fs: { allow: [dir] },
   },
   build: {
     outDir: '../../dist/renderer',

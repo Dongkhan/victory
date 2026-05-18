@@ -1,20 +1,37 @@
-// 운영 진단 패널 (개선분석 9순위) — 데스크가 연결/경로 문제를 스스로 파악.
+// 운영 진단 패널 (개선분석 9순위, 2차 4순위) — 데스크가 연결/인증 문제를 스스로 파악.
 
 const STATUS_LABEL = {
   connecting: '연결 중',
-  open: '연결됨',
+  open: '연결됨 (인증 완료)',
   closed: '연결 끊김',
   error: '오류',
 };
 
 const fmt = (ts) => (ts ? new Date(ts).toLocaleString('ko-KR') : '—');
 
-export default function DiagnosticsPanel({ diag, status, lastReceivedAt, me, myRole, onClose }) {
+function closeText(lc) {
+  if (!lc) return '—';
+  const reason = lc.code === 4001 ? '인증 실패' : lc.reason || '';
+  return reason ? `${lc.code} · ${reason}` : String(lc.code);
+}
+
+export default function DiagnosticsPanel({
+  diag,
+  status,
+  lastReceivedAt,
+  lastClose,
+  sharedKeySet,
+  me,
+  myRole,
+  onClose,
+}) {
   const rows = [
     ['이 PC', `${me} / ${myRole}`],
     ['역할', diag.isServer ? '서버 (메시지 허브 호스팅)' : '클라이언트'],
     ['서버 주소', `${diag.isServer ? '127.0.0.1 (자체)' : diag.serverHost ?? '?'} : ${diag.wsPort}`],
     ['연결 상태', STATUS_LABEL[status] ?? status],
+    ['인증 키', sharedKeySet ? '설정됨' : '미설정 — settings.yaml auth.shared_key 입력 필요'],
+    ['마지막 연결 종료', closeText(lastClose)],
     ['마지막 메시지 수신', fmt(lastReceivedAt)],
     ['DB 경로', diag.dbPath],
     ['첨부 폴더', diag.attachmentsDir],

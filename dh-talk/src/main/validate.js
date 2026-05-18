@@ -1,3 +1,5 @@
+import { MAX_FILE_B64 } from '../shared/limits.js';
+
 // 수신 메시지 스키마 검증 (개선분석 8순위).
 // 인증된 클라이언트라도 잘못된/위험한 페이로드는 거부한다.
 
@@ -13,8 +15,6 @@ const BLOCKED_EXT = new Set([
 
 const MAX_BODY = 4000;
 const MAX_FILENAME = 255;
-// 5MB 파일의 base64 길이 상한 (+여유)
-const MAX_FILE_B64 = Math.ceil((5 * 1024 * 1024 * 4) / 3) + 16;
 
 export function validateInbound(msg) {
   if (!msg || typeof msg !== 'object') return { ok: false, reason: '형식 오류' };

@@ -3,10 +3,11 @@
 # 이 PC 의 사용자 id. users.yaml 의 id 중 하나로, 설치 PC 마다 수정한다.
 me: desk1
 
-# WebSocket 인증 — 4대 PC 모두 동일한 값이어야 한다.
-# !!! 배포 전 반드시 길고 무작위한 문자열로 변경할 것 !!!
+# WebSocket 인증 키 — 4대 PC 모두 동일한 값이어야 한다.
+# 비워두면 모든 연결이 거부된다.
+# `node scripts/generate-shared-key.js` 로 키를 만들어 4대 PC 에 동일 입력.
 auth:
-  shared_key: "dhtalk-lan-secret-CHANGE-BEFORE-DEPLOY"
+  shared_key: ""
 
 server:
   host: "192.168.0.10"   # 데스크1 PC 의 LAN IP (실제 값으로 수정)

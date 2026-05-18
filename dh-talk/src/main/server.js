@@ -5,12 +5,11 @@ import { insertMessage, acknowledgeMessage } from './db.js';
 import { mirror } from './hermes-mirror.js';
 import { makeNonce, verifyHmac } from './auth.js';
 import { validateInbound } from './validate.js';
+import { WS_MAX_PAYLOAD } from '../shared/limits.js';
 
 // 메시지 허브 — 데스크1 PC 에서만 기동된다 (CLAUDE.md §4).
 // 접속 시 shared secret HMAC 챌린지로 인증한다. 인증 전에는 어떤 메시지도 받지 않으며,
 // 인증 후 sender 는 항상 인증된 userId 로 강제한다 (위장 방지, 개선분석 1·7순위).
-
-const MAX_PAYLOAD = 16 * 1024 * 1024;
 
 let wss = null;
 let attachmentsDir = null;
@@ -19,7 +18,11 @@ let getSecurity = () => ({ sharedKey: '', userIds: [] });
 export function startServer(port, options = {}) {
   attachmentsDir = options.attachmentsDir ?? null;
   getSecurity = options.getSecurity ?? getSecurity;
-  wss = new WebSocketServer({ port, maxPayload: MAX_PAYLOAD });
+
+  if (!getSecurity().sharedKey) {
+    console.error('[server] 경고: auth.shared_key 가 비어 있어 모든 연결이 거부됩니다.');
+  }
+  wss = new WebSocketServer({ port, maxPayload: WS_MAX_PAYLOAD });
 
   wss.on('listening', () => {
     console.log(`[server] 메시지 허브 시작: ws://0.0.0.0:${port}`);

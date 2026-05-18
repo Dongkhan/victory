@@ -20,13 +20,25 @@ PHI 외부 유출)를 해결하기 위한 1인 클리닉 전용 도구다. 자�
 
 ## 개발
 
+요구 환경: **Node.js 20 이상**. (Electron 35 기준 — `npm install` 시 `better-sqlite3`
+가 Electron ABI 로 자동 재빌드된다.)
+
 ```bash
 npm install
 npm run dev      # Vite dev 서버 + Electron 동시 기동
 ```
 
-`npm run dev` 실행 시 창이 뜨고, echo 입력창에 메시지를 보내면 main process의
-WebSocket 서버가 그대로 되돌려준다.
+## 인증 키 설정 (필수)
+
+WebSocket 통신은 shared secret HMAC 인증을 거친다. `config/settings.yaml` 의
+`auth.shared_key` 가 비어 있으면 모든 연결이 거부된다.
+
+```bash
+npm run key      # 무작위 키 생성
+```
+
+생성된 키를 **4대 PC(데스크1/2/3/원장) 모두**의 `config/settings.yaml`
+`auth.shared_key` 에 동일하게 입력한다.
 
 ## 스크립트
 
@@ -35,6 +47,8 @@ WebSocket 서버가 그대로 되돌려준다.
 | `npm run dev` | 개발 모드 (Vite + Electron) |
 | `npm run build` | renderer 빌드 (`dist/renderer`) |
 | `npm run build:win` | Windows 설치본(.exe) 빌드 |
+| `npm test` | 인증·검증·파서·매크로 순수 로직 테스트 |
+| `npm run key` | WebSocket 인증 키 생성 |
 | `npm start` | 빌드된 renderer로 Electron 실행 |
 
 ## 폴더 구조
