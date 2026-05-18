@@ -24,5 +24,6 @@ Day 7(Windows 빌드/설치) 작업 시 채워 나간다.
 
 - [ ] 설치 폴더의 `resources/` 안에 `.env` 생성, `DHTALK_API_KEY` 설정
       (Hermes VPS 와 동일 값. dev 환경은 프로젝트 루트의 `.env`)
-- [ ] Hermes VPS 에 `/dhtalk/relay` 엔드포인트 추가됐는지 확인 (CLAUDE.md §12)
+- [ ] `.env`에 `HERMES_URL=https://...` 명시. 환자 정보 보호를 위해 HTTP URL은 거부되고, 미설정 시 미러링은 비활성화된다.
+- [ ] Hermes VPS 에 HTTPS `/dhtalk/relay` 엔드포인트 추가됐는지 확인 (CLAUDE.md §12)
 - [ ] `mirror_to: ["telegram"]` 매크로 전송 → 텔레그램 알림 수신 확인

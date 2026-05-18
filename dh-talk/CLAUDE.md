@@ -320,16 +320,16 @@ waiting ─(advance_queue 액션)─→ current ─(다음 advance)─→ done
 
 ```javascript
 // src/main/hermes-mirror.js
-import fetch from 'node-fetch';
-
-const HERMES_URL = process.env.HERMES_URL || 'http://76.13.179.163:8090';
+// 실제 구현은 HERMES_URL 명시 설정 + HTTPS만 허용한다. HTTP 기본 URL은 환자 정보 보호상 금지.
 const API_KEY = process.env.DHTALK_API_KEY;
+const HERMES_URL = process.env.HERMES_URL; // 예: https://hermes.example.com
 
 export async function mirror(message) {
   if (!message.mirror_to?.includes('telegram')) return;
+  if (!API_KEY || !HERMES_URL || !HERMES_URL.startsWith('https://')) return;
 
   try {
-    await fetch(`${HERMES_URL}/dhtalk/relay`, {
+    await fetch(`${HERMES_URL.replace(/\/$/, '')}/dhtalk/relay`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

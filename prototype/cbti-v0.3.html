@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#8e7cc3">
   <meta name="description" content="DH Mind Clinic CBT-I Care — 라벤더 테마 수면일기 기반 8주 CBT-I care extension prototype v0.3">
   <title>CBT-I Care v0.3 — DH Mind Clinic</title>
@@ -90,6 +90,8 @@
     .notice{font-size:12px;line-height:1.6}
     .notice.warn{background:var(--warn-bg);border-color:rgba(156,138,77,.26);color:#6e5f2f}
     .notice.danger{background:var(--danger-bg);border-color:rgba(199,90,77,.26);color:#8e3d33}
+    .safety-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .safety-link{display:grid;place-items:center;min-height:42px;border-radius:999px;background:#fff;color:#8e3d33;border:1px solid rgba(199,90,77,.28);font-weight:900;text-decoration:none}
     .summary-box{white-space:pre-wrap;background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:18px;padding:13px;font-size:12px;line-height:1.62;color:var(--ink);margin-top:10px}
     .blocked-note{border-color:rgba(199,90,77,.34);background:#fff7f5;color:#8e3d33}
     /* route cards */
@@ -252,6 +254,15 @@
           </div>
         </div>
 
+        <div class="card notice danger section hidden" id="homeCrisisBanner">
+          <h3>위기 신호가 선택됨</h3>
+          <p>CBT-I 자동 진행보다 즉시 안전 연결이 우선입니다. 혼자 앱을 계속 진행하지 말고 보호자, 진료실, 119/응급실, 보건소 생명존중사업 중 바로 가능한 도움을 선택합니다.</p>
+          <div class="safety-actions">
+            <a class="safety-link" href="tel:119">119 전화</a>
+            <button class="safety-link" data-toast="진료실 또는 보호자에게 현재 위험 신호를 바로 공유하세요.">보호자·진료실 연결</button>
+          </div>
+        </div>
+
         <div class="card banner section">
           <div class="banner-icon">오늘</div>
           <div><h3>오늘 우선순위</h3><p>어제 수면효율 74%. 졸릴 때만 침대에 눕고, 20분 넘게 깨어 있으면 침대 밖으로 나와 졸음을 기다립니다.</p></div>
@@ -365,19 +376,19 @@
         <h2>수면창 계산의 원자료</h2>
         <p class="lead">수면제한은 최소 1주 기록 후 안전하게 계산합니다. 아래 값은 입력 즉시 재계산됩니다.</p>
         <div class="card form-grid">
-          <div class="field"><label>오늘 날짜</label><input id="diaryDate" type="date"></div>
-          <div class="field"><label>취침 시간</label><input id="bedTime" type="time" value="23:30"></div>
-          <div class="field"><label>불 끈 시간</label><input id="lightsOff" type="time" value="00:10"></div>
-          <div class="field"><label>잠든 시간 추정</label><input id="sleepOnset" type="time" value="00:45"></div>
-          <div class="field"><label>한밤중 깬 횟수</label><input id="wakeCount" type="number" min="0" value="2"></div>
-          <div class="field"><label>깨어 있던 총 시간(분)</label><input id="waso" type="number" min="0" value="45"></div>
-          <div class="field"><label>최종 기상 시간</label><input id="wakeTime" type="time" value="06:40"></div>
-          <div class="field"><label>침대에서 나온 시간</label><input id="outTime" type="time" value="07:05"></div>
-          <div class="field"><label>낮잠</label><select id="nap"><option value="0">없음</option><option value="20">20분 이하</option><option value="45">20분 초과</option></select></div>
-          <div class="field"><label>카페인 / 음주</label><select id="caf"><option value="none">없음</option><option value="caf">오후 카페인</option><option value="alc">음주</option><option value="both">둘 다</option></select></div>
-          <div class="field"><label>수면제 복용</label><select id="med"><option value="no">복용하지 않음</option><option value="yes">복용</option><option value="taper">감량 중</option></select></div>
-          <div class="field wide"><label>주관적 수면 질 (0–10)</label><div class="range-row"><input id="quality" type="range" min="0" max="10" value="5"><span class="range-val" id="qualityVal">5</span></div></div>
-          <div class="field wide"><label>걱정 / 반추 메모</label><textarea placeholder="예: 내일 일정 때문에 잠을 못 잘 것 같다는 생각이 반복됨"></textarea></div>
+          <div class="field"><label for="diaryDate">오늘 날짜</label><input id="diaryDate" type="date"></div>
+          <div class="field"><label for="bedTime">취침 시간</label><input id="bedTime" type="time" value="23:30"></div>
+          <div class="field"><label for="lightsOff">불 끈 시간</label><input id="lightsOff" type="time" value="00:10"></div>
+          <div class="field"><label for="sleepOnset">잠든 시간 추정</label><input id="sleepOnset" type="time" value="00:45"></div>
+          <div class="field"><label for="wakeCount">한밤중 깬 횟수</label><input id="wakeCount" type="number" min="0" value="2"></div>
+          <div class="field"><label for="waso">깨어 있던 총 시간(분)</label><input id="waso" type="number" min="0" value="45"></div>
+          <div class="field"><label for="wakeTime">최종 기상 시간</label><input id="wakeTime" type="time" value="06:40"></div>
+          <div class="field"><label for="outTime">침대에서 나온 시간</label><input id="outTime" type="time" value="07:05"></div>
+          <div class="field"><label for="nap">낮잠</label><select id="nap"><option value="0">없음</option><option value="20">20분 이하</option><option value="45">20분 초과</option></select></div>
+          <div class="field"><label for="caf">카페인 / 음주</label><select id="caf"><option value="none">없음</option><option value="caf">오후 카페인</option><option value="alc">음주</option><option value="both">둘 다</option></select></div>
+          <div class="field"><label for="med">수면제 복용</label><select id="med"><option value="no">복용하지 않음</option><option value="yes">복용</option><option value="taper">감량 중</option></select></div>
+          <div class="field wide"><label for="quality">주관적 수면 질 (0–10)</label><div class="range-row"><input id="quality" type="range" min="0" max="10" value="5"><span class="range-val" id="qualityVal">5</span></div></div>
+          <div class="field wide"><label for="worryMemo">걱정 / 반추 메모</label><textarea id="worryMemo" placeholder="예: 내일 일정 때문에 잠을 못 잘 것 같다는 생각이 반복됨"></textarea></div>
         </div>
         <div class="mini-grid section">
           <div class="metric"><span>총 침대 시간</span><strong id="tib">7h 35m</strong><em>취침–침대에서 나온 시간</em></div>
@@ -574,6 +585,7 @@
         n.setAttribute('aria-disabled',blocked?'true':'false');
       });
       document.getElementById('crisisPanel')?.classList.toggle('hidden',!hasCrisisBlock());
+      document.getElementById('homeCrisisBanner')?.classList.toggle('hidden',!hasCrisisBlock());
     }
     function go(id){
       if(!document.getElementById(id))return;
@@ -751,7 +763,8 @@
       validation.textContent=(warnings.length?warnings.join(' '):'계산식: 총침대시간(TIB)=취침–침대에서 나온 시간, 총수면시간(TST)=TIB-SOL-WASO, 수면효율(SE)=TST/TIB.')+' 수면제 감량 속도와 중단 시점은 진료에서만 결정합니다.';
       validation.classList.toggle('danger',warnings.length>0);
       let hint;
-      if(caf!=='none')hint='오후 카페인이나 음주는 잠을 얕게 만들 수 있습니다. 카페인은 이른 오후까지로 제한하고 잠들기 전 음주는 피합니다.';
+      if(hasOsaCaution())hint='수면무호흡 위험 신호가 있으면 수면제한이나 침대 시간 축소보다 진료 평가가 우선입니다. 오늘 수면일기는 평가를 위한 참고자료로만 기록합니다.';
+      else if(caf!=='none')hint='오후 카페인이나 음주는 잠을 얕게 만들 수 있습니다. 카페인은 이른 오후까지로 제한하고 잠들기 전 음주는 피합니다.';
       else if(nap>20)hint='낮잠이 길면 밤의 수면압이 낮아질 수 있습니다. 오늘은 낮잠을 줄이고 기상 시간을 고정합니다.';
       else if(se<80)hint='수면효율이 낮은 날은 침대에 머문 시간을 줄이는 전략이 도움이 될 수 있습니다. 정확한 제한 시간은 7일 기록 후 계산합니다.';
       else hint='현재 패턴을 유지하면서 기상 시간을 일정하게 고정합니다.';

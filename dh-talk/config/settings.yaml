@@ -19,6 +19,7 @@ alert:
 
 hermes:
   enabled: false
-  url: "http://76.13.179.163:8090"
+  # Telegram 미러링을 명시적으로 사용할 때만 HTTPS URL을 입력한다. HTTP는 거부된다.
+  url: ""
 
 retention_days: 30
