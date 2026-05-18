@@ -6,6 +6,12 @@
 
 제품 가칭은 계속 **ActivaCare**로 둔다.
 
+## 바로 보기
+
+- 프로젝트 페이지: [`behavioral-activation-dtx/index.html`](./index.html)
+- 프로토타입 v0.1: [`behavioral-activation-dtx/prototype/index.html`](./prototype/)
+- 버전 고정 파일: [`behavioral-activation-dtx/prototype/v0.1.html`](./prototype/v0.1.html)
+
 ---
 
 ## 1. 한 줄 정의

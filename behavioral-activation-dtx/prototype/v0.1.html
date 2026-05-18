@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#7ea66a">
+  <meta name="description" content="ActivaCare v0.1 — 행동활성화 기반 삶 회복 앱 프로토타입">
+  <title>ActivaCare v0.1 — DH Mind Clinic</title>
+  <style>
+    :root{
+      --ivory:#f7f2e8;--phone-bg:#ece5d6;--surface:#fffdf7;--surface-2:#f0eadf;
+      --ink:#24251f;--muted:#687061;--subtle:#969b8b;--line:#e3dac9;
+      --accent:#7ea66a;--accent-light:#e3efd8;--accent-deep:#416632;
+      --clay:#d79b72;--clay-light:#f4dfcf;--lav:#8d83bd;--lav-light:#e7e3f5;
+      --danger:#c85f55;--danger-bg:#f8e5e1;--warn:#9a7b2d;--warn-bg:#f3e9c4;
+      --shadow:0 18px 45px rgba(31,31,31,.15);--radius-xl:30px;--radius-lg:24px;--radius-md:18px;--tap:54px;
+      --bottom-nav-h:82px;--screen-bottom-pad:116px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{width:100%;min-height:100%}
+    body{min-height:100vh;min-height:100dvh;display:grid;place-items:center;
+      padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0);
+      background:radial-gradient(circle at top,#4c5841 0%,#303727 56%,#20231b 100%);
+      color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;line-height:1.45;overflow:hidden}
+    button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(126,166,106,.55);outline-offset:2px}
+    .phone{width:min(390px,100vw);height:min(844px,100vh);height:min(844px,100dvh);border-radius:30px;overflow:hidden;position:relative;background:var(--ivory);box-shadow:0 34px 90px rgba(0,0,0,.42),inset 0 0 0 1px rgba(255,255,255,.12)}
+    @media(max-width:480px){body{background:var(--ivory)}.phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}}
+    .status{height:30px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 22px 6px;font-size:11px;font-weight:800;letter-spacing:.02em;opacity:.85}.status .pill{width:74px;height:18px;border-radius:999px;background:rgba(31,31,31,.07);display:grid;place-items:center;font-size:10px}
+    .screen-wrap{position:absolute;inset:30px 0 0;overflow:hidden}.screen{position:absolute;inset:0 0 calc(var(--bottom-nav-h) + env(safe-area-inset-bottom,0px));padding:14px 20px calc(var(--screen-bottom-pad) + env(safe-area-inset-bottom,0px));overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(10px) scale(.995);pointer-events:none;transition:opacity .24s ease,transform .24s ease,visibility 0s linear .24s;scrollbar-width:none}.screen::-webkit-scrollbar{display:none}.screen.active{opacity:1;visibility:visible;transform:none;pointer-events:auto;transition:opacity .24s ease,transform .24s ease}
+    .splash{position:absolute;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 34%,#fffdf7 0%,var(--ivory) 64%);transition:opacity .45s ease}.splash.hide{opacity:0;pointer-events:none}.splash-logo{width:104px;height:104px;border-radius:28px;background:var(--accent);display:grid;place-items:center;box-shadow:0 18px 34px rgba(65,102,50,.24);animation:pulse 1.55s ease-in-out infinite}.splash-logo svg{width:64px;height:64px;stroke:#fff;fill:none;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round}.splash-name{font-family:Georgia,"Times New Roman","Noto Serif KR",serif;font-size:29px;letter-spacing:-.02em;margin-top:22px}.splash-sub{color:var(--muted);font-size:12px;font-weight:900;letter-spacing:.18em;margin-top:7px}.splash-tap{position:absolute;bottom:54px;color:var(--subtle);font-size:12px;font-weight:800}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+    .brand-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;min-height:30px}.brand{display:inline-flex;align-items:center;gap:9px;color:var(--muted);font-size:11px;font-weight:950;letter-spacing:.14em;text-transform:uppercase}.logo{width:27px;height:27px;border-radius:9px;background:var(--accent);box-shadow:0 6px 12px rgba(65,102,50,.22);position:relative;flex:none}.logo:before{content:"";position:absolute;left:7px;right:7px;bottom:6px;height:13px;border:3px solid #fff;border-top:0;border-radius:0 0 9px 9px}.logo:after{content:"";position:absolute;left:10px;top:5px;width:7px;height:15px;border-radius:999px;background:#fff;box-shadow:8px 4px 0 -1px #fff;transform:rotate(-28deg)}.version{color:var(--subtle);font-size:11px;font-weight:850}.app-name{font-family:Georgia,"Times New Roman","Noto Serif KR",serif;font-size:17px;color:var(--accent-deep);margin-bottom:4px}h1{font-family:Georgia,"Times New Roman","Noto Serif KR",serif;font-size:30px;letter-spacing:-.035em;line-height:1.12;text-wrap:pretty;margin-bottom:10px}h2{font-size:21px;letter-spacing:-.02em;line-height:1.22;margin-bottom:8px}h3{font-size:15.5px;letter-spacing:-.01em;margin-bottom:6px}p{color:var(--muted);font-size:14px}.lead{font-size:14.5px;color:var(--muted);margin-bottom:15px}.soft{color:var(--subtle);font-size:12px;line-height:1.5}.section{margin-top:13px}.center{text-align:center}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:17px;box-shadow:0 8px 22px rgba(31,31,31,.05)}.hero{display:flex;flex-direction:column;text-align:left;padding:22px 19px;background:radial-gradient(circle at 20% 9%,rgba(126,166,106,.24),transparent 34%),linear-gradient(180deg,#fffdf7,#f4eedf)}.hero .lead{max-width:305px}.cta{min-height:var(--tap);width:100%;border-radius:999px;background:var(--accent);color:#fff;font-weight:950;font-size:15.5px;box-shadow:0 13px 26px rgba(65,102,50,.28);transition:transform .15s ease,filter .15s ease}.cta:active,.secondary-btn:active,.nav-item:active,.choice:active,.action-card:active,.life-card:active{transform:scale(.985)}.cta-note{display:block;color:var(--subtle);font-size:11.5px;font-weight:800;margin-top:8px;text-align:center}.secondary-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:11px}.secondary-btn{min-height:46px;border-radius:999px;background:rgba(255,255,255,.7);border:1px solid var(--line);color:var(--accent-deep);font-weight:900;padding:0 10px;font-size:13px}
+    .pill-row{display:flex;gap:7px;flex-wrap:wrap}.tag{display:inline-flex;min-height:26px;align-items:center;padding:0 10px;border-radius:999px;background:rgba(126,166,106,.14);color:var(--muted);font-size:11px;font-weight:850}.tag.lav{background:var(--lav-light);color:#5d548d}.tag.clay{background:var(--clay-light);color:#8c5737}.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:14px;min-height:88px}.metric strong{display:block;font-size:20px;letter-spacing:-.02em;color:var(--ink);margin-top:3px}.metric span{color:var(--subtle);font-size:12px;font-weight:850}.metric em{display:block;font-style:normal;color:var(--muted);font-size:11px;margin-top:4px;line-height:1.4}.banner{display:grid;grid-template-columns:38px 1fr;gap:11px;align-items:start;background:linear-gradient(180deg,#fffdf7,#f2eddf)}.banner-icon{width:38px;height:38px;border-radius:15px;background:var(--accent-light);display:grid;place-items:center;color:var(--accent-deep);font-weight:950;font-size:13px}.notice{font-size:12px;line-height:1.6}.notice.warn{background:var(--warn-bg);border-color:rgba(154,123,45,.26);color:#725b21}.notice.danger{background:var(--danger-bg);border-color:rgba(200,95,85,.26);color:#8e3d33}
+    .matrix{display:grid;grid-template-columns:1fr 1fr;gap:9px}.quad{min-height:102px;border-radius:20px;padding:13px;border:1px solid var(--line);background:rgba(255,255,255,.63)}.quad b{font-size:13px}.quad p{font-size:12px;margin-top:5px}.quad.away{background:#f7ece4}.quad.toward{background:#edf4e6}.quad.value{background:#f1eef9}.quad.pain{background:#fff7ed}.action-card{width:100%;text-align:left;color:var(--ink);display:grid;gap:12px}.action-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.week{color:var(--accent-deep);font-size:11px;font-weight:950;letter-spacing:.06em}.status-chip{padding:6px 10px;border-radius:999px;font-size:11px;font-weight:950;white-space:nowrap;background:var(--accent-light);color:var(--accent-deep)}.status-chip.todo{background:#ede8dc;color:var(--muted)}.status-chip.done{background:#dfeecb;color:#4d7a1c}.plan-row{display:grid;grid-template-columns:78px 1fr;gap:10px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}.plan-row:first-child{border-top:0;padding-top:2px}.plan-row b{font-size:12px;color:var(--accent-deep)}.plan-row span{font-size:13px;color:var(--muted);line-height:1.5}.form-grid{display:grid;gap:10px}.field{display:grid;grid-template-columns:1fr minmax(110px,150px);align-items:center;gap:12px;padding:11px 14px;background:rgba(255,255,255,.66);border:1px solid var(--line);border-radius:18px}.field label{font-size:13px;color:var(--ink);font-weight:850}.field input,.field select{min-height:38px;border:0;border-radius:13px;padding:0 10px;background:var(--surface-2);color:var(--ink);outline:none;width:100%}.field.wide{grid-template-columns:1fr}.field.wide textarea{border:0;border-radius:13px;padding:10px;background:var(--surface-2);color:var(--ink);min-height:66px;resize:vertical;outline:none}.range-row{display:flex;align-items:center;gap:12px}.range-row input[type=range]{flex:1;accent-color:var(--accent);height:30px}.range-val{width:36px;text-align:center;font-weight:950;color:var(--accent-deep)}
+    .life-grid{display:grid;gap:10px}.life-card{display:grid;grid-template-columns:46px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;color:var(--ink);border-radius:20px;padding:14px;background:var(--surface);border:1px solid var(--line)}.life-icon{width:46px;height:46px;border-radius:17px;background:var(--accent-light);display:grid;place-items:center;color:var(--accent-deep);font-weight:950}.life-card:nth-child(2n) .life-icon{background:var(--clay-light);color:#8c5737}.life-card:nth-child(3n) .life-icon{background:var(--lav-light);color:#5d548d}.life-card b{font-size:14px}.life-card small{display:block;color:var(--subtle);font-size:12px;margin-top:2px}.score{font-size:20px;font-weight:950;color:var(--ink)}.bars{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;min-height:126px;padding-top:12px}.bar-col{display:grid;gap:7px;justify-items:center;color:var(--subtle);font-size:10px;font-weight:850}.bar{width:100%;max-width:24px;border-radius:999px;background:linear-gradient(180deg,var(--accent),var(--clay));min-height:28px;box-shadow:0 6px 12px rgba(126,166,106,.14)}.line-item{display:grid;grid-template-columns:76px 1fr 42px;gap:10px;align-items:center;font-size:12px;color:var(--muted);font-weight:850;margin-top:9px}.track{height:10px;border-radius:999px;background:rgba(31,31,31,.07);overflow:hidden}.fill{height:100%;border-radius:inherit;background:var(--accent)}.num{text-align:right;color:var(--ink)}
+    .timer{display:grid;place-items:center;width:154px;height:154px;border-radius:50%;margin:12px auto;background:conic-gradient(var(--accent) var(--prog,0deg),#ece6d7 0);box-shadow:inset 0 0 0 13px #fffdf7,0 14px 28px rgba(65,102,50,.12)}.timer strong{font-size:34px;letter-spacing:-.04em}.timer span{display:block;font-size:11px;color:var(--subtle);font-weight:850;text-align:center;margin-top:-4px}.toast{position:absolute;left:50%;bottom:88px;translate:-50% 12px;z-index:80;min-width:240px;max-width:330px;padding:12px 14px;border-radius:999px;background:rgba(36,37,31,.92);color:#fff;font-size:12.5px;font-weight:850;text-align:center;opacity:0;pointer-events:none;transition:opacity .22s,translate .22s}.toast.show{opacity:1;translate:-50% 0}.bottom-nav{position:absolute;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));height:58px;display:grid;grid-template-columns:repeat(5,1fr);gap:2px;padding:6px;border-radius:24px;background:rgba(250,248,240,.94);border:1px solid var(--line);box-shadow:0 12px 30px rgba(31,31,31,.12);backdrop-filter:blur(16px)}.nav-item{border-radius:18px;display:grid;place-items:center;gap:2px;color:var(--subtle);background:transparent;font-size:10px;font-weight:850;min-width:0}.nav-item svg{width:19px;height:19px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}.nav-item.active{background:var(--accent-light);color:var(--accent-deep)}.hidden{display:none!important}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <main class="phone" aria-label="ActivaCare 모바일 프로토타입">
+    <div class="status"><span>9:41</span><span class="pill">v0.1</span><span>100%</span></div>
+    <div class="screen-wrap">
+      <section class="screen active" id="today" aria-labelledby="today-title">
+        <div class="brand-row"><div class="brand"><span class="logo"></span>DH Mind Clinic</div><span class="version">ActivaCare v0.1</span></div>
+        <div class="app-name">ActivaCare</div><h1 id="today-title">오늘은 삶 쪽으로 2분만 움직입니다.</h1>
+        <p class="lead">기분이 좋아질 때까지 기다리지 않고, 가능한 행동 하나를 작게 시작합니다.</p>
+        <div class="card hero">
+          <div class="pill-row"><span class="tag">ADHD 모드 ON</span><span class="tag clay">실행 조건 재설계</span></div>
+          <h2 style="margin-top:14px">오늘의 단 하나</h2>
+          <p>19:00 · 집 앞에서 5분 걷기. 목표는 운동량이 아니라 시작 경험입니다.</p>
+          <div class="timer" id="timer"><div><strong id="timerText">2:00</strong><span>2분 시작 실험</span></div></div>
+          <button class="cta" id="startBtn">2분 시작</button><span class="cta-note">실패해도 기록됩니다. 조건을 바꾸기 위한 데이터입니다.</span>
+        </div>
+        <div class="section mini-grid">
+          <div class="metric"><span>이번 주 시도</span><strong id="attempts">8회</strong><em>완료보다 시도 수를 먼저 봅니다.</em></div>
+          <div class="metric"><span>다시 시작</span><strong>3회</strong><em>streak보다 회복력을 강화합니다.</em></div>
+        </div>
+        <div class="section card banner"><div class="banner-icon">BA</div><div><h3>오늘의 원칙</h3><p>행동이 먼저, 기분은 후행 지표. 작은 성공이 자기모델을 갱신합니다.</p></div></div>
+        <div class="section card notice warn">이 프로토타입은 진료 보조·자기관리 도구 컨셉입니다. 진단이나 치료를 대체하지 않습니다.</div>
+      </section>
+
+      <section class="screen" id="life" aria-labelledby="life-title">
+        <div class="brand-row"><div class="brand"><span class="logo"></span>Life Map</div><span class="version">좁아진 삶을 다시 넓히기</span></div>
+        <h1 id="life-title">삶의 지도를 밝히는 행동</h1><p class="lead">증상 점수만 낮추는 것이 아니라, 줄어든 삶의 영역을 작은 행동으로 다시 켭니다.</p>
+        <div class="life-grid">
+          <button class="life-card"><div class="life-icon">몸</div><div><b>몸·활동</b><small>걷기, 햇빛, 스트레칭</small></div><div class="score">62</div></button>
+          <button class="life-card"><div class="life-icon">관</div><div><b>관계</b><small>짧은 메시지, 약속 잡기</small></div><div class="score">38</div></button>
+          <button class="life-card"><div class="life-icon">일</div><div><b>일·학업</b><small>3분 초안, 책상 앉기</small></div><div class="score">44</div></button>
+          <button class="life-card"><div class="life-icon">즐</div><div><b>즐거움</b><small>음악, 취미, 회복 활동</small></div><div class="score">29</div></button>
+          <button class="life-card"><div class="life-icon">의</div><div><b>성장·의미</b><small>내가 원하는 삶과 연결</small></div><div class="score">51</div></button>
+        </div>
+        <div class="section card"><h2>이번 주 밝아진 영역</h2><div class="bars"><div class="bar-col"><div class="bar" style="height:42px"></div>월</div><div class="bar-col"><div class="bar" style="height:60px"></div>화</div><div class="bar-col"><div class="bar" style="height:34px"></div>수</div><div class="bar-col"><div class="bar" style="height:78px"></div>목</div><div class="bar-col"><div class="bar" style="height:50px"></div>금</div><div class="bar-col"><div class="bar" style="height:92px"></div>토</div><div class="bar-col"><div class="bar" style="height:68px"></div>일</div></div></div>
+      </section>
+
+      <section class="screen" id="lab" aria-labelledby="lab-title">
+        <div class="brand-row"><div class="brand"><span class="logo"></span>Action Lab</div><span class="version">예상 vs 실제</span></div>
+        <h1 id="lab-title">회피를 줄이는 행동 실험</h1><p class="lead">불쾌감을 없앤 뒤 행동하는 대신, 불쾌감을 옆에 두고 가치 쪽으로 한 걸음 이동합니다.</p>
+        <div class="card"><h2>ACT Matrix</h2><div class="matrix"><div class="quad pain"><b>내면의 고통</b><p>실패 두려움, 귀찮음, 완벽해야 한다는 생각</p></div><div class="quad value"><b>가치</b><p>건강, 자유, 성장, 관계, 안정</p></div><div class="quad away"><b>멀어지기</b><p>침대, 폰, 무한 검색, 미루기</p></div><div class="quad toward"><b>가까워지기</b><p>2분 시작, 메시지 하나, 밖으로 나가기</p></div></div></div>
+        <div class="section card"><h2>행동 처방 만들기</h2><div class="form-grid"><div class="field wide"><label>오늘 할 행동</label><textarea id="actionText">책상에 앉아 메일 답장 초안 3줄 쓰기</textarea></div><div class="field"><label>가치 영역</label><select><option>일·학업</option><option>몸</option><option>관계</option><option>즐거움</option></select></div><div class="field"><label>예상 난이도</label><div class="range-row"><input id="difficulty" type="range" min="0" max="10" value="6"><span class="range-val" id="difficultyVal">6</span></div></div><button class="cta" id="saveAction">처방 카드로 저장</button></div></div>
+      </section>
+
+      <section class="screen" id="review" aria-labelledby="review-title">
+        <div class="brand-row"><div class="brand"><span class="logo"></span>Review</div><span class="version">실패는 정보</span></div>
+        <h1 id="review-title">이번 조건에서는 무엇이 어려웠나</h1><p class="lead">완료율보다 조건을 봅니다. 실패는 의지 부족이 아니라 설계 데이터입니다.</p>
+        <div class="card action-card"><div class="action-top"><div><div class="week">실패 재설계 엔진</div><h2>메일 답장 초안</h2></div><span class="status-chip todo">재설계</span></div><div class="plan-row"><b>기존 조건</b><span>밤 11시 · 침대 · 20분 답장 완성</span></div><div class="plan-row"><b>새 조건</b><span>오후 7시 · 책상 · 3분 초안만 작성</span></div><div class="plan-row"><b>장벽</b><span>완벽하게 써야 한다는 생각 + 피로</span></div><button class="cta" id="redesignBtn">새 조건으로 내일 다시 시도</button></div>
+        <div class="section card"><h2>회피 패턴 Top 3</h2><div class="line-item"><span>폰</span><div class="track"><div class="fill" style="width:74%"></div></div><span class="num">74%</span></div><div class="line-item"><span>침대</span><div class="track"><div class="fill" style="width:61%"></div></div><span class="num">61%</span></div><div class="line-item"><span>검색</span><div class="track"><div class="fill" style="width:43%"></div></div><span class="num">43%</span></div></div>
+      </section>
+
+      <section class="screen" id="clinic" aria-labelledby="clinic-title">
+        <div class="brand-row"><div class="brand"><span class="logo"></span>Clinic</div><span class="version">외래 30초 요약</span></div>
+        <h1 id="clinic-title">다음 외래에서 볼 행동 패턴</h1><p class="lead">의사는 증상 변화뿐 아니라 실제 삶의 강화 구조가 어떻게 바뀌었는지 확인합니다.</p>
+        <div class="card"><h2>주간 요약</h2><div class="plan-row"><b>총 시도</b><span>8회. 완료 5회, 재설계 3회</span></div><div class="plan-row"><b>잘 된 조건</b><span>오후 6–8시, 집 밖, 10분 이하 행동</span></div><div class="plan-row"><b>어려운 조건</b><span>밤 10시 이후, 침대 주변, 완료 기준이 높은 과제</span></div><div class="plan-row"><b>추천 처방</b><span>월·수·금 19:00 집 앞 5분 걷기 + 화·목 3분 메일 초안</span></div></div>
+        <div class="section card banner"><div class="banner-icon">안전</div><div><h3>위험 신호 우선</h3><p>자살사고, 조증, 정신병적 증상, 급성 중독이 있으면 행동 처방보다 의료진 연결을 우선합니다.</p></div></div>
+        <div class="section card notice danger">본 앱은 의료진 판단을 대체하지 않습니다. 급격한 증상 악화나 안전 문제가 있으면 담당 의료진 또는 응급서비스를 이용하세요.</div>
+      </section>
+    </div>
+    <nav class="bottom-nav" aria-label="하단 내비게이션">
+      <button class="nav-item active" data-tab="today" aria-label="오늘"><svg viewBox="0 0 24 24"><path d="M4 12l8-7 8 7"/><path d="M7 10v9h10v-9"/></svg><span>Today</span></button>
+      <button class="nav-item" data-tab="life" aria-label="삶의 지도"><svg viewBox="0 0 24 24"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3-6-3z"/><path d="M9 3v15M15 6v15"/></svg><span>Life</span></button>
+      <button class="nav-item" data-tab="lab" aria-label="행동 실험"><svg viewBox="0 0 24 24"><path d="M10 2v6l-5 9a3 3 0 0 0 3 5h8a3 3 0 0 0 3-5l-5-9V2"/><path d="M8 2h8M7 15h10"/></svg><span>Lab</span></button>
+      <button class="nav-item" data-tab="review" aria-label="리뷰"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M8 17V9M12 17V7M16 17v-5M20 17V4"/></svg><span>Review</span></button>
+      <button class="nav-item" data-tab="clinic" aria-label="클리닉"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><path d="M5 5h14v14H5z"/></svg><span>Clinic</span></button>
+    </nav>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <div class="splash" id="splash" aria-label="ActivaCare 시작 화면"><div class="splash-logo"><svg viewBox="0 0 64 64"><path d="M12 42c10-1 17-6 20-15 3 9 10 14 20 15"/><path d="M32 12v38"/><path d="M21 24c3-7 8-10 11-10s8 3 11 10"/></svg></div><div class="splash-name">ActivaCare</div><div class="splash-sub">작게 움직이면 삶이 다시 커진다</div><div class="splash-tap">탭해서 시작</div></div>
+  </main>
+  <script>
+    const $ = (sel, root=document) => root.querySelector(sel);
+    const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+    const toast = $('#toast');
+    function showToast(msg){ toast.textContent = msg; toast.classList.add('show'); clearTimeout(window.__toast); window.__toast=setTimeout(()=>toast.classList.remove('show'),2200); }
+    function activate(tab){ $$('.screen').forEach(s=>{s.classList.toggle('active',s.id===tab); s.setAttribute('aria-hidden', s.id===tab?'false':'true');}); $$('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab)); }
+    $$('.nav-item').forEach(btn=>btn.addEventListener('click',()=>activate(btn.dataset.tab)));
+    $('#splash').addEventListener('click', e=> e.currentTarget.classList.add('hide'));
+    setTimeout(()=>$('#splash').classList.add('hide'),900);
+    $('#difficulty').addEventListener('input', e=> $('#difficultyVal').textContent=e.target.value);
+    $('#saveAction').addEventListener('click',()=>{showToast('처방 카드가 저장되었습니다. Today에서 시작할 수 있습니다.'); activate('today');});
+    $('#redesignBtn').addEventListener('click',()=>showToast('내일의 행동 조건을 더 작게 저장했습니다.'));
+    let timerRunning=false, remaining=120, interval=null;
+    function renderTimer(){ const m=Math.floor(remaining/60), s=String(remaining%60).padStart(2,'0'); $('#timerText').textContent=`${m}:${s}`; $('#timer').style.setProperty('--prog', `${(120-remaining)/120*360}deg`); }
+    $('#startBtn').addEventListener('click',()=>{
+      if(timerRunning){return}
+      timerRunning=true; $('#startBtn').textContent='진행 중 · 완료 처리'; showToast('목표는 완벽한 수행이 아니라 시작 경험입니다.');
+      interval=setInterval(()=>{ remaining--; renderTimer(); if(remaining<=0){ clearInterval(interval); timerRunning=false; $('#startBtn').textContent='완료 기록'; showToast('2분 실험 완료. 행동이 자기모델을 조금 바꿉니다.'); $('#attempts').textContent='9회'; }},1000);
+    });
+    renderTimer();
+    window.__ACTIVACARE_READY__ = true;
+  </script>
+</body>
+</html>
