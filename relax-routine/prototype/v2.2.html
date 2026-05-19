@@ -234,6 +234,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 <script id="relax-focused-home-v22">
 (function(){
   const STORAGE_KEY='relax-routine-v22-mobile-state';
+  let focusedPanelSuppressed=false;
   function read(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}catch(_){return {}}}
   function write(next){localStorage.setItem(STORAGE_KEY,JSON.stringify({...read(),...next,updatedAt:new Date().toISOString()}));}
   function todayKey(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
@@ -290,8 +291,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   }
   function dismissFocusedPanel(panel){
-    // v2.2: 패널은 좋은 초기 안내이므로 영구/당일 숨김 처리하지 않는다.
-    // 닫기와 전체 보기는 현재 화면에서만 패널을 걷어낸다.
+    // v2.2 hotfix: 닫기/전체 보기는 현재 방문 중에는 다시 자동 표시하지 않는다.
+    // 새로고침하면 다시 안내될 수 있지만, 같은 화면에서 즉시 재생성되지는 않는다.
+    focusedPanelSuppressed=true;
     write({focusedHomeChoice:'현재 화면에서 닫음'});
     panel.remove();
     setLegacyInteractive(true, panel);
@@ -329,6 +331,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       && !/홈 세션 지도 배경 설정|오늘의 이완|8주 프로그램 이어가기/.test(txt);
   }
   function installFocusedHome(){
+    if(focusedPanelSuppressed) return;
     if(document.getElementById('relax-focused-home-v22')) return;
     if(!hasCompletedOnboarding() || isOnboardingVisible()) return;
     const label=pickRoutine();
@@ -358,7 +361,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     scheduleFocusedHome();
     new MutationObserver(()=>{
       const panel=document.getElementById('relax-focused-home-v22');
-      if(panel && isOnboardingVisible()) dismissFocusedPanel(panel);
+      if(panel && isOnboardingVisible()) { panel.remove(); setLegacyInteractive(true, panel); }
       else installFocusedHome();
     }).observe(document.documentElement,{childList:true,subtree:true,characterData:true});
     document.addEventListener('click',()=>setTimeout(installFocusedHome,180),true);

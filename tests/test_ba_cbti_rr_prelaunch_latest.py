@@ -43,6 +43,9 @@ def test_rr_v22_is_lightweight_and_preserves_latest_lineage():
     assert len(gzip.compress(raw)) < 350_000
     assert "function hasCompletedOnboarding" in html
     assert "function isOnboardingVisible" in html
+    assert "let focusedPanelSuppressed=false" in html
+    assert "focusedPanelSuppressed=true" in html
+    assert "if(focusedPanelSuppressed) return;" in html
     assert "if(!hasCompletedOnboarding() || isOnboardingVisible()) return;" in html
     assert "new MutationObserver(()=>" in html
     assert "prototype/v2.2.html" in index
