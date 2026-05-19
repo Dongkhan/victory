@@ -152,5 +152,5 @@
     $('#applyRecommendBtn').addEventListener('click',()=>{if(hasCrisisBlock())return;if(state.nextPrescription?.includes('축소')){applyRedesignToPrescription()}else{state.baseAction=state.action||'오늘의 가장 작은 회복 행동 1개만 선택';state.action=state.baseAction;state.duration=Math.max(.5,state.duration||2);state.shrinkLevel=state.duration<1?2:state.duration===1?1:0}save();activate('today');showToast('추천 행동을 Today에 적용했습니다.')});$('#exportBtn').addEventListener('click',()=>exportClinicReport(false));$('#downloadBtn').addEventListener('click',()=>exportClinicReport(true));$('#resetBtn').addEventListener('click',resetSavedData);
     renderAll();window.__ACTIVACARE_READY__=true;
   </script>
-<div style="display:none" aria-hidden="true">legacy verified links: v1.1.html v1.2.html v1.3.html</div></body>
+</body>
 </html>

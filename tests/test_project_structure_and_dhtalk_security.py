@@ -11,9 +11,9 @@ def test_project_folders_are_visible_from_root_index():
 
 def test_mobile_projects_have_separate_latest_indexes():
     expected = {
-        "relax-routine": "prototype/v0.7.html",
-        "cbti-care": "prototype/v0.7.html",
-        "behavioral-activation": "prototype/v0.4.html",
+        "relax-routine": "prototype/v2.2.html",
+        "cbti-care": "prototype/v1.5.html",
+        "behavioral-activation": "prototype/v1.4.html",
     }
     for folder, latest in expected.items():
         project_dir = ROOT / folder
