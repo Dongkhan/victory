@@ -281,7 +281,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
   }
   function startFocusedSession(label, panel){
-    write({lastStarted:new Date().toISOString(),label,version:'v2.2',mode:'sessionStartedOnly',targetSeconds:60,completedOnlyBySentinel:true,activeSession: true,recommendedRoutine:label,sessionStartedOnly:true});
+    // 추천만 보기를 누른 뒤 세션 화면으로 이동할 때도 현재 안내 탭은 재생성하지 않는다.
+    focusedPanelSuppressed=true;
+    write({lastStarted:new Date().toISOString(),label,version:'v2.2',mode:'sessionStartedOnly',targetSeconds:60,completedOnlyBySentinel:true,activeSession: true,recommendedRoutine:label,sessionStartedOnly:true,focusedHomeChoice:'추천만 보기'});
     const target=findSessionTarget(label, panel);
     panel.remove();
     setLegacyInteractive(true, panel);

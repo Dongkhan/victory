@@ -45,6 +45,8 @@ def test_rr_v22_is_lightweight_and_preserves_latest_lineage():
     assert "function isOnboardingVisible" in html
     assert "let focusedPanelSuppressed=false" in html
     assert "focusedPanelSuppressed=true" in html
+    assert "focusedHomeChoice:'추천만 보기'" in html
+    assert "function startFocusedSession(label, panel){" in html
     assert "if(focusedPanelSuppressed) return;" in html
     assert "if(!hasCompletedOnboarding() || isOnboardingVisible()) return;" in html
     assert "new MutationObserver(()=>" in html
