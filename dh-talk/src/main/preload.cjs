@@ -22,7 +22,7 @@ contextBridge.exposeInMainWorld('dhtalk', {
 
   // 펄스 알람 — 메인 창이 알람 창 표시/종료를 요청.
   showAlert: (msg) => ipcRenderer.send('alert:show', msg),
-  closeAlert: () => ipcRenderer.send('alert:close'),
+  closeAlert: (msg) => ipcRenderer.send('alert:close', msg),
 
   // config/macros.yaml 핫리로드 시 main 이 push. 해제 함수를 반환한다.
   onMacrosChanged: (callback) => {

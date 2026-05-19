@@ -11,11 +11,12 @@ def read_html() -> str:
     return HTML.read_text(encoding="utf-8")
 
 
-def test_latest_index_points_to_release_quality_v07():
+def test_legacy_release_quality_v07_link_is_preserved():
     index = INDEX.read_text(encoding="utf-8")
     assert 'prototype/v0.7.html' in index
     assert 'QA 7일 데이터 입력' in index
-    assert re.search(r'v0\.7\.html.*<small>latest</small>', index)
+    assert not re.search(r'v0\.7\.html.*<small>latest</small>', index)
+    assert re.search(r'v1\.3\.html.*<small>latest</small>', index)
 
 
 def test_release_app_has_non_prototype_product_surfaces():

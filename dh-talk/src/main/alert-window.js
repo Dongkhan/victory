@@ -9,6 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let alertWin = null;
 let alertUrgent = false;
+let currentAlertId = null;
 let target = null; // { isPackaged, devUrl, projectRoot }
 
 export function configureAlertWindow(loadTarget) {
@@ -59,6 +60,7 @@ function createAlertWindow(urgent) {
 }
 
 export function showAlert(msg) {
+  currentAlertId = msg?.id ?? null;
   const urgent = msg.alert_level === 'urgent';
 
   // 긴급/일반은 창 크기가 다르므로 종류가 바뀌면 새로 만든다.
@@ -86,9 +88,18 @@ export function showAlert(msg) {
   }
 }
 
-export function closeAlert() {
+export function getCurrentAlertId() {
+  return currentAlertId;
+}
+
+export function closeAlert(id = null) {
+  if (id !== null && currentAlertId !== null && String(id) !== String(currentAlertId)) return false;
   if (alertWin) {
     alertWin.destroy();
     alertWin = null;
+    currentAlertId = null;
+    return true;
   }
+  currentAlertId = null;
+  return false;
 }

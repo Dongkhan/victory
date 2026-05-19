@@ -7,7 +7,7 @@ def read(rel):
     return (ROOT / rel).read_text(encoding="utf-8")
 
 
-def test_v11_is_new_current_version_with_isolated_storage_and_links():
+def test_v11_snapshot_is_preserved_with_isolated_storage_and_links():
     html = read("behavioral-activation/prototype/v1.1.html")
     landing = read("behavioral-activation/index.html")
     prototype_index = read("behavioral-activation/prototype/index.html")
@@ -16,10 +16,10 @@ def test_v11_is_new_current_version_with_isolated_storage_and_links():
     assert "ActivaCare v1.1" in html
     assert "activacare-v11-state" in html
     assert "current version file: v1.1.html" in html
-    assert "v1.1.html" in prototype_index
+    assert "v1.2.html" in prototype_index
     assert "prototype/v1.1.html" in landing
-    assert "현재 버전:</strong> v1.1" in landing
-    assert "prototype/v1.1.html" in readme
+    assert "현재 버전:</strong> v1.2" in landing
+    assert "prototype/v1.2.html" in readme
     assert "v1.0.html" in landing  # preserve previous immutable version link
 
 

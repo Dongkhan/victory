@@ -21,6 +21,17 @@ export function isUsableSharedKey(value) {
   return key.length >= 20 && key !== 'CHANGE_ME_BEFORE_USE';
 }
 
+
+export function updateServerAuthToken(nextToken) {
+  const next = String(nextToken || process.env.DHTALK_SHARED_KEY || '').trim();
+  if (!isUsableSharedKey(next)) {
+    console.error('[server] shared_key_update_rejected: 새 shared_key는 20자 이상이어야 합니다.');
+    return false;
+  }
+  authToken = next;
+  return true;
+}
+
 export function startServer(port, options = {}) {
   attachmentsDir = options.attachmentsDir ?? null;
   authToken = String(options.authToken || process.env.DHTALK_SHARED_KEY || '').trim();

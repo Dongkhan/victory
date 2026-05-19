@@ -1,8 +1,9 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
+import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { WS_PORT } from '../shared/types.js';
-import { startServer, stopServer } from './server.js';
+import { startServer, stopServer, updateServerAuthToken } from './server.js';
 import { registerIpc } from './ipc.js';
 import { initDb, closeDb, clearPatients } from './db.js';
 import { loadConfig, watchConfig } from './config.js';
@@ -20,8 +21,19 @@ const dataDir = app.isPackaged
   ? path.join(app.getPath('documents'), 'DH Talk')
   : path.join(projectRoot, 'data');
 const configDir = app.isPackaged
-  ? path.join(process.resourcesPath, 'config')
+  ? path.join(dataDir, 'config')
   : path.join(projectRoot, 'config');
+const bundledConfigDir = path.join(app.isPackaged ? process.resourcesPath : projectRoot, 'config');
+
+function ensurePackagedConfig() {
+  if (!app.isPackaged) return;
+  fs.mkdirSync(configDir, { recursive: true });
+  for (const name of ['settings.yaml', 'macros.yaml', 'users.yaml']) {
+    const targetFile = path.join(configDir, name);
+    const sourceFile = path.join(bundledConfigDir, name);
+    if (!fs.existsSync(targetFile) && fs.existsSync(sourceFile)) fs.copyFileSync(sourceFile, targetFile);
+  }
+}
 const attachmentsDir = path.join(dataDir, 'attachments');
 
 let mainWindow = null;
@@ -60,11 +72,11 @@ function createWindow() {
 // 펄스 알람 창 ↔ 메인 창 IPC 중계.
 function wireAlertIpc() {
   ipcMain.on('alert:show', (_e, msg) => showAlert(msg));
-  ipcMain.on('alert:close', () => closeAlert());
+  ipcMain.on('alert:close', (_e, msg) => closeAlert(msg?.id));
 
   // 알람 창의 "확인" → 알람 닫고, 메인 창이 ack 를 WS 로 보내도록 전달.
   ipcMain.on('alert:ack', (_e, msg) => {
-    closeAlert();
+    closeAlert(msg?.id);
     mainWindow?.webContents.send('alert:acked', msg);
   });
 
@@ -80,9 +92,11 @@ app.whenReady().then(() => {
 
   initDb(path.join(dataDir, 'messages.db'));
 
+  ensurePackagedConfig();
   config = loadConfig(configDir);
   configWatcher = watchConfig(configDir, (next) => {
     config = next;
+    updateServerAuthToken(config.settings.server?.shared_key);
     mainWindow?.webContents.send('config:macros-changed', config.macros);
   });
 

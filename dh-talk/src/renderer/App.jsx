@@ -56,6 +56,7 @@ export default function App() {
   const [promptName, setPromptName] = useState('');
 
   const wsRef = useRef(null);
+  const currentAlertRef = useRef(null);
 
   const connectWebSocket = ({ host, sharedKey, myId, info, role, sharedKeyNeedsSetup }) => {
     if (sharedKeyConnectionBlocked(sharedKey)) {
@@ -100,11 +101,13 @@ export default function App() {
         setStatusDetail(`${msg.userId} 인증 완료`);
       } else if (msg.kind === 'message') {
         setMessages((prev) => [...prev, msg]);
-        if (shouldPulse(msg, { me: myId, role })) window.dhtalk.showAlert(msg);
+        if (shouldPulse(msg, { me: myId, role })) { currentAlertRef.current = msg; window.dhtalk.showAlert(msg); }
       } else if (msg.kind === 'ack') {
-        window.dhtalk.closeAlert();
+        // ACK 대상 알람이 현재 알람과 일치할 때만 닫는다.
+        if (msg.id === currentAlertRef.current?.id) { window.dhtalk.closeAlert(msg); currentAlertRef.current = null; }
       } else if (msg.kind === 'escalate') {
         if (shouldPulseOnEscalate(msg.original, { me: myId, role })) {
+          currentAlertRef.current = msg.original;
           window.dhtalk.showAlert(msg.original);
         }
       }
