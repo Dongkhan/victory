@@ -9,8 +9,8 @@
 ## 바로 보기
 
 - 프로젝트 페이지: [`behavioral-activation/index.html`](./index.html)
-- 프로토타입 v0.2: [`behavioral-activation/prototype/index.html`](./prototype/)
-- 버전 고정 파일: [`behavioral-activation/prototype/v0.2.html`](./prototype/v0.2.html)
+- 프로토타입 v0.3: [`behavioral-activation/prototype/index.html`](./prototype/)
+- 버전 고정 파일: [`behavioral-activation/prototype/v0.3.html`](./prototype/v0.3.html)
 
 ---
 

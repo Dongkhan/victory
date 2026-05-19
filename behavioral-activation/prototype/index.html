@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#7ea66a">
-  <meta name="description" content="ActivaCare v0.2 — 행동활성화 기반 삶 회복 앱 프로토타입">
-  <title>ActivaCare v0.2 — DH Mind Clinic</title>
+  <meta name="description" content="ActivaCare v0.3 — 행동활성화 기반 삶 회복 앱 프로토타입">
+  <title>ActivaCare v0.3 — DH Mind Clinic</title>
   <style>
     :root{--ivory:#f7f2e8;--surface:#fffdf7;--surface2:#f0eadf;--ink:#24251f;--muted:#687061;--subtle:#858b7c;--line:#e3dac9;--accent:#7ea66a;--accent2:#416632;--accentBg:#e3efd8;--clay:#d79b72;--clayBg:#f4dfcf;--lav:#8d83bd;--lavBg:#e7e3f5;--danger:#c85f55;--dangerBg:#f8e5e1;--warn:#9a7b2d;--warnBg:#f3e9c4;--nav:82px;--tap:52px;--r1:26px;--r2:18px;--shadow:0 16px 36px rgba(31,31,31,.12)}
     *{box-sizing:border-box;margin:0;padding:0}html,body{width:100%;min-height:100%}body{min-height:100vh;min-height:100dvh;display:grid;place-items:center;background:radial-gradient(circle at top,#4c5841 0%,#303727 56%,#20231b 100%);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;line-height:1.45;overflow:hidden}button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(126,166,106,.55);outline-offset:2px}.phone{width:min(390px,100vw);height:min(844px,100dvh);border-radius:30px;overflow:hidden;position:relative;background:var(--ivory);box-shadow:0 34px 90px rgba(0,0,0,.42),inset 0 0 0 1px rgba(255,255,255,.14)}@media(max-width:480px){body{background:var(--ivory)}.phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}}
@@ -15,10 +15,10 @@
 </head>
 <body>
   <main class="phone" aria-label="ActivaCare 모바일 프로토타입">
-    <div class="status"><span>9:41</span><span class="pill">v0.2</span><span>100%</span></div>
+    <div class="status"><span>9:41</span><span class="pill">v0.3</span><span>100%</span></div>
     <div class="screen-wrap">
       <section class="screen active" id="today" aria-labelledby="today-title" aria-hidden="false">
-        <div class="brand-row"><div class="brand"><span class="logo"></span>DH Mind Clinic</div><span class="version">ActivaCare v0.2</span></div>
+        <div class="brand-row"><div class="brand"><span class="logo"></span>DH Mind Clinic</div><span class="version">ActivaCare v0.3</span></div>
         <div class="app-name">ActivaCare</div><h1 id="today-title">오늘은 삶 쪽으로 2분만 움직입니다.</h1>
         <p class="lead">기분이 좋아질 때까지 기다리지 않고, 가능한 행동 하나를 작게 시작합니다. 완료보다 예상-실제 차이를 학습합니다.</p>
         <div class="card hero">
@@ -67,7 +67,7 @@
         <div class="section card banner"><div class="banner-icon">안전</div><div><h3>위험 신호 우선</h3><p>자살사고, 조증, 정신병적 증상, 급성 중독이 있으면 행동 처방보다 의료진 연결을 우선합니다.</p></div></div>
         <div class="section card"><h2>안전 체크</h2><div class="choice-grid"><button class="choice" data-risk="0"><span><b>위험 신호 없음</b><small>일반 행동 처방을 계속합니다.</small></span><span class="check">✓</span></button><button class="choice" data-risk="1"><span><b>죽고 싶다는 생각이 스쳐 지나감</b><small>안전계획과 지지자 연결을 같이 검토합니다.</small></span><span class="check">✓</span></button><button class="choice" data-risk="2"><span><b>자주 있거나 구체적 계획이 있음</b><small>행동 처방보다 즉시 도움 연결이 우선입니다.</small></span><span class="check">✓</span></button></div></div>
         <div class="section card notice danger" id="riskNotice">본 앱은 의료진 판단을 대체하지 않습니다. 급격한 증상 악화나 안전 문제가 있으면 담당 의료진, 보호자, 응급실/119, 보건소 생명존중사업 등 즉시 도움을 연결하세요.</div>
-        <button class="section cta secondary" id="exportBtn">외래 요약 복사</button>
+        <button class="section cta secondary" id="exportBtn">외래 요약 복사</button><button class="section cta secondary" id="downloadBtn">다운로드</button><button class="section cta secondary" id="resetBtn">저장 초기화</button>
       </section>
     </div>
 
@@ -88,7 +88,7 @@
 
   <script>
     const $=(s,r=document)=>r.querySelector(s); const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-    const storeKey='activacare-v02-state';
+    const storeKey='activacare-v03-state';
     const domains={
       '몸·활동':{icon:'몸',score:62,actions:['현관문 열고 밖 공기 30초 맡기','집 앞에서 2분 걷기','물 한 컵 마시고 스트레칭 3회']},
       '관계':{icon:'관',score:38,actions:['친구에게 “오늘 생각났다” 한 줄 보내기','답장 미룬 메시지 열기만 하기','가족에게 안부 이모지 하나 보내기']},
@@ -123,11 +123,20 @@
       const gap=(last.expectedDifficulty??0)-(last.actualDifficulty??last.expectedDifficulty??0); $('#lastInsight').innerHTML=`<h2>예상-실제 차이 ${gap>=0?'-':''}${Math.abs(gap)}점</h2><div class="plan-row"><b>예상</b><span>난이도 ${last.expectedDifficulty}, 기분 ${last.moodBefore}, 회피욕구 ${last.urgeBefore}</span></div><div class="plan-row"><b>실제</b><span>난이도 ${last.actualDifficulty??'미기록'}, 기분 ${last.moodAfter??'미기록'}</span></div><div class="plan-row"><b>학습</b><span>${last.learning||last.redesign||'조건을 더 작게 조정합니다.'}</span></div>`;
       $('#historyList').innerHTML=h.slice(0,5).map(x=>`<div class="action-option"><div><b>${x.action}</b><small>${x.completed?'완료':'재설계'} · ${x.domain} · ${new Date(x.at).toLocaleDateString('ko-KR')}</small></div><span class="tag ${x.completed?'':'clay'}">${x.completed?'기록':'조건'}</span></div>`).join('');
     }
+    function generateWeeklyReport(){
+      const recent=state.history.slice(-7), attempts=recent.length, completed=recent.filter(x=>x.completed).length, failed=attempts-completed;
+      const avgMood=avg(recent.filter(x=>x.completed).map(x=>(x.moodAfter||0)-(x.moodBefore||0))).toFixed(1);
+      const summary=`총 시도 ${attempts}회. 완료 ${completed}회, 재설계 ${failed}회. 기분 변화 ${avgMood>=0?'+':''}${avgMood}.`;
+      return ['ActivaCare 7일 외래 요약',`- 모드: ${state.mode}`,`- 영역: ${state.domain}`,`- 현재 처방: ${state.action} · ${state.duration}분`, `- ${summary}`,`- 다음 처방: ${state.domain}: ${state.action}을 2–10분 버전으로 반복`,`- 안전: ${state.risk>=2?'행동 처방 중단, 즉시 의료진/119/보건소 생명존중사업 연결':'급성 위험 신호 없음. 진료 판단을 대체하지 않음'}`].join('\n');
+    }
     function renderClinic(){
-      const attempts=state.history.length, completed=state.history.filter(x=>x.completed).length, failed=attempts-completed; const summary=`총 시도 ${attempts}회. 완료 ${completed}회, 재설계 ${failed}회.`;
-      $('#clinicSummary').innerHTML=`<h2>주간 요약</h2><div class="plan-row"><b>총 시도</b><span>${summary}</span></div><div class="plan-row"><b>잘 된 조건</b><span>오후 6–8시, 10분 이하, 시작 기준이 낮은 행동.</span></div><div class="plan-row"><b>어려운 조건</b><span>밤 10시 이후, 침대 주변, 완료 기준이 높은 과제.</span></div><div class="plan-row"><b>추천 처방</b><span>${state.domain}: ${state.action} · ${state.duration}분 버전 반복.</span></div>`;
+      const report=generateWeeklyReport();
+      const lines=report.split('\n').slice(1);
+      $('#clinicSummary').innerHTML=`<h2>7일 외래 요약</h2>${lines.map(line=>{const [k,...rest]=line.replace(/^- /,'').split(': ');return `<div class="plan-row"><b>${k}</b><span>${rest.join(': ')}</span></div>`}).join('')}`;
       $$('.choice[data-risk]').forEach(b=>b.classList.toggle('active',Number(b.dataset.risk)===state.risk)); $('#riskNotice').textContent=state.risk>=2?'구체적 계획이나 높은 위험이 있으면 오늘의 행동 처방은 중단합니다. 즉시 담당 의료진, 보호자, 응급실/119, 보건소 생명존중사업을 연결하세요.':'본 앱은 의료진 판단을 대체하지 않습니다. 급격한 증상 악화나 안전 문제가 있으면 담당 의료진 또는 응급서비스를 이용하세요.';
     }
+    function exportClinicReport(download=false){const text=generateWeeklyReport(); if(download){const blob=new Blob([text],{type:'text/plain;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='activacare-7day-clinic-report.txt'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); showToast('외래 요약을 다운로드했습니다.'); return;} return navigator.clipboard.writeText(text).then(()=>showToast('외래 요약을 복사했습니다.')).catch(()=>showToast('브라우저 권한상 복사 대신 다운로드를 사용하세요.'));}
+    function resetSavedData(){state={...defaultState,history:[]}; localStorage.setItem(storeKey,JSON.stringify(state)); renderAll(); showToast('저장 데이터를 초기화했습니다.')}
     function record(completed){const rec={at:new Date().toISOString(),mode:state.mode,domain:state.domain,action:state.action,duration:state.duration,expectedDifficulty:Number(pre.expectedDifficulty??state.expectedDifficulty),moodBefore:Number(pre.moodBefore??4),energyBefore:Number(pre.energyBefore??4),urgeBefore:Number(pre.urgeBefore??7),completed}; if(completed){rec.moodAfter=Number($('#moodAfter').value);rec.actualDifficulty=Number($('#actualDiff').value);rec.learning=$('#learningText').value}else{rec.redesign=state.redesign} state.history=[...state.history,rec].slice(-30); save();}
     $$('.nav-item').forEach(btn=>btn.addEventListener('click',()=>activate(btn.dataset.tab))); $('#splash').addEventListener('click',e=>e.currentTarget.classList.add('hide')); setTimeout(()=>$('#splash').classList.add('hide'),800); $$('[data-close]').forEach(b=>b.addEventListener('click',()=>closeModal(b.dataset.close)));
     ['difficulty','moodBefore','energyBefore','urgeBefore','expectedDiff','moodAfter','actualDiff'].forEach(id=>$('#'+id).addEventListener('input',e=>$('#'+id+'Val').textContent=e.target.value));
@@ -140,7 +149,7 @@
     $('#startTimerBtn').addEventListener('click',()=>{pre={moodBefore:$('#moodBefore').value,energyBefore:$('#energyBefore').value,urgeBefore:$('#urgeBefore').value,expectedDifficulty:$('#expectedDiff').value};closeModal('preModal'); if(running)return; running=true; $('.phone').classList.add('timer-on'); remaining=state.duration*60; renderTimer(); $('#today').scrollTo({top:220,behavior:'smooth'}); showToast('목표는 완벽한 수행이 아니라 시작 경험입니다.'); clearInterval(interval); interval=setInterval(()=>{remaining--; renderTimer(); if(remaining<=0){clearInterval(interval);running=false;$('.phone').classList.remove('timer-on');openModal('postModal');showToast('체크아웃을 기록하면 치료 루프가 닫힙니다.')}},1000)});
     $('#completeBtn').addEventListener('click',()=>{record(true);closeModal('postModal');activate('review');showToast('실행 전후 차이를 저장했습니다.')}); $('#partialBtn').addEventListener('click',()=>{record(false);closeModal('postModal');activate('review');showToast('부분 수행으로 저장하고 조건을 재설계합니다.')});
     $$('.choice[data-risk]').forEach(b=>b.addEventListener('click',()=>{state.risk=Number(b.dataset.risk);save(); if(state.risk>=2)showToast('행동 처방보다 즉시 도움 연결이 우선입니다.')}));
-    $('#exportBtn').addEventListener('click',async()=>{const text=$('#clinicSummary').innerText+'\n\n안전: '+$('#riskNotice').innerText; try{await navigator.clipboard.writeText(text);showToast('외래 요약을 복사했습니다.')}catch(e){showToast('브라우저 권한상 복사 대신 화면을 보여주세요.')}});
+    $('#exportBtn').addEventListener('click',()=>exportClinicReport(false)); $('#downloadBtn').addEventListener('click',()=>exportClinicReport(true)); $('#resetBtn').addEventListener('click',resetSavedData);
     renderAll(); window.__ACTIVACARE_READY__=true;
   </script>
 </body>

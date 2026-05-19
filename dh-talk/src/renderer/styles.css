@@ -571,3 +571,11 @@ body {
   background: var(--panel-2);
   color: var(--accent);
 }
+
+.app__status-detail {
+  flex: 1;
+  min-width: 220px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}

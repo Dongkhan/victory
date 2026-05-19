@@ -40,6 +40,7 @@ export default function App() {
   const [messages, setMessages] = useState([]);
   const [searchResults, setSearchResults] = useState(null); // null = 검색 안 함
   const [status, setStatus] = useState('connecting');
+  const [statusDetail, setStatusDetail] = useState('서버 연결을 준비 중입니다.');
   const [pendingMacro, setPendingMacro] = useState(null);
   const [promptName, setPromptName] = useState('');
 
@@ -60,6 +61,8 @@ export default function App() {
       const meUser = users.find((u) => u.id === myId);
       const role = meUser?.role || 'desk';
       const host = meUser?.is_server ? '127.0.0.1' : settings.server?.host || '127.0.0.1';
+      const sharedKey = String(settings.server?.shared_key || '').trim();
+      const sharedKeyNeedsSetup = !sharedKey || sharedKey === 'CHANGE_ME_BEFORE_USE';
 
       setAppInfo(info);
       setMe(myId);
@@ -67,6 +70,11 @@ export default function App() {
       setMacros(await window.dhtalk.getMacros());
       setPatients(await window.dhtalk.listPatients());
       setMessages(await window.dhtalk.getRecentMessages());
+      setStatusDetail(
+        sharedKeyNeedsSetup
+          ? '공유키를 설정해야 합니다. config/settings.yaml의 server.shared_key를 모든 PC에서 같은 무작위 문자열로 바꾸세요.'
+          : `${host}:${info.wsPort} 연결 시도 중`,
+      );
       if (cancelled) return;
 
       ws = new WebSocket(`ws://${host}:${info.wsPort}`);
@@ -74,11 +82,25 @@ export default function App() {
 
       ws.onopen = () => {
         if (cancelled) return;
-        ws.send(JSON.stringify({ kind: 'hello', userId: myId, token: settings.server?.shared_key || '' }));
+        ws.send(JSON.stringify({ kind: 'hello', userId: myId, token: sharedKey }));
         setStatus('open');
+        setStatusDetail(
+          sharedKeyNeedsSetup
+            ? '서버에는 연결됐지만 기본 공유키 상태입니다. 실사용 전 shared_key 교체가 필요합니다.'
+            : '인증 요청을 보냈습니다.',
+        );
       };
-      ws.onclose = () => !cancelled && setStatus('closed');
-      ws.onerror = () => !cancelled && setStatus('error');
+      ws.onclose = (ev) => {
+        if (cancelled) return;
+        setStatus('closed');
+        if (ev.code === 1008) setStatusDetail('인증 실패 또는 정책 위반으로 연결이 종료되었습니다. 공유키와 users.yaml을 확인하세요.');
+        else setStatusDetail('연결 실패 또는 서버 종료 상태입니다. 데스크1 서버 앱, IP, 방화벽을 확인하세요.');
+      };
+      ws.onerror = () => {
+        if (cancelled) return;
+        setStatus('error');
+        setStatusDetail('연결 실패: 서버 IP, 포트, Windows 방화벽, shared_key 설정을 확인하세요.');
+      };
       ws.onmessage = (ev) => {
         if (cancelled) return;
         let msg;
@@ -87,7 +109,14 @@ export default function App() {
         } catch {
           return;
         }
-        if (msg.kind === 'message') {
+        if (msg.kind === 'error') {
+          setStatus('error');
+          const reason = msg.code === 'auth_failed' ? 'auth_failed: 공유키가 일치하지 않습니다.' : msg.reason;
+          setStatusDetail(reason || '서버 오류가 발생했습니다.');
+        } else if (msg.kind === 'hello_ack') {
+          setStatus('open');
+          setStatusDetail(`${msg.userId} 인증 완료`);
+        } else if (msg.kind === 'message') {
           setMessages((prev) => [...prev, msg]);
           if (shouldPulse(msg, { me: myId, role })) window.dhtalk.showAlert(msg);
         } else if (msg.kind === 'ack') {
@@ -242,6 +271,7 @@ export default function App() {
         <h1>DH Talk</h1>
         {me && <span className="app__me">{me}</span>}
         <span className={`status status--${status}`}>{STATUS_LABEL[status]}</span>
+        <span className="app__status-detail">{statusDetail}</span>
       </header>
 
       <FileDropZone onFiles={onDropFiles}>

@@ -11,9 +11,9 @@ def test_project_folders_are_visible_from_root_index():
 
 def test_mobile_projects_have_separate_latest_indexes():
     expected = {
-        "relax-routine": "prototype/v0.5.html",
-        "cbti-care": "prototype/v0.5.html",
-        "behavioral-activation": "prototype/v0.2.html",
+        "relax-routine": "prototype/v0.6.html",
+        "cbti-care": "prototype/v0.6.html",
+        "behavioral-activation": "prototype/v0.3.html",
     }
     for folder, latest in expected.items():
         project_dir = ROOT / folder
@@ -33,6 +33,6 @@ def test_dhtalk_has_lan_shared_key_auth_and_electron_fallback():
     assert "allowedUsers" in server
     assert "sender = socket.userId" in server
     assert "client.isAuthed" in server
-    assert "token: settings.server?.shared_key" in app
+    assert "token: sharedKey" in app
     assert "ElectronOnlyFallback" in app
     assert "shared_key" in settings_text
