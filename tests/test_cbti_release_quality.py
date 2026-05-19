@@ -16,7 +16,7 @@ def test_legacy_release_quality_v07_link_is_preserved():
     assert 'prototype/v0.7.html' in index
     assert 'QA 7일 데이터 입력' in index
     assert not re.search(r'v0\.7\.html.*<small>latest</small>', index)
-    assert re.search(r'v1\.5\.html.*<small>latest</small>', index)
+    assert re.search(r'v1\.6\.html.*<small>latest</small>', index)
 
 
 def test_release_app_has_non_prototype_product_surfaces():

@@ -6,17 +6,17 @@ ROOT = Path(__file__).resolve().parents[1]
 def read(rel):
     return (ROOT / rel).read_text(encoding="utf-8")
 
-def test_ba_v14_has_risk_flow_avoidance_engine_and_accessible_life_map():
-    html = read("behavioral-activation/prototype/v1.4.html")
+def test_ba_v15_has_risk_flow_avoidance_engine_and_accessible_life_map():
+    html = read("behavioral-activation/prototype/v1.5.html")
     index = read("behavioral-activation/index.html")
-    assert "ActivaCare v1.4" in html
-    assert "activacare-v14-state" in html
-    assert "legacyStoreKey='activacare-v13-state'" in html
+    assert "ActivaCare v1.5" in html
+    assert "activacare-v15-state" in html
+    assert "legacyStoreKey='activacare-v14-state'" in html
     assert "avoidanceSelect" in html and "회피 유형" in html
     assert "function prescribeByMode" in html
     assert "aria-label=\"${name} 영역" in html
-    assert "행동 처방 잠금" in html and "생명존중사업" in html
-    assert "prototype/v1.4.html" in index
+    assert "행동 처방 잠금" in html and "지역 위기지원기관" in html
+    assert "prototype/v1.5.html" in index
 
 def test_cbti_v15_has_safety_intake_gate_and_latest_index():
     html = read("cbti-care/prototype/v1.5.html")
@@ -30,6 +30,23 @@ def test_cbti_v15_has_safety_intake_gate_and_latest_index():
     assert "route('screen-dashboard')" in html
     assert "prototype/v1.5.html" in index
     assert 'prototype/v1.4.html">CBT-I Care v1.4</a><br>' in index
+
+
+def test_cbti_v16_compresses_home_and_adds_breathing_mode_without_life_respect_program():
+    html = read("cbti-care/prototype/v1.6.html")
+    index = read("cbti-care/index.html")
+    assert "CBT-I Care v1.6" in html
+    assert "cbti-care-v16-state" in html
+    assert "LEGACY_KEY='cbti-care-v15-state'" in html
+    assert "오늘은 하나만 해도 됩니다" in html
+    assert "todayFocusCard" in html
+    assert "screen-breath" in html
+    assert "복식호흡 1분" in html
+    assert "function startBreathMode" in html
+    assert "지역 위기지원기관" in html
+    assert "생명존중" not in html
+    assert "prototype/v1.6.html" in index
+    assert 'prototype/v1.5.html">CBT-I Care v1.5</a><br>' in index
 
 def test_rr_v22_is_lightweight_and_preserves_latest_lineage():
     html_path = ROOT / "relax-routine/prototype/v2.2.html"
