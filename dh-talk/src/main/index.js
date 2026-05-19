@@ -98,7 +98,7 @@ app.whenReady().then(() => {
     console.log(`[main] 이 PC(${config.settings.me})는 서버가 아님 — 허브 미기동`);
   }
 
-  registerIpc(() => config);
+  registerIpc(() => config, configDir);
   configureAlertWindow({ isPackaged: app.isPackaged, devUrl: DEV_SERVER_URL, projectRoot });
   wireAlertIpc();
   createWindow();

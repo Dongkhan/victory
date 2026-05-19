@@ -2,26 +2,26 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-HTML = ROOT / "cbti-care" / "prototype" / "v0.6.html"
+HTML = ROOT / "cbti-care" / "prototype" / "v0.7.html"
 INDEX = ROOT / "cbti-care" / "index.html"
 
 
 def read_html() -> str:
-    assert HTML.exists(), "CBT-I v0.6 release-quality app must exist"
+    assert HTML.exists(), "CBT-I v0.7 release-quality app must exist"
     return HTML.read_text(encoding="utf-8")
 
 
-def test_latest_index_points_to_release_quality_v06():
+def test_latest_index_points_to_release_quality_v07():
     index = INDEX.read_text(encoding="utf-8")
-    assert 'prototype/v0.6.html' in index
-    assert '7일 미만 수면창 권고 차단' in index
-    assert re.search(r'v0\.6\.html.*<small>latest</small>', index)
+    assert 'prototype/v0.7.html' in index
+    assert 'QA 7일 데이터 입력' in index
+    assert re.search(r'v0\.7\.html.*<small>latest</small>', index)
 
 
 def test_release_app_has_non_prototype_product_surfaces():
     html = read_html()
     required = [
-        'CBT-I Care v0.6',
+        'CBT-I Care v0.7',
         '출시 직전 앱 수준',
         '오늘의 실행 플랜',
         '7일 수면 데이터',

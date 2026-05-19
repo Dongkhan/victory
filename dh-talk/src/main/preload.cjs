@@ -7,6 +7,7 @@ contextBridge.exposeInMainWorld('dhtalk', {
   getAppInfo: () => ipcRenderer.invoke('app:get-info'),
   getMacros: () => ipcRenderer.invoke('config:get-macros'),
   getSettings: () => ipcRenderer.invoke('config:get-settings'),
+  saveSettings: (patch) => ipcRenderer.invoke('config:save-settings', patch),
   getUsers: () => ipcRenderer.invoke('config:get-users'),
 
   getRecentMessages: () => ipcRenderer.invoke('messages:recent'),

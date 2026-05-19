@@ -41,6 +41,7 @@ export default function App() {
   const [searchResults, setSearchResults] = useState(null); // null = 검색 안 함
   const [status, setStatus] = useState('connecting');
   const [statusDetail, setStatusDetail] = useState('서버 연결을 준비 중입니다.');
+  const [settingsDraft, setSettingsDraft] = useState({ host: '', sharedKey: '' });
   const [pendingMacro, setPendingMacro] = useState(null);
   const [promptName, setPromptName] = useState('');
 
@@ -67,6 +68,7 @@ export default function App() {
       setAppInfo(info);
       setMe(myId);
       setMyRole(role);
+      setSettingsDraft({ host, sharedKey });
       setMacros(await window.dhtalk.getMacros());
       setPatients(await window.dhtalk.listPatients());
       setMessages(await window.dhtalk.getRecentMessages());
@@ -174,6 +176,20 @@ export default function App() {
 
   const sendText = (body) => sendMessage({ sender: me, type: 'text', body });
 
+  const saveConnectionSettings = async () => {
+    const sharedKey = settingsDraft.sharedKey.trim();
+    if (sharedKey.length < 20) {
+      setStatus('error');
+      setStatusDetail('새 공유키는 20자 이상이어야 합니다. 모든 PC에 같은 값을 저장하세요.');
+      return;
+    }
+    const saved = await window.dhtalk.saveSettings({
+      server: { host: settingsDraft.host.trim() || '127.0.0.1', shared_key: sharedKey },
+    });
+    setSettingsDraft({ host: saved.server?.host || '127.0.0.1', sharedKey: saved.server?.shared_key || '' });
+    setStatusDetail('공유키 저장 완료. 모든 PC에서 같은 값을 저장한 뒤 앱을 재시작하세요.');
+  };
+
   const sendMacro = (macro, patientName) =>
     sendMessage({
       sender: me,
@@ -272,6 +288,22 @@ export default function App() {
         {me && <span className="app__me">{me}</span>}
         <span className={`status status--${status}`}>{STATUS_LABEL[status]}</span>
         <span className="app__status-detail">{statusDetail}</span>
+        <div className="app__settings">
+          <input
+            aria-label="서버 IP"
+            value={settingsDraft.host}
+            onChange={(e) => setSettingsDraft((prev) => ({ ...prev, host: e.target.value }))}
+            placeholder="서버 IP"
+          />
+          <input
+            aria-label="새 공유키"
+            value={settingsDraft.sharedKey}
+            onChange={(e) => setSettingsDraft((prev) => ({ ...prev, sharedKey: e.target.value }))}
+            placeholder="새 공유키 20자 이상"
+            type="password"
+          />
+          <button type="button" onClick={saveConnectionSettings}>공유키 저장</button>
+        </div>
       </header>
 
       <FileDropZone onFiles={onDropFiles}>
