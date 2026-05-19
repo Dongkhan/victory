@@ -43,6 +43,9 @@ def test_rr_v22_is_lightweight_and_preserves_latest_lineage():
     assert len(gzip.compress(raw)) < 350_000
     assert "function hasCompletedOnboarding" in html
     assert "function isOnboardingVisible" in html
+    assert "소리 없이 진행 가능 · 언제든 중단 가능" in html
+    assert "React.createElement(\\\"br\\\", null)" in html
+    assert "어지럽거나 불편하면 멈추세요" in html
     assert "let focusedPanelSuppressed=false" in html
     assert "focusedPanelSuppressed=true" in html
     assert "focusedHomeChoice:'추천만 보기'" in html
