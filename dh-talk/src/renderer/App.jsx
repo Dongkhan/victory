@@ -190,17 +190,36 @@ export default function App() {
 
   const sendText = (body) => sendMessage({ sender: me, type: 'text', body });
 
+  const diagnosticSeverity = ({ host, sharedKey }) => {
+    if (!host || host === '127.0.0.1') return 'warn';
+    if (sharedKey.length < 20 || sharedKey === 'CHANGE_ME_BEFORE_USE') return 'error';
+    if (status === 'error') return 'error';
+    if (status !== 'open') return 'warn';
+    return 'ok';
+  };
+
+  const diagnosticFixGuide = ({ host, sharedKey }) => {
+    if (!host || host === '127.0.0.1') return '주의: 접수/진료실 분리 PC에서는 서버 PC의 LAN IP를 입력하세요.';
+    if (sharedKey.length < 20 || sharedKey === 'CHANGE_ME_BEFORE_USE') return '오류: 모든 PC에 같은 공유키를 20자 이상 무작위 문자열로 저장하세요.';
+    if (status === 'error') return '오류: 서버 실행, IP/포트, Windows 방화벽, 같은 공유키 여부를 확인하세요.';
+    if (status !== 'open') return '주의: WebSocket 연결 대기 중입니다. 서버와 같은 네트워크인지 확인하세요.';
+    return '정상: 서버 IP, 공유키, WebSocket 연결이 실사용 조건을 만족합니다.';
+  };
+
   const runConnectionDiagnostics = () => {
     const host = settingsDraft.host.trim() || '127.0.0.1';
     const sharedKey = settingsDraft.sharedKey.trim();
+    const severity = diagnosticSeverity({ host, sharedKey });
+    const label = severity === 'ok' ? '정상' : severity === 'warn' ? '주의' : '오류';
     const rows = [
-      `서버 IP: ${host}`,
-      `공유키: ${sharedKey.length >= 20 ? '20자 이상 설정됨' : '20자 미만 또는 기본값'}`,
-      `WebSocket: ${status === 'open' ? '연결됨' : statusDetail}`,
-      `역할/사용자: ${me || '미확인'} / ${myRole || '미확인'}`,
+      { label: `서버 IP: ${host}`, severity: host === '127.0.0.1' ? 'warn' : 'ok' },
+      { label: `공유키: ${sharedKey.length >= 20 ? '20자 이상 설정됨' : '20자 미만 또는 기본값'}`, severity: sharedKey.length >= 20 ? 'ok' : 'error' },
+      { label: `WebSocket: ${status === 'open' ? '연결됨' : statusDetail}`, severity: status === 'open' ? 'ok' : status === 'error' ? 'error' : 'warn' },
+      { label: `역할/사용자: ${me || '미확인'} / ${myRole || '미확인'}`, severity: me ? 'ok' : 'warn' },
+      { label: `${label}: ${diagnosticFixGuide({ host, sharedKey })}`, severity },
     ];
     setConnectionDiagnostics(rows);
-    setStatusDetail('설정 진단을 갱신했습니다. 서버 IP, 공유키, WebSocket 상태를 확인하세요.');
+    setStatusDetail('설정 진단을 갱신했습니다. 서버 IP, 공유키, WebSocket 상태와 해결 가이드를 확인하세요.');
   };
 
   const saveConnectionSettings = async () => {
@@ -336,7 +355,9 @@ export default function App() {
           <small className="app__settings-hint">공유키 저장 후 자동 재연결</small>
         </div>
         <div className="app__diagnostics" aria-label="설정 진단 결과">
-          {(connectionDiagnostics.length ? connectionDiagnostics : ['서버 IP, 공유키, WebSocket 상태를 설정 진단 버튼으로 확인하세요.']).map((item) => <span key={item}>{item}</span>)}
+          {(connectionDiagnostics.length ? connectionDiagnostics : [{ label: '서버 IP, 공유키, WebSocket 상태를 설정 진단 버튼으로 확인하세요.', severity: 'warn' }]).map((item) => (
+            <span key={item.label} className={`app__diagnostic app__diagnostic--${item.severity}`}>{item.label}</span>
+          ))}
         </div>
       </header>
 
