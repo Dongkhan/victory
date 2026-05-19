@@ -612,3 +612,19 @@ body {
   font-size: 11px;
   width: 100%;
 }
+
+.app__diagnostics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.app__diagnostics span {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: rgba(15, 23, 42, 0.48);
+}

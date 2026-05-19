@@ -43,6 +43,7 @@ export default function App() {
   const [statusDetail, setStatusDetail] = useState('서버 연결을 준비 중입니다.');
   const [settingsDraft, setSettingsDraft] = useState({ host: '', sharedKey: '' });
   const [showSharedKey, setShowSharedKey] = useState(false);
+  const [connectionDiagnostics, setConnectionDiagnostics] = useState([]);
   const [pendingMacro, setPendingMacro] = useState(null);
   const [promptName, setPromptName] = useState('');
 
@@ -189,6 +190,19 @@ export default function App() {
 
   const sendText = (body) => sendMessage({ sender: me, type: 'text', body });
 
+  const runConnectionDiagnostics = () => {
+    const host = settingsDraft.host.trim() || '127.0.0.1';
+    const sharedKey = settingsDraft.sharedKey.trim();
+    const rows = [
+      `서버 IP: ${host}`,
+      `공유키: ${sharedKey.length >= 20 ? '20자 이상 설정됨' : '20자 미만 또는 기본값'}`,
+      `WebSocket: ${status === 'open' ? '연결됨' : statusDetail}`,
+      `역할/사용자: ${me || '미확인'} / ${myRole || '미확인'}`,
+    ];
+    setConnectionDiagnostics(rows);
+    setStatusDetail('설정 진단을 갱신했습니다. 서버 IP, 공유키, WebSocket 상태를 확인하세요.');
+  };
+
   const saveConnectionSettings = async () => {
     const sharedKey = settingsDraft.sharedKey.trim();
     if (sharedKey.length < 20) {
@@ -318,7 +332,11 @@ export default function App() {
           />
           <button type="button" onClick={() => setShowSharedKey((value) => !value)}>{showSharedKey ? '공유키 숨김' : '공유키 표시'}</button>
           <button type="button" onClick={saveConnectionSettings}>공유키 저장</button>
+          <button type="button" onClick={runConnectionDiagnostics}>설정 진단</button>
           <small className="app__settings-hint">공유키 저장 후 자동 재연결</small>
+        </div>
+        <div className="app__diagnostics" aria-label="설정 진단 결과">
+          {(connectionDiagnostics.length ? connectionDiagnostics : ['서버 IP, 공유키, WebSocket 상태를 설정 진단 버튼으로 확인하세요.']).map((item) => <span key={item}>{item}</span>)}
         </div>
       </header>
 
