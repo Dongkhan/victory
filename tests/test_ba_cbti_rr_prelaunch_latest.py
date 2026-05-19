@@ -41,5 +41,9 @@ def test_rr_v22_is_lightweight_and_preserves_latest_lineage():
     assert "relax-routine-v15-mobile-state" in html
     assert len(raw) < 1_200_000
     assert len(gzip.compress(raw)) < 350_000
+    assert "function hasCompletedOnboarding" in html
+    assert "function isOnboardingVisible" in html
+    assert "if(!hasCompletedOnboarding() || isOnboardingVisible()) return;" in html
+    assert "new MutationObserver(()=>" in html
     assert "prototype/v2.2.html" in index
     assert 'prototype/v2.1.html">Relax Routine v2.1</a><br>' in index

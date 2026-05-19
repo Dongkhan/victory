@@ -317,8 +317,20 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
   window.markRoutineCompletedOnNaturalFinish=markRoutineCompletedOnNaturalFinish;
   window.startFocusedSession=startFocusedSession;
+  function hasCompletedOnboarding(){
+    try{
+      const user=JSON.parse(localStorage.getItem('dtxrelax_user')||'{}');
+      return ['A','B','C'].includes(user.track) || Number.isFinite(Number(user.paqScore));
+    }catch(_){ return false; }
+  }
+  function isOnboardingVisible(){
+    const txt=(document.getElementById('root')?.innerText||document.body.innerText||'').replace(/\s+/g,' ');
+    return /감정 인식 어려움 정도|PAQ-S|TRACK B · SIGNAL-FIRST|몸 신호 체크인부터 시작하기|시작하기 \(약 2분\)|질문 \d+/.test(txt)
+      && !/홈 세션 지도 배경 설정|오늘의 이완|8주 프로그램 이어가기/.test(txt);
+  }
   function installFocusedHome(){
     if(document.getElementById('relax-focused-home-v22')) return;
+    if(!hasCompletedOnboarding() || isOnboardingVisible()) return;
     const label=pickRoutine();
     const panel=document.createElement('section');
     panel.id='relax-focused-home-v22';
@@ -335,7 +347,22 @@ document.addEventListener('DOMContentLoaded', async function() {
     panel.querySelector('#relax-view-all-v22').addEventListener('click',()=>dismissFocusedPanel(panel));
     panel.querySelector('#relax-close-focused-v22').addEventListener('click',()=>dismissFocusedPanel(panel));
   }
-  document.addEventListener('DOMContentLoaded',()=>{installCompletionObserver();setTimeout(installFocusedHome,500);setTimeout(installFocusedHome,1400);});
+  function scheduleFocusedHome(){
+    installFocusedHome();
+    setTimeout(installFocusedHome,500);
+    setTimeout(installFocusedHome,1400);
+    setTimeout(installFocusedHome,2600);
+  }
+  document.addEventListener('DOMContentLoaded',()=>{
+    installCompletionObserver();
+    scheduleFocusedHome();
+    new MutationObserver(()=>{
+      const panel=document.getElementById('relax-focused-home-v22');
+      if(panel && isOnboardingVisible()) dismissFocusedPanel(panel);
+      else installFocusedHome();
+    }).observe(document.documentElement,{childList:true,subtree:true,characterData:true});
+    document.addEventListener('click',()=>setTimeout(installFocusedHome,180),true);
+  });
 })();
 </script>
 
