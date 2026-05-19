@@ -482,5 +482,29 @@ document.addEventListener('DOMContentLoaded', async function() {
 })();
 </script>
 
+
+<script id="relax-home-copy-polish-v22">
+(function(){
+  const replacements=new Map([
+    ['정신건강의학과 전문의가 설계한 근거 기반 이완 습관 루틴','전문의가 설계한 근거 기반 이완 루틴'],
+    ['오늘 시작해 볼까요? (약 2분)','2분만에 내 루틴 찾기'],
+    ['먼저 잠시 쉬어가도 좋아요','바로 체험하기'],
+    ['6문항으로 나에게 맞는 루틴 찾기','6문항 맞춤 추천'],
+    ['4가지 이완 기법','4가지 기법'],
+    ['8주 함께하는 루틴','8주 루틴 구성']
+  ]);
+  function polish(){
+    const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+    const nodes=[]; while(walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(n=>{let t=n.nodeValue;replacements.forEach((to,from)=>{if(t.includes(from))t=t.replaceAll(from,to)});if(t!==n.nodeValue)n.nodeValue=t;});
+    document.querySelectorAll('button,[role="button"]').forEach(el=>{
+      const text=(el.textContent||'').trim();
+      if(/복식호흡|PMR|바디스캔|자율훈련/.test(text)){el.style.borderColor='rgba(90,110,75,.24)';el.style.color='#253422';}
+    });
+  }
+  window.addEventListener('load',()=>{polish();setTimeout(polish,400);setTimeout(polish,1200);});
+})();
+</script>
+
 <script>document.title='Relax Routine v2.2 — DH Mind Clinic';window.__RELAX_ROUTINE_READY__=true;try{const oldKey='relax-routine-v15-mobile-state',newKey='relax-routine-v22-mobile-state';if(!localStorage.getItem(newKey)&&localStorage.getItem(oldKey)){const v=JSON.parse(localStorage.getItem(oldKey));v.version='v2.2';v.schemaVersion='relax-v2.2';localStorage.setItem(newKey,JSON.stringify(v));}}catch(e){}</script></body>
 </html>

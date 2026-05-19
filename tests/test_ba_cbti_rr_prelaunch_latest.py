@@ -16,6 +16,11 @@ def test_ba_v15_has_risk_flow_avoidance_engine_and_accessible_life_map():
     assert "function prescribeByMode" in html
     assert "aria-label=\"${name} 영역" in html
     assert "행동 처방 잠금" in html and "지역 위기지원기관" in html
+    assert "오늘은 하나만 작게 시작합니다" in html
+    assert "2분 행동 시작하기" in html
+    assert "제목만 열면 성공" in html
+    assert "20초 상태 확인 후 시작" not in html
+    assert "목표는 완성이 아니라 시작 증거" not in html
     assert "prototype/v1.5.html" in index
 
 def test_cbti_v15_has_safety_intake_gate_and_latest_index():
@@ -39,6 +44,12 @@ def test_cbti_v16_compresses_home_and_adds_breathing_mode_without_life_respect_p
     assert "cbti-care-v16-state" in html
     assert "LEGACY_KEY='cbti-care-v15-state'" in html
     assert "오늘은 하나만 해도 됩니다" in html
+    assert "오늘의 시작" in html
+    assert "수면일기 저장하기" in html
+    assert "1분 호흡으로 진정하기" in html
+    assert "수면 제한 전 확인" in html
+    assert "복식호흡 1분으로 각성 낮추기" not in html
+    assert "안전 기준 먼저 확인" not in html
     assert "todayFocusCard" in html
     assert "screen-breath" in html
     assert "복식호흡 1분" in html
@@ -70,5 +81,9 @@ def test_rr_v22_is_lightweight_and_preserves_latest_lineage():
     assert "if(focusedPanelSuppressed) return;" in html
     assert "if(!hasCompletedOnboarding() || isOnboardingVisible()) return;" in html
     assert "new MutationObserver(()=>" in html
+    assert "relax-home-copy-polish-v22" in html
+    assert "2분만에 내 루틴 찾기" in html
+    assert "바로 체험하기" in html
+    assert "전문의가 설계한 근거 기반 이완 루틴" in html
     assert "prototype/v2.2.html" in index
     assert 'prototype/v2.1.html">Relax Routine v2.1</a><br>' in index
