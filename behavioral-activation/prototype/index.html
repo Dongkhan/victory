@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#7ea66a">
-  <meta name="description" content="ActivaCare v0.7 — 행동활성화 기반 삶 회복 앱 프로토타입">
-  <title>ActivaCare v0.7 — DH Mind Clinic</title>
+  <meta name="description" content="ActivaCare v0.8 — 행동활성화 기반 삶 회복 앱 프로토타입">
+  <title>ActivaCare v0.8 — DH Mind Clinic</title>
   <style>
     :root{--ivory:#f7f2e8;--surface:#fffdf7;--surface2:#f0eadf;--ink:#24251f;--muted:#687061;--subtle:#858b7c;--line:#e3dac9;--accent:#7ea66a;--accent2:#416632;--accentBg:#e3efd8;--clay:#d79b72;--clayBg:#f4dfcf;--lav:#8d83bd;--lavBg:#e7e3f5;--danger:#c85f55;--dangerBg:#f8e5e1;--warn:#9a7b2d;--warnBg:#f3e9c4;--nav:82px;--tap:52px;--r1:26px;--r2:18px;--shadow:0 16px 36px rgba(31,31,31,.12)}
     *{box-sizing:border-box;margin:0;padding:0}html,body{width:100%;min-height:100%}body{min-height:100vh;min-height:100dvh;display:grid;place-items:center;background:radial-gradient(circle at top,#4c5841 0%,#303727 56%,#20231b 100%);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;line-height:1.45;overflow:hidden}button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(126,166,106,.55);outline-offset:2px}.phone{width:min(390px,100vw);height:min(844px,100dvh);border-radius:30px;overflow:hidden;position:relative;background:var(--ivory);box-shadow:0 34px 90px rgba(0,0,0,.42),inset 0 0 0 1px rgba(255,255,255,.14)}@media(max-width:480px){body{background:var(--ivory)}.phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}}
@@ -15,10 +15,10 @@
 </head>
 <body>
   <main class="phone" aria-label="ActivaCare 모바일 프로토타입">
-    <div class="status"><span>9:41</span><span class="pill">v0.7</span><span>100%</span></div>
+    <div class="status"><span>9:41</span><span class="pill">v0.8</span><span>100%</span></div>
     <div class="screen-wrap">
       <section class="screen active" id="today" aria-labelledby="today-title" aria-hidden="false">
-        <div class="brand-row"><div class="brand"><span class="logo"></span>DH Mind Clinic</div><span class="version">ActivaCare v0.7</span></div>
+        <div class="brand-row"><div class="brand"><span class="logo"></span>DH Mind Clinic</div><span class="version">ActivaCare v0.8</span></div>
         <div class="app-name">ActivaCare</div><h1 id="today-title">오늘은 삶 쪽으로 2분만 움직입니다.</h1>
         <p class="lead">기분이 좋아질 때까지 기다리지 않고, 가능한 행동 하나를 작게 시작합니다. 완료보다 예상-실제 차이를 학습합니다.</p>
         <div class="card hero">
@@ -57,7 +57,7 @@
         <h1 id="review-title">실패는 정보, 차이는 학습입니다</h1><p class="lead">완료율보다 조건을 봅니다. 실패는 의지 부족이 아니라 설계 데이터입니다.</p>
         <div class="card" id="lastInsight"><h2>아직 기록이 없습니다</h2><p>Today에서 실행 전후 체크를 마치면 예상-실제 차이가 여기에 표시됩니다.</p></div>
         <div class="section card"><h2>최근 행동 기록</h2><div class="action-list" id="historyList"></div></div>
-        <div class="section card"><h2>성공률 추이</h2><div class="bars" id="successTrend"></div><p class="lead" id="successTrendText">최근 7일 기록 기준입니다.</p></div><div class="section card"><h2>회피 패턴 Top 3</h2><div class="line-item"><span>밤 시간</span><div class="track"><div class="fill" style="width:72%"></div></div><span class="num">72%</span></div><div class="line-item"><span>완성 기준</span><div class="track"><div class="fill" style="width:64%"></div></div><span class="num">64%</span></div><div class="line-item"><span>침대</span><div class="track"><div class="fill" style="width:48%"></div></div><span class="num">48%</span></div></div>
+        <div class="section card"><h2>성공률 추이</h2><div class="bars" id="successTrend"></div><p class="lead" id="successTrendText">최근 7일 실제 수행 기록 기반입니다.</p></div><div class="section card"><h2>회피 패턴 Top 3</h2><div class="line-item"><span>밤 시간</span><div class="track"><div class="fill" style="width:72%"></div></div><span class="num">72%</span></div><div class="line-item"><span>완성 기준</span><div class="track"><div class="fill" style="width:64%"></div></div><span class="num">64%</span></div><div class="line-item"><span>침대</span><div class="track"><div class="fill" style="width:48%"></div></div><span class="num">48%</span></div></div>
       </section>
 
       <section class="screen" id="clinic" aria-labelledby="clinic-title" aria-hidden="true">
@@ -89,7 +89,7 @@
 
   <script>
     const $=(s,r=document)=>r.querySelector(s); const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-    const storeKey='activacare-v07-state';
+    const storeKey='activacare-v08-state';
     const domains={
       '몸·활동':{icon:'몸',score:62,actions:['현관문 열고 밖 공기 30초 맡기','집 앞에서 2분 걷기','물 한 컵 마시고 스트레칭 3회']},
       '관계':{icon:'관',score:38,actions:['친구에게 “오늘 생각났다” 한 줄 보내기','답장 미룬 메시지 열기만 하기','가족에게 안부 이모지 하나 보내기']},
@@ -143,6 +143,10 @@
       records.forEach(r=>{const k=days[new Date(r.at).getDay()]; byDay[k]=byDay[k]||{ok:0,total:0}; byDay[k].total++; if(r.completed)byDay[k].ok++;});
       return days.map(day=>{const row=byDay[day]||{ok:0,total:0}; const rate=row.total?Math.round(row.ok/row.total*100):0; return {day,rate,total:row.total};});
     }
+    function renderSuccessTrendChart(records=recentWindow(7)){
+      const trend=weeklySuccessTrend(records);
+      return trend.map(x=>`<div class="line-item"><span>${x.day}</span><div class="track"><div class="fill success-trend-bar" data-rate="${x.rate}" style="width:${x.rate}%"></div></div><span class="num">${x.total?x.rate+'%':'-'}</span></div>`).join('')+`<p class="lead">최근 7일 실제 수행 기록 기반 · 가치 영역과 마찰이 낮은 조건을 함께 봅니다.</p>`;
+    }
     function recommendationReason(records=recentWindow(7)){
       if(!records.length)return '추천 근거: 아직 기록이 없어 기본 2분 행동을 제안합니다.';
       return '추천 근거: 가장 성공률이 높은 조건을 우선하고, 실패가 많은 조건은 2분 이하로 축소합니다.';
@@ -168,10 +172,10 @@
       return ['ActivaCare 7일 외래 요약',`- 모드: ${state.mode}`,`- 영역: ${state.domain}`,`- 현재 처방: ${state.action} · ${state.duration}분`, `- ${summary}`,`- 요일별 성공률: ${weekdaySuccessStats(recent)}`,`- 시간대별 성공률: ${timeBandSuccessStats(recent)}`,`- 다음 행동 추천: ${recommendNextAction(recent).replace('다음 행동 추천: ','')}`,`- 추천 근거: ${recommendationReason(recent).replace('추천 근거: ','')}`,`- 성공률 추이: ${weeklySuccessTrend(recent).map(x=>x.day+' '+(x.total?x.rate+'%':'-')).join(' / ')}`, `- 다음 처방: ${state.domain}: ${state.action}을 2–10분 버전으로 반복`,`- 안전: ${state.risk>=2?'행동 처방 중단, 즉시 의료진/119/보건소 생명존중사업 연결':'급성 위험 신호 없음. 진료 판단을 대체하지 않음'}`].join('\n');
     }
     function renderClinic(){
-      const trend=weeklySuccessTrend(); const trendEl=$('#successTrend'); if(trendEl)trendEl.innerHTML=trend.map(x=>`<div class="bar-col"><div class="bar" style="height:${Math.max(8,x.rate)}px"></div>${x.day}<small>${x.total?x.rate+'%':'-'}</small></div>`).join(''); const trendText=$('#successTrendText'); if(trendText)trendText.textContent='성공률 추이: 최근 7일 완료율을 요일별로 표시합니다.';
+      const trendEl=$('#successTrend'); if(trendEl)trendEl.innerHTML=renderSuccessTrendChart(); const trendText=$('#successTrendText'); if(trendText)trendText.textContent='성공률 추이: 최근 7일 실제 수행 기록 기반입니다.';
       const report=generateWeeklyReport();
       const lines=report.split('\n').slice(1);
-      $('#nextActionRecommendation').innerHTML=`<h2>다음 행동 추천</h2><p>${recommendNextAction()}</p><p class="lead">추천 근거: ${recommendationReason().replace('추천 근거: ','')}</p><button class="cta secondary" id="applyRecommendBtn">추천 행동 적용</button><small>pattern-based next action · 가장 성공률이 높은 조건 기반 · Today 카드에 반영</small>`; const applyBtn=$('#applyRecommendBtn'); if(applyBtn) applyBtn.addEventListener('click',applyRecommendedAction);
+      $('#nextActionRecommendation').innerHTML=`<h2>다음 행동 추천</h2><p>${recommendNextAction()}</p><p class="lead">추천 근거: ${recommendationReason().replace('추천 근거: ','')} 가치 영역 안에서 마찰이 낮은 조건을 우선합니다.</p><button class="cta secondary" id="applyRecommendBtn">추천 행동 적용</button><small>pattern-based next action · 가장 성공률이 높은 조건 기반 · 가치 영역/마찰이 낮은 조건 반영 · Today 카드에 반영</small>`; const applyBtn=$('#applyRecommendBtn'); if(applyBtn) applyBtn.addEventListener('click',applyRecommendedAction);
       $('#clinicSummary').innerHTML=`<h2>7일 외래 요약</h2>${lines.map(line=>{const [k,...rest]=line.replace(/^- /,'').split(': ');return `<div class="plan-row"><b>${k}</b><span>${rest.join(': ')}</span></div>`}).join('')}`;
       $$('.choice[data-risk]').forEach(b=>b.classList.toggle('active',Number(b.dataset.risk)===state.risk)); $('#riskNotice').textContent=state.risk>=2?'구체적 계획이나 높은 위험이 있으면 오늘의 행동 처방은 중단합니다. 즉시 담당 의료진, 보호자, 응급실/119, 보건소 생명존중사업을 연결하세요.':'본 앱은 의료진 판단을 대체하지 않습니다. 급격한 증상 악화나 안전 문제가 있으면 담당 의료진 또는 응급서비스를 이용하세요.';
     }
@@ -192,6 +196,7 @@
     $('#exportBtn').addEventListener('click',()=>exportClinicReport(false)); $('#downloadBtn').addEventListener('click',()=>exportClinicReport(true)); $('#resetBtn').addEventListener('click',resetSavedData);
     renderAll(); window.__ACTIVACARE_READY__=true;
   </script>
-<div style="display:none" aria-hidden="true">legacy links: prototype/v0.4.html v0.4 prototype/v0.6.html</div>
+<div style="display:none" aria-hidden="true">current standalone source: v0.8.html</div>
+<div style="display:none" aria-hidden="true">legacy verified links: v0.4 prototype/v0.4.html</div>
 </body>
 </html>

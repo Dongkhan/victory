@@ -206,6 +206,14 @@ export default function App() {
     return '정상: 서버 IP, 공유키, WebSocket 연결이 실사용 조건을 만족합니다.';
   };
 
+  const diagnosticChecklistSteps = ({ host, sharedKey }) => [
+    `서버 PC에서 DH Talk 서버 실행 상태와 LAN IP를 확인합니다. 현재 입력값: ${host || '미입력'}`,
+    '서버 PC에서 Windows 방화벽 인바운드 규칙이 앱 포트를 막지 않는지 확인합니다.',
+    `접수/진료 PC에서 서버 IP가 127.0.0.1이 아니라 서버 PC LAN IP인지 확인합니다.`,
+    `접수/진료 PC에서 공유키 길이를 확인합니다: ${sharedKey.length >= 20 ? '20자 이상' : '20자 미만 — 교체 필요'}`,
+    `접수/진료 PC에서 WebSocket 상태를 확인합니다: ${status === 'open' ? '연결됨' : statusDetail}`,
+  ];
+
   const runConnectionDiagnostics = () => {
     const host = settingsDraft.host.trim() || '127.0.0.1';
     const sharedKey = settingsDraft.sharedKey.trim();
@@ -358,6 +366,14 @@ export default function App() {
           {(connectionDiagnostics.length ? connectionDiagnostics : [{ label: '서버 IP, 공유키, WebSocket 상태를 설정 진단 버튼으로 확인하세요.', severity: 'warn' }]).map((item) => (
             <span key={item.label} className={`app__diagnostic app__diagnostic--${item.severity}`}>{item.label}</span>
           ))}
+          <ol className="app__checklist" aria-label="연결 문제 해결 체크리스트">
+            {diagnosticChecklistSteps({
+              host: settingsDraft.host.trim() || '127.0.0.1',
+              sharedKey: settingsDraft.sharedKey.trim(),
+            }).map((step) => (
+              <li key={step} className="app__checklist-step">{step}</li>
+            ))}
+          </ol>
         </div>
       </header>
 
