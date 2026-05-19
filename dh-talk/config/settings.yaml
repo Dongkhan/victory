@@ -6,6 +6,9 @@ me: desk1
 server:
   host: "192.168.0.10"   # 데스크1 PC 의 LAN IP (실제 값으로 수정)
   ws_port: 8123
+  # 실사용 전 모든 PC에서 같은 값으로 바꾼다. 20자 이상 무작위 문자열 권장.
+  # Windows PowerShell 예: -join ((48..57)+(65..90)+(97..122) | Get-Random -Count 32 | % {[char]$_})
+  shared_key: "CHANGE_ME_BEFORE_USE"
 
 alert:
   pulse_window: true

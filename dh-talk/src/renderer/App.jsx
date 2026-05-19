@@ -14,7 +14,24 @@ const STATUS_LABEL = {
   error: '오류',
 };
 
+function ElectronOnlyFallback() {
+  return (
+    <div className="app app--fallback">
+      <main className="fallback panel">
+        <h1>DH Talk은 Electron 앱에서 실행해야 합니다</h1>
+        <p>
+          브라우저에서 dist 파일만 열면 환자 큐, DB, LAN 메시지 API가 제공되지 않습니다. Windows PC에서는
+          <code> npm run start </code> 또는 배포된 DH Talk 실행 파일로 열어주세요.
+        </p>
+        <p className="modal__hint">이 화면은 blank page 대신 표시되는 안전 fallback입니다.</p>
+      </main>
+    </div>
+  );
+}
+
 export default function App() {
+  if (!window.dhtalk) return <ElectronOnlyFallback />;
+
   const [appInfo, setAppInfo] = useState(null);
   const [me, setMe] = useState('');
   const [myRole, setMyRole] = useState('');
@@ -57,7 +74,7 @@ export default function App() {
 
       ws.onopen = () => {
         if (cancelled) return;
-        ws.send(JSON.stringify({ kind: 'hello', userId: myId }));
+        ws.send(JSON.stringify({ kind: 'hello', userId: myId, token: settings.server?.shared_key || '' }));
         setStatus('open');
       };
       ws.onclose = () => !cancelled && setStatus('closed');

@@ -1,30 +1,40 @@
 <!doctype html>
-<meta charset=utf-8>
-<title>Relax Routine prototypes</title>
-<style>body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;max-width:560px;margin:40px auto;padding:0 20px;color:#1f1f1f;line-height:1.6}a{color:#1a73e8}small{color:#5c6b62}</style>
-<h1>Relax Routine — DH Mind Clinic</h1>
-<p>Internal prototype index.</p>
-<h2>ActivaCare — Behavioral Activation</h2>
-<p>행동활성화 기반 삶 회복 앱. 우울증에 국한하지 않고 ADHD·불안·회피·완벽주의·번아웃·실행기능 저하 등 원하는 삶을 살지 못하는 사용자를 대상으로 한다.</p>
-<ul>
-  <li><a href="behavioral-activation-dtx/">ActivaCare project page</a> — 행동활성화 앱 전용 폴더에서 보기 <small>(recommended)</small></li>
-  <li><a href="behavioral-activation-dtx/prototype/">ActivaCare prototype v0.2</a> — 실행 전 체크 · 타이머 · 실행 후 체크아웃 · 예상-실제 비교 · 외래 요약까지 이어지는 치료 루프 <small>(latest)</small></li>
-  <li><a href="behavioral-activation-dtx/prototype/v0.2.html">ActivaCare prototype v0.2 snapshot</a> — 버전 고정 파일</li>
-</ul>
-<h2>CBT-I Care</h2>
-<p>수면일기 기반 8주 CBT-I care extension 프로토타입.</p>
-<ul>
-  <li><a href="prototype/cbti-v0.5.html">CBT-I prototype v0.5</a> — 출시 직전 앱 수준 · 오프라인 저장 · 실제 입력 기반 홈/리포트 갱신 · 개인정보/동의 · 임상 안전 가드레일 · 데이터 내보내기 <small>(latest)</small></li>
-  <li><a href="prototype/cbti-v0.4.html">CBT-I prototype v0.4</a> — 탭 시 세션·척도·진료연결 상세 화면 진입 · 일기 저장 시 홈/진도/요약 갱신 · 더미처럼 보이던 고정값을 로컬 입력 기반 상태로 정리</li>
-  <li><a href="prototype/cbti-v0.3.html">CBT-I prototype v0.3-stable</a> — 라벤더 수면 테마 · 위기 선택 시 CBT-I 진행 차단 · 진료용 요약 export · 수면일기 계산/검증 보강</li>
-  <li><a href="prototype/cbti-v0.2.html">CBT-I prototype v0.2</a> — Relax Routine v0.5 색상 시스템 정렬 · 스플래시 · 초기 평가 소개 화면 · 수면일기 카페인/수면질 입력 · 지식 아티클 상세 · 설정 화면</li>
-  <li><a href="prototype/cbti-v0.1.html">CBT-I prototype v0.1</a> — 초기 CBT-I 전환 · 5탭(홈·일기·세션·진도·지식) · 인테이크 · AI Memory</li>
-</ul>
-<h2>Relax Routine</h2>
-<ul>
-  <li><a href="prototype/v0.5.html">prototype v0.5</a> — 2026-05-17 late · 개인화 엔진 카드 접기/펴기 + BackBtn click event 누락 버그 fix <small>(latest)</small></li>
-  <li><a href="prototype/v0.4.html">prototype v0.4</a> — Home mini CTA + PMR/BodyScan/Autogenic completion semantics</li>
-  <li><a href="prototype/v0.3.html">prototype v0.3</a> — 세션 탭 주차 동적 · 앱 버전 표시</li>
-  <li><a href="prototype/v0.2.html">prototype v0.2</a> — 5분 라벨 · 진도 동적 · padding · sd_caption · Track · 회 완료</li>
-  <li><a href="prototype/v0.1.html">prototype v0.1</a> — 초기 minor patch + 로고 + pulse</li>
-</ul>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Victory Projects</title>
+<style>
+  :root{color-scheme:light dark;--bg:#f6f7fb;--card:#fff;--ink:#14171f;--muted:#667085;--line:#e5e7eb;--accent:#2563eb}
+  @media (prefers-color-scheme:dark){:root{--bg:#0f172a;--card:#111827;--ink:#f8fafc;--muted:#cbd5e1;--line:#243044;--accent:#93c5fd}}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}
+  main{max-width:920px;margin:0 auto;padding:28px 18px 44px}
+  h1{font-size:32px;margin:0 0 8px}p{color:var(--muted)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:24px}
+  .card{display:block;padding:20px;border:1px solid var(--line);border-radius:22px;background:var(--card);text-decoration:none;color:inherit;box-shadow:0 12px 28px rgba(15,23,42,.08)}
+  .card strong{display:block;font-size:19px;margin-bottom:8px}.card span{color:var(--muted)}.tag{display:inline-block;margin-top:14px;color:var(--accent);font-weight:700}
+</style>
+<main>
+  <h1>Victory Projects</h1>
+  <p>프로젝트별 폴더로 분리한 기본 인덱스. 모바일 출시 목표 프로젝트 3종과 LAN 데스크톱 메신저 1종.</p>
+  <section class="grid" aria-label="project folders">
+    <a class="card" href="relax-routine/">
+      <strong>Relax Routine</strong>
+      <span>모바일 출시 목표. 이완·호흡·PMR·바디스캔 루틴.</span>
+      <b class="tag">relax-routine/</b>
+    </a>
+    <a class="card" href="cbti-care/">
+      <strong>CBT-I Care</strong>
+      <span>모바일 출시 목표. 수면일기 기반 CBT-I care extension.</span>
+      <b class="tag">cbti-care/</b>
+    </a>
+    <a class="card" href="behavioral-activation/">
+      <strong>Behavioral Activation</strong>
+      <span>모바일 출시 목표. ActivaCare 행동활성화 앱.</span>
+      <b class="tag">behavioral-activation/</b>
+    </a>
+    <a class="card" href="dh-talk/">
+      <strong>DH Talk</strong>
+      <span>동행정신건강의학과 LAN 원장↔데스크 메신저.</span>
+      <b class="tag">dh-talk/</b>
+    </a>
+  </section>
+</main>

@@ -89,7 +89,11 @@ app.whenReady().then(() => {
   // WebSocket 허브는 데스크1(is_server) PC 에서만 기동한다.
   const meUser = config.users.find((u) => u.id === config.settings.me);
   if (meUser?.is_server) {
-    startServer(WS_PORT, { attachmentsDir });
+    startServer(WS_PORT, {
+      attachmentsDir,
+      authToken: config.settings.server?.shared_key,
+      users: config.users,
+    });
   } else {
     console.log(`[main] 이 PC(${config.settings.me})는 서버가 아님 — 허브 미기동`);
   }

@@ -8,9 +8,9 @@
 
 ## 바로 보기
 
-- 프로젝트 페이지: [`behavioral-activation-dtx/index.html`](./index.html)
-- 프로토타입 v0.2: [`behavioral-activation-dtx/prototype/index.html`](./prototype/)
-- 버전 고정 파일: [`behavioral-activation-dtx/prototype/v0.2.html`](./prototype/v0.2.html)
+- 프로젝트 페이지: [`behavioral-activation/index.html`](./index.html)
+- 프로토타입 v0.2: [`behavioral-activation/prototype/index.html`](./prototype/)
+- 버전 고정 파일: [`behavioral-activation/prototype/v0.2.html`](./prototype/v0.2.html)
 
 ---
 
@@ -57,7 +57,7 @@
 
 ## 3. 작업명
 
-- 폴더명: `behavioral-activation-dtx`
+- 폴더명: `behavioral-activation`
 - 제품 가칭: **ActivaCare**
 - 내부 프로젝트명: **BA DTx**
 - 제품 문장: **작게 움직이면 삶이 다시 커진다**

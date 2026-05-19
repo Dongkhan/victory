@@ -30,6 +30,10 @@ npm run dev      # Vite dev 서버 + Electron 동시 기동
 `npm run dev` 실행 시 창이 뜨고, echo 입력창에 메시지를 보내면 main process의
 WebSocket 서버가 그대로 되돌려준다.
 
+## LAN 인증 설정
+
+`config/settings.yaml`의 `server.shared_key`는 실사용 전 모든 PC에서 같은 20자 이상 무작위 문자열로 바꾼다. 서버는 `hello` 단계에서 공유키와 `users.yaml` 등록 사용자를 확인하고, 이후 메시지의 `sender`는 클라이언트 입력값이 아니라 인증된 소켓 사용자로 서버가 덮어쓴다.
+
 ## 스크립트
 
 | 명령 | 설명 |

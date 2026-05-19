@@ -549,3 +549,25 @@ body {
   color: var(--muted);
   text-align: right;
 }
+
+.app--fallback {
+  align-items: center;
+  justify-content: center;
+}
+
+.fallback {
+  width: min(640px, 100%);
+  padding: 24px;
+  line-height: 1.65;
+}
+
+.fallback h1 {
+  font-size: 24px;
+}
+
+.fallback code {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--panel-2);
+  color: var(--accent);
+}
