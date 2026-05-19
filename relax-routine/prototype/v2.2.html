@@ -390,5 +390,65 @@ document.addEventListener('DOMContentLoaded', async function() {
 })();
 </script>
 
+<script id="relax-mobile-scroll-fix-v22">
+(function(){
+  // v2.2 hotfix: minor mobile layout patch only. Do not bump version.
+  // Some Android/in-app browsers keep #root overflow hidden while the rendered
+  // app screen is taller than the phone frame, so bottom-tab screens cannot be
+  // pulled upward. Make the active React shell itself the scroll container and
+  // reserve space above the fixed bottom navigation.
+  const STYLE_ID='relax-mobile-scroll-fix-v22-style';
+  function ensureStyle(){
+    if(document.getElementById(STYLE_ID)) return;
+    const style=document.createElement('style');
+    style.id=STYLE_ID;
+    style.textContent=`
+      #root[data-relax-scroll-fix-v22="true"] > *{
+        overflow-y:auto!important;
+        overflow-x:hidden!important;
+        -webkit-overflow-scrolling:touch;
+        overscroll-behavior-y:contain;
+        touch-action:pan-y;
+        scrollbar-width:none;
+      }
+      #root[data-relax-scroll-fix-v22="true"] > *::-webkit-scrollbar{display:none;}
+    `;
+    document.head.appendChild(style);
+  }
+  function hasBottomNav(){
+    const txt=(document.getElementById('root')?.innerText||'').replace(/\s+/g,' ');
+    return ['홈','세션','지도','배경','설정'].every(word=>txt.includes(word));
+  }
+  function applyScrollFix(){
+    const root=document.getElementById('root');
+    const shell=root?.firstElementChild;
+    if(!root || !shell) return;
+    const needsScroll = shell.scrollHeight > root.clientHeight + 2 || root.scrollHeight > root.clientHeight + 2 || hasBottomNav();
+    if(!needsScroll) return;
+    ensureStyle();
+    root.dataset.relaxScrollFixV22='true';
+    root.style.overflow='hidden';
+    shell.style.overflowY='auto';
+    shell.style.overflowX='hidden';
+    shell.style.webkitOverflowScrolling='touch';
+    shell.style.touchAction='pan-y';
+    shell.style.overscrollBehaviorY='contain';
+    shell.style.minHeight='0';
+    shell.style.paddingBottom='calc(104px + env(safe-area-inset-bottom, 0px))';
+    shell.dataset.relaxScrollContainerV22='true';
+  }
+  function install(){
+    applyScrollFix();
+    setTimeout(applyScrollFix,250);
+    setTimeout(applyScrollFix,900);
+    setTimeout(applyScrollFix,1800);
+    new MutationObserver(applyScrollFix).observe(document.documentElement,{childList:true,subtree:true,characterData:false});
+    window.addEventListener('resize',applyScrollFix,{passive:true});
+    window.addEventListener('orientationchange',()=>setTimeout(applyScrollFix,250),{passive:true});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',install,{once:true}); else install();
+})();
+</script>
+
 <script>document.title='Relax Routine v2.2 — DH Mind Clinic';window.__RELAX_ROUTINE_READY__=true;try{const oldKey='relax-routine-v15-mobile-state',newKey='relax-routine-v22-mobile-state';if(!localStorage.getItem(newKey)&&localStorage.getItem(oldKey)){const v=JSON.parse(localStorage.getItem(oldKey));v.version='v2.2';v.schemaVersion='relax-v2.2';localStorage.setItem(newKey,JSON.stringify(v));}}catch(e){}</script></body>
 </html>
