@@ -7,7 +7,7 @@ def read(rel):
     return (ROOT / rel).read_text(encoding="utf-8")
 
 
-def test_activacare_v10_is_current_version_with_isolated_storage():
+def test_activacare_v10_snapshot_is_preserved_with_isolated_storage():
     html = read("behavioral-activation/prototype/v1.0.html")
     landing = read("behavioral-activation/index.html")
     prototype_index = read("behavioral-activation/prototype/index.html")
@@ -17,7 +17,7 @@ def test_activacare_v10_is_current_version_with_isolated_storage():
     assert "viewport-fit=cover" in html
     assert "prototype/v1.0.html" in landing
     assert "v1.0.html" in prototype_index
-    assert "현재 버전:</strong> v1.0" in landing
+    assert "현재 버전:</strong> v1.0" not in landing
 
 
 def test_difficulty_adjustment_is_stateful_and_changes_today_card():
