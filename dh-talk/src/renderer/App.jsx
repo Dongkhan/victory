@@ -7,6 +7,14 @@ import { resolveMacroText, macroTextNeeds, matchesHotkey } from './lib/macro.js'
 import { shouldPulse, shouldPulseOnEscalate } from './lib/alert.js';
 import { readFileAsDataURL, splitDataUrl, MAX_FILE_BYTES, formatBytes } from './lib/file.js';
 
+const MIN_SHARED_KEY_LENGTH = 20;
+const DEFAULT_SHARED_KEY = 'CHANGE_ME_BEFORE_USE';
+
+function sharedKeyConnectionBlocked(sharedKey) {
+  const key = String(sharedKey || '').trim();
+  return key.length < MIN_SHARED_KEY_LENGTH || key === DEFAULT_SHARED_KEY;
+}
+
 const STATUS_LABEL = {
   connecting: '연결 중…',
   open: '연결됨',
@@ -50,6 +58,11 @@ export default function App() {
   const wsRef = useRef(null);
 
   const connectWebSocket = ({ host, sharedKey, myId, info, role, sharedKeyNeedsSetup }) => {
+    if (sharedKeyConnectionBlocked(sharedKey)) {
+      setStatus('error');
+      setStatusDetail('공유키를 먼저 설정해야 연결합니다. 20자 이상 무작위 shared_key로 모든 PC를 맞춘 뒤 재연결하세요.');
+      return null;
+    }
     const socket = new WebSocket(`ws://${host}:${info.wsPort}`);
     wsRef.current = socket;
 
@@ -104,7 +117,7 @@ export default function App() {
     wsRef.current?.close();
     const nextHost = saved.server?.host || settingsDraft.host.trim() || '127.0.0.1';
     const nextSharedKey = String(saved.server?.shared_key || '').trim();
-    const sharedKeyNeedsSetup = !nextSharedKey || nextSharedKey === 'CHANGE_ME_BEFORE_USE';
+    const sharedKeyNeedsSetup = sharedKeyConnectionBlocked(nextSharedKey);
     setStatus('connecting');
     setStatusDetail(`설정 저장 후 재연결: ${nextHost}:${appInfo.wsPort}`);
     connectWebSocket({ host: nextHost, sharedKey: nextSharedKey, myId: me, info: appInfo, role: myRole, sharedKeyNeedsSetup });
@@ -126,7 +139,7 @@ export default function App() {
       const role = meUser?.role || 'desk';
       const host = meUser?.is_server ? '127.0.0.1' : settings.server?.host || '127.0.0.1';
       const sharedKey = String(settings.server?.shared_key || '').trim();
-      const sharedKeyNeedsSetup = !sharedKey || sharedKey === 'CHANGE_ME_BEFORE_USE';
+      const sharedKeyNeedsSetup = sharedKeyConnectionBlocked(sharedKey);
 
       setAppInfo(info);
       setMe(myId);
@@ -142,6 +155,11 @@ export default function App() {
       );
       if (cancelled) return;
 
+      if (sharedKeyConnectionBlocked(sharedKey)) {
+        setStatus('error');
+        setStatusDetail('공유키를 먼저 설정해야 연결합니다. config/settings.yaml 또는 상단 설정에서 20자 이상 무작위 shared_key를 저장하세요.');
+        return;
+      }
       ws = connectWebSocket({ host, sharedKey, myId, info, role, sharedKeyNeedsSetup });
 
       cleanups.push(

@@ -16,13 +16,18 @@ let attachmentsDir = null;
 let authToken = '';
 let allowedUsers = new Set();
 
+export function isUsableSharedKey(value) {
+  const key = String(value || '').trim();
+  return key.length >= 20 && key !== 'CHANGE_ME_BEFORE_USE';
+}
+
 export function startServer(port, options = {}) {
   attachmentsDir = options.attachmentsDir ?? null;
   authToken = String(options.authToken || process.env.DHTALK_SHARED_KEY || '').trim();
   allowedUsers = new Set((options.users || []).map((u) => u.id).filter(Boolean));
 
-  if (!authToken) {
-    console.warn('[server] DHTALK_SHARED_KEY/server.shared_key 미설정 — LAN 인증이 비활성화됩니다. 실사용 전 반드시 설정하세요.');
+  if (!isUsableSharedKey(authToken)) {
+    throw new Error('[server] shared_key_required: server.shared_key는 20자 이상 무작위 문자열이어야 하며 CHANGE_ME_BEFORE_USE는 사용할 수 없습니다.');
   }
 
   wss = new WebSocketServer({ port, maxPayload: MAX_PAYLOAD });
