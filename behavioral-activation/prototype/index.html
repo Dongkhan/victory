@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#7ea66a">
-  <meta name="description" content="ActivaCare v0.4 — 행동활성화 기반 삶 회복 앱 프로토타입">
-  <title>ActivaCare v0.4 — DH Mind Clinic</title>
+  <meta name="description" content="ActivaCare v0.5 — 행동활성화 기반 삶 회복 앱 프로토타입">
+  <title>ActivaCare v0.5 — DH Mind Clinic</title>
   <style>
     :root{--ivory:#f7f2e8;--surface:#fffdf7;--surface2:#f0eadf;--ink:#24251f;--muted:#687061;--subtle:#858b7c;--line:#e3dac9;--accent:#7ea66a;--accent2:#416632;--accentBg:#e3efd8;--clay:#d79b72;--clayBg:#f4dfcf;--lav:#8d83bd;--lavBg:#e7e3f5;--danger:#c85f55;--dangerBg:#f8e5e1;--warn:#9a7b2d;--warnBg:#f3e9c4;--nav:82px;--tap:52px;--r1:26px;--r2:18px;--shadow:0 16px 36px rgba(31,31,31,.12)}
     *{box-sizing:border-box;margin:0;padding:0}html,body{width:100%;min-height:100%}body{min-height:100vh;min-height:100dvh;display:grid;place-items:center;background:radial-gradient(circle at top,#4c5841 0%,#303727 56%,#20231b 100%);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;line-height:1.45;overflow:hidden}button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(126,166,106,.55);outline-offset:2px}.phone{width:min(390px,100vw);height:min(844px,100dvh);border-radius:30px;overflow:hidden;position:relative;background:var(--ivory);box-shadow:0 34px 90px rgba(0,0,0,.42),inset 0 0 0 1px rgba(255,255,255,.14)}@media(max-width:480px){body{background:var(--ivory)}.phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}}
@@ -15,10 +15,10 @@
 </head>
 <body>
   <main class="phone" aria-label="ActivaCare 모바일 프로토타입">
-    <div class="status"><span>9:41</span><span class="pill">v0.4</span><span>100%</span></div>
+    <div class="status"><span>9:41</span><span class="pill">v0.5</span><span>100%</span></div>
     <div class="screen-wrap">
       <section class="screen active" id="today" aria-labelledby="today-title" aria-hidden="false">
-        <div class="brand-row"><div class="brand"><span class="logo"></span>DH Mind Clinic</div><span class="version">ActivaCare v0.4</span></div>
+        <div class="brand-row"><div class="brand"><span class="logo"></span>DH Mind Clinic</div><span class="version">ActivaCare v0.5</span></div>
         <div class="app-name">ActivaCare</div><h1 id="today-title">오늘은 삶 쪽으로 2분만 움직입니다.</h1>
         <p class="lead">기분이 좋아질 때까지 기다리지 않고, 가능한 행동 하나를 작게 시작합니다. 완료보다 예상-실제 차이를 학습합니다.</p>
         <div class="card hero">
@@ -166,5 +166,6 @@
     $('#exportBtn').addEventListener('click',()=>exportClinicReport(false)); $('#downloadBtn').addEventListener('click',()=>exportClinicReport(true)); $('#resetBtn').addEventListener('click',resetSavedData);
     renderAll(); window.__ACTIVACARE_READY__=true;
   </script>
+<!-- previous latest: v0.4 / prototype/v0.4.html -->
 </body>
 </html>

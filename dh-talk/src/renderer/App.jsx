@@ -42,10 +42,72 @@ export default function App() {
   const [status, setStatus] = useState('connecting');
   const [statusDetail, setStatusDetail] = useState('서버 연결을 준비 중입니다.');
   const [settingsDraft, setSettingsDraft] = useState({ host: '', sharedKey: '' });
+  const [showSharedKey, setShowSharedKey] = useState(false);
   const [pendingMacro, setPendingMacro] = useState(null);
   const [promptName, setPromptName] = useState('');
 
   const wsRef = useRef(null);
+
+  const connectWebSocket = ({ host, sharedKey, myId, info, role, sharedKeyNeedsSetup }) => {
+    const socket = new WebSocket(`ws://${host}:${info.wsPort}`);
+    wsRef.current = socket;
+
+    socket.onopen = () => {
+      socket.send(JSON.stringify({ kind: 'hello', userId: myId, token: sharedKey }));
+      setStatus('open');
+      setStatusDetail(
+        sharedKeyNeedsSetup
+          ? '서버에는 연결됐지만 기본 공유키 상태입니다. 실사용 전 shared_key 교체가 필요합니다.'
+          : '인증 요청을 보냈습니다.',
+      );
+    };
+    socket.onclose = (ev) => {
+      setStatus('closed');
+      if (ev.code === 1008) setStatusDetail('인증 실패 또는 정책 위반으로 연결이 종료되었습니다. 공유키와 users.yaml을 확인하세요.');
+      else setStatusDetail('연결 실패 또는 서버 종료 상태입니다. 데스크1 서버 앱, IP, 방화벽을 확인하세요.');
+    };
+    socket.onerror = () => {
+      setStatus('error');
+      setStatusDetail('연결 실패: 서버 IP, 포트, Windows 방화벽, shared_key 설정을 확인하세요.');
+    };
+    socket.onmessage = (ev) => {
+      let msg;
+      try {
+        msg = JSON.parse(ev.data);
+      } catch {
+        return;
+      }
+      if (msg.kind === 'error') {
+        setStatus('error');
+        const reason = msg.code === 'auth_failed' ? 'auth_failed: 공유키가 일치하지 않습니다.' : msg.reason;
+        setStatusDetail(reason || '서버 오류가 발생했습니다.');
+      } else if (msg.kind === 'hello_ack') {
+        setStatus('open');
+        setStatusDetail(`${msg.userId} 인증 완료`);
+      } else if (msg.kind === 'message') {
+        setMessages((prev) => [...prev, msg]);
+        if (shouldPulse(msg, { me: myId, role })) window.dhtalk.showAlert(msg);
+      } else if (msg.kind === 'ack') {
+        window.dhtalk.closeAlert();
+      } else if (msg.kind === 'escalate') {
+        if (shouldPulseOnEscalate(msg.original, { me: myId, role })) {
+          window.dhtalk.showAlert(msg.original);
+        }
+      }
+    };
+    return socket;
+  };
+
+  const reconnectAfterSettingsSave = (saved) => {
+    if (!appInfo || !me) return;
+    wsRef.current?.close();
+    const nextHost = saved.server?.host || settingsDraft.host.trim() || '127.0.0.1';
+    const nextSharedKey = String(saved.server?.shared_key || '').trim();
+    const sharedKeyNeedsSetup = !nextSharedKey || nextSharedKey === 'CHANGE_ME_BEFORE_USE';
+    setStatus('connecting');
+    setStatusDetail(`설정 저장 후 재연결: ${nextHost}:${appInfo.wsPort}`);
+    connectWebSocket({ host: nextHost, sharedKey: nextSharedKey, myId: me, info: appInfo, role: myRole, sharedKeyNeedsSetup });
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -79,56 +141,7 @@ export default function App() {
       );
       if (cancelled) return;
 
-      ws = new WebSocket(`ws://${host}:${info.wsPort}`);
-      wsRef.current = ws;
-
-      ws.onopen = () => {
-        if (cancelled) return;
-        ws.send(JSON.stringify({ kind: 'hello', userId: myId, token: sharedKey }));
-        setStatus('open');
-        setStatusDetail(
-          sharedKeyNeedsSetup
-            ? '서버에는 연결됐지만 기본 공유키 상태입니다. 실사용 전 shared_key 교체가 필요합니다.'
-            : '인증 요청을 보냈습니다.',
-        );
-      };
-      ws.onclose = (ev) => {
-        if (cancelled) return;
-        setStatus('closed');
-        if (ev.code === 1008) setStatusDetail('인증 실패 또는 정책 위반으로 연결이 종료되었습니다. 공유키와 users.yaml을 확인하세요.');
-        else setStatusDetail('연결 실패 또는 서버 종료 상태입니다. 데스크1 서버 앱, IP, 방화벽을 확인하세요.');
-      };
-      ws.onerror = () => {
-        if (cancelled) return;
-        setStatus('error');
-        setStatusDetail('연결 실패: 서버 IP, 포트, Windows 방화벽, shared_key 설정을 확인하세요.');
-      };
-      ws.onmessage = (ev) => {
-        if (cancelled) return;
-        let msg;
-        try {
-          msg = JSON.parse(ev.data);
-        } catch {
-          return;
-        }
-        if (msg.kind === 'error') {
-          setStatus('error');
-          const reason = msg.code === 'auth_failed' ? 'auth_failed: 공유키가 일치하지 않습니다.' : msg.reason;
-          setStatusDetail(reason || '서버 오류가 발생했습니다.');
-        } else if (msg.kind === 'hello_ack') {
-          setStatus('open');
-          setStatusDetail(`${msg.userId} 인증 완료`);
-        } else if (msg.kind === 'message') {
-          setMessages((prev) => [...prev, msg]);
-          if (shouldPulse(msg, { me: myId, role })) window.dhtalk.showAlert(msg);
-        } else if (msg.kind === 'ack') {
-          window.dhtalk.closeAlert();
-        } else if (msg.kind === 'escalate') {
-          if (shouldPulseOnEscalate(msg.original, { me: myId, role })) {
-            window.dhtalk.showAlert(msg.original);
-          }
-        }
-      };
+      ws = connectWebSocket({ host, sharedKey, myId, info, role, sharedKeyNeedsSetup });
 
       cleanups.push(
         window.dhtalk.onAlertAcked((m) => {
@@ -187,7 +200,8 @@ export default function App() {
       server: { host: settingsDraft.host.trim() || '127.0.0.1', shared_key: sharedKey },
     });
     setSettingsDraft({ host: saved.server?.host || '127.0.0.1', sharedKey: saved.server?.shared_key || '' });
-    setStatusDetail('공유키 저장 완료. 모든 PC에서 같은 값을 저장한 뒤 앱을 재시작하세요.');
+    setStatusDetail('공유키 저장 후 자동 재연결을 시작합니다. 모든 PC에는 같은 값을 저장하세요.');
+    reconnectAfterSettingsSave(saved);
   };
 
   const sendMacro = (macro, patientName) =>
@@ -300,9 +314,11 @@ export default function App() {
             value={settingsDraft.sharedKey}
             onChange={(e) => setSettingsDraft((prev) => ({ ...prev, sharedKey: e.target.value }))}
             placeholder="새 공유키 20자 이상"
-            type="password"
+            type={showSharedKey ? 'text' : 'password'}
           />
+          <button type="button" onClick={() => setShowSharedKey((value) => !value)}>{showSharedKey ? '공유키 숨김' : '공유키 표시'}</button>
           <button type="button" onClick={saveConnectionSettings}>공유키 저장</button>
+          <small className="app__settings-hint">공유키 저장 후 자동 재연결</small>
         </div>
       </header>
 
