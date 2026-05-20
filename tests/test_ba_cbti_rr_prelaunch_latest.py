@@ -143,6 +143,16 @@ def test_rr_v24_opens_with_bounded_copy_hotfix_after_v23_regression():
     assert all(f"{week}: {{ titleK: 'cur_b_w{week}_t'" in template for week in range(1, 9))
     assert all(f"{week}: {{ titleK: 'cur_c_w{week}_t'" in template for week in range(1, 9))
     assert all(f"{week}: {{ titleK: 'cur_bv_w{week}_t'" in template for week in range(1, 9))
+    assert "tech_breath_long: { key: 'breathingLong'" in template
+    assert "const LONG_BREATH_CYCLES = 16;" in template
+    assert "targetCycles = TARGET_CYCLES" in template
+    assert "targetCycles: LONG_BREATH_CYCLES" in template
+    assert "sess_breath_long_dur" in template and "약 5분" in template
+    assert "cur_dose_breath_long" in template and "복식호흡만 5분" in template
+    assert "techniqueKs: ['tech_bodyscan', 'tech_breath']" in template
+    assert "techniqueKs: ['tech_breath_long']" in template
+    assert "techniqueKs: ['tech_pmr', 'tech_breath']" in template
+    assert "techniqueKs: ['tech_autogenic', 'tech_breath']" in template
     hotfix = html.split('relax-home-copy-layout-hotfix-v24', 1)[1]
     assert "new MutationObserver" not in hotfix
     assert "setInterval" in hotfix and "runs>18" in hotfix
