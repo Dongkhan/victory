@@ -61,6 +61,26 @@ def test_cbti_v16_compresses_home_and_adds_breathing_mode_without_life_respect_p
     assert "prototype/v1.6.html" in index
     assert 'prototype/v1.5.html">CBT-I Care v1.5</a><br>' in index
 
+
+def test_cbti_v17_makes_first_screen_diary_first_and_latest_index():
+    html = read("cbti-care/prototype/v1.7.html")
+    index = read("cbti-care/index.html")
+    root_index = read("index.html")
+    assert "CBT-I Care v1.7" in html
+    assert "cbti-care-v17-state" in html
+    assert "LEGACY_KEY='cbti-care-v16-state'" in html
+    assert "먼저 오늘 수면을 기록합니다" in html
+    assert "수면일기 입력" in html
+    assert "오늘 수면일기 작성하기" in html
+    assert "기록 후 볼 세부 정보" in html
+    assert "잠이 안 오면 1분 호흡" in html
+    assert "수면제한 전 안전 확인" in html
+    assert "grid-template-columns:1fr 1fr" in html
+    assert "prototype/v1.7.html" in index and "latest" in index
+    assert 'prototype/v1.6.html">CBT-I Care v1.6</a><br>' in index
+    assert "최신 실행 파일은 v1.7" in index
+    assert "최신 v1.7" in root_index
+
 def test_rr_v22_is_lightweight_and_preserves_latest_lineage():
     html_path = ROOT / "relax-routine/prototype/v2.2.html"
     html = html_path.read_text(encoding="utf-8")
@@ -175,4 +195,27 @@ def test_rr_v24_opens_with_bounded_copy_hotfix_after_v23_regression():
     assert "setInterval" in hotfix and "runs>18" in hotfix
     assert "prototype/v2.4.html" in index
     assert 'prototype/v2.3.html">Relax Routine v2.3</a><br>' in index
-    assert "최신 실행 파일은 v2.4" in index
+    assert 'prototype/v2.4.html">Relax Routine v2.4</a><br>' in index
+
+
+def test_rr_v25_clarifies_first_screen_and_latest_index():
+    html_path = ROOT / "relax-routine/prototype/v2.5.html"
+    html = html_path.read_text(encoding="utf-8")
+    index = read("relax-routine/index.html")
+    root_index = read("index.html")
+    raw = html_path.read_bytes()
+    assert "Relax Routine v2.5" in html
+    assert "relax-routine-v25-mobile-state" in html
+    assert "relax-routine-v24-mobile-state" in html
+    assert len(raw) < 1_200_000
+    assert len(gzip.compress(raw)) < 350_000
+    assert "relax-first-screen-polish-v25" in html
+    assert "하루 6분, 내 몸에 맞는 이완 루틴" in html
+    assert "2분 설문으로 추천받기" in html
+    assert "추천 전 짧게 체험하기" in html
+    assert "급한 긴장 낮추기" in html
+    assert "relax-routine-card-v25" in html
+    assert "prototype/v2.5.html" in index and "latest" in index
+    assert 'prototype/v2.4.html">Relax Routine v2.4</a><br>' in index
+    assert "최신 실행 파일은 v2.5" in index
+    assert "최신 v2.5" in root_index
