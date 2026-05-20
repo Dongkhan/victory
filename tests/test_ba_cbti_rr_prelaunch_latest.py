@@ -1,5 +1,7 @@
 from pathlib import Path
 import gzip
+import json
+import re
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -129,6 +131,18 @@ def test_rr_v24_opens_with_bounded_copy_hotfix_after_v23_regression():
     assert "어지럽거나 불편하면 바로 멈추세요." in html
     assert "removeDuplicateBreathing" in html
     assert "el.remove(); return;" in html
+    assert "const currentWeek = getProgramProgress().weekNo || 1" in html
+    assert "const locked = i + 1 > currentWeek" in html
+    assert "const locked = i + 1 > 2" not in html
+    m = re.search(r'<script type="__bundler/template">(.*?)</script>', html, re.S)
+    assert m is not None
+    template = json.loads(m.group(1))
+    assert "const currentWeek = getProgramProgress().weekNo || 1;" in template
+    assert "const locked = i + 1 > currentWeek;" in template
+    assert all(f"week: {week}," in template for week in range(1, 9))
+    assert all(f"{week}: {{ titleK: 'cur_b_w{week}_t'" in template for week in range(1, 9))
+    assert all(f"{week}: {{ titleK: 'cur_c_w{week}_t'" in template for week in range(1, 9))
+    assert all(f"{week}: {{ titleK: 'cur_bv_w{week}_t'" in template for week in range(1, 9))
     hotfix = html.split('relax-home-copy-layout-hotfix-v24', 1)[1]
     assert "new MutationObserver" not in hotfix
     assert "setInterval" in hotfix and "runs>18" in hotfix
