@@ -153,6 +153,19 @@ def test_rr_v24_opens_with_bounded_copy_hotfix_after_v23_regression():
     assert "techniqueKs: ['tech_breath_long']" in template
     assert "techniqueKs: ['tech_pmr', 'tech_breath']" in template
     assert "techniqueKs: ['tech_autogenic', 'tech_breath']" in template
+    assert "var { lang } = useT();" in template
+    assert "Good morning. Start gently today." in template
+    assert "Ready for the first routine this week?" in template
+    assert "One minute is enough · nothing is recorded until you finish" in template
+    assert "Session complete · total " in template
+    assert "progress_session_unit: {" in template and "en: ' sessions'" in template
+    assert "window.__uxv01_badge_for_count = function(n, lang)" in template
+    assert "font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI'" in template
+    assert "This is enough for today" in html
+    assert "displayLabel=isEnglish" in html and "Body scan" in html
+    assert "Use this recommendation" in html
+    assert "Nothing is recorded until you finish · stop if dizzy or uncomfortable" in html
+    assert "'바디스캔':['바디스캔','Body Scan','Body scan']" in html
     hotfix = html.split('relax-home-copy-layout-hotfix-v24', 1)[1]
     assert "new MutationObserver" not in hotfix
     assert "setInterval" in hotfix and "runs>18" in hotfix
