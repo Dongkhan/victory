@@ -131,13 +131,17 @@ def test_rr_v24_opens_with_bounded_copy_hotfix_after_v23_regression():
     assert "어지럽거나 불편하면 바로 멈추세요." in html
     assert "removeDuplicateBreathing" in html
     assert "el.remove(); return;" in html
-    assert "const currentWeek = getProgramProgress().weekNo || 1" in html
+    assert "const [programWeek, setProgramWeek] = useState(() => getProgramProgress().weekNo || 1)" in html
+    assert "setInterval(refreshProgramWeek, 60000)" in html
+    assert "const currentWeek = programWeek" in html
     assert "const locked = i + 1 > currentWeek" in html
     assert "const locked = i + 1 > 2" not in html
     m = re.search(r'<script type="__bundler/template">(.*?)</script>', html, re.S)
     assert m is not None
     template = json.loads(m.group(1))
-    assert "const currentWeek = getProgramProgress().weekNo || 1;" in template
+    assert "const [programWeek, setProgramWeek] = useState(() => getProgramProgress().weekNo || 1);" in template
+    assert "setSelWeek(programWeek);" in template
+    assert "const currentWeek = programWeek;" in template
     assert "const locked = i + 1 > currentWeek;" in template
     assert all(f"week: {week}," in template for week in range(1, 9))
     assert all(f"{week}: {{ titleK: 'cur_b_w{week}_t'" in template for week in range(1, 9))
