@@ -123,6 +123,8 @@ def test_rr_v24_opens_with_bounded_copy_hotfix_after_v23_regression():
     assert len(gzip.compress(raw)) < 350_000
     assert "relax-home-copy-layout-hotfix-v24" in html
     assert "relax-greeting-font-v24" in html
+    assert ".uxv01-greet,.relax-greeting-font-v24" in html
+    assert "Noto Serif KR" in html  # retained elsewhere, but not for the home greeting
     assert "소리 없이 진행 가능 · 언제든 중단 가능 · 완료 후에만 기록됩니다" in html
     assert "어지럽거나 불편하면 바로 멈추세요." in html
     assert "removeDuplicateBreathing" in html
