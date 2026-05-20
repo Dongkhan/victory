@@ -4,7 +4,8 @@
 
 const DEFAULT_URL = 'http://76.13.179.163:8090';
 
-export async function mirror(message) {
+export async function mirror(message, options = {}) {
+  if (options.enabled !== true) return;
   if (!message?.mirror_to?.includes('telegram')) return;
 
   const apiKey = process.env.DHTALK_API_KEY;
@@ -12,7 +13,7 @@ export async function mirror(message) {
     console.error('[hermes-mirror] DHTALK_API_KEY 미설정 — 미러링 건너뜀');
     return;
   }
-  const baseUrl = process.env.HERMES_URL || DEFAULT_URL;
+  const baseUrl = options.url || process.env.HERMES_URL || DEFAULT_URL;
 
   try {
     const res = await fetch(`${baseUrl}/dhtalk/relay`, {

@@ -15,6 +15,7 @@ let wss = null;
 let attachmentsDir = null;
 let authToken = '';
 let allowedUsers = new Set();
+let hermesConfig = { enabled: false, url: null };
 
 export function isUsableSharedKey(value) {
   const key = String(value || '').trim();
@@ -36,6 +37,10 @@ export function startServer(port, options = {}) {
   attachmentsDir = options.attachmentsDir ?? null;
   authToken = String(options.authToken || process.env.DHTALK_SHARED_KEY || '').trim();
   allowedUsers = new Set((options.users || []).map((u) => u.id).filter(Boolean));
+  hermesConfig = {
+    enabled: options.hermes?.enabled === true,
+    url: options.hermes?.url || null,
+  };
 
   if (!isUsableSharedKey(authToken)) {
     throw new Error('[server] shared_key_required: server.shared_key는 20자 이상 무작위 문자열이어야 하며 CHANGE_ME_BEFORE_USE는 사용할 수 없습니다.');
@@ -149,8 +154,8 @@ function handleIncoming(socket, raw) {
       };
       const id = insertMessage(normalized);
       broadcast({ ...normalized, id });
-      // mirror_to 에 telegram 이 있으면 Hermes 경유 미러링 (실패해도 무관, await 안 함).
-      mirror({ ...normalized, id });
+      // mirror_to 에 telegram 이 있으면 Hermes 경유 미러링. 설정에서 명시적으로 켠 경우에만 외부 전송한다.
+      if (hermesConfig.enabled) mirror({ ...normalized, id }, hermesConfig);
       break;
     }
 

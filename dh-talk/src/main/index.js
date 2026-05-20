@@ -108,6 +108,7 @@ app.whenReady().then(() => {
         attachmentsDir,
         authToken: config.settings.server?.shared_key,
         users: config.users,
+        hermes: config.settings.hermes,
       });
     } catch (err) {
       console.error(err.message);
