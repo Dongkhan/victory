@@ -69,7 +69,8 @@ def test_cbti_v17_makes_first_screen_diary_first_and_latest_index():
     assert "CBT-I Care v1.7" in html
     assert "cbti-care-v17-state" in html
     assert "LEGACY_KEY='cbti-care-v16-state'" in html
-    assert "먼저 오늘 수면을 기록합니다" in html
+    assert "오늘 수면부터 기록합니다" in html
+    assert "지금은 수면일기 하나만 저장합니다" in html
     assert "수면일기 입력" in html
     assert "오늘 수면일기 작성하기" in html
     assert "기록 후 볼 세부 정보" in html
@@ -210,7 +211,8 @@ def test_rr_v25_clarifies_first_screen_and_latest_index():
     assert len(raw) < 1_200_000
     assert len(gzip.compress(raw)) < 350_000
     assert "relax-first-screen-polish-v25" in html
-    assert "하루 6분, 내 몸에 맞는 이완 루틴" in html
+    assert "오늘 몸에 맞는 6분 이완 루틴" in html
+    assert "word-break:keep-all" in html
     assert "2분 설문으로 추천받기" in html
     assert "추천 전 짧게 체험하기" in html
     assert "급한 긴장 낮추기" in html

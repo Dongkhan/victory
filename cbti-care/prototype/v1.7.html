@@ -23,17 +23,19 @@
 
 
     /* v1.7 first-screen polish: reduce stacked-card feel and clarify one primary action. */
-    #screen-dashboard{padding-top:20px}
-    .home-hero-v17{padding:8px 2px 6px;margin-bottom:12px}
-    .home-hero-v17 .release{margin-bottom:10px;background:rgba(120,102,177,.12);color:var(--deep)}
-    .home-hero-v17 h1{font-size:30px;line-height:1.12;margin:0 0 10px;letter-spacing:-.055em;color:#17131f}
-    .home-hero-v17 .lead{max-width:330px;font-size:14px;line-height:1.55;color:#574f63;margin:0}
-    .home-primary-v17{padding:20px;border-radius:28px;background:linear-gradient(145deg,#fffdf8 0%,#f1eafd 100%);box-shadow:0 18px 42px rgba(77,63,122,.13);border-color:rgba(120,102,177,.2)}
-    .home-primary-v17 .focus-label{background:#fff;color:var(--deep);box-shadow:inset 0 0 0 1px rgba(120,102,177,.18)}
-    .home-primary-v17 .focus-title{font-size:26px}
-    .home-primary-v17 .cta{font-size:16px;min-height:56px;box-shadow:0 12px 24px rgba(120,102,177,.2)}
-    .home-secondary-v17{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(120,102,177,.16)}
-    .home-secondary-v17 .subtle-action{width:100%;min-height:42px;text-align:left;justify-content:flex-start;background:rgba(255,255,255,.74);border-color:rgba(120,102,177,.2);font-size:12px;line-height:1.25;color:#3f365f;white-space:normal;border-radius:16px}
+    #screen-dashboard{padding-top:14px}
+    .home-hero-v17{padding:4px 2px 2px;margin-bottom:8px}
+    .home-hero-v17 .release{margin-bottom:8px;background:rgba(120,102,177,.12);color:var(--deep)}
+    .home-hero-v17 h1{font-size:26px;line-height:1.14;margin:0 0 8px;letter-spacing:-.05em;color:#17131f;word-break:keep-all}
+    .home-hero-v17 .lead{max-width:330px;font-size:13px;line-height:1.45;color:#574f63;margin:0;word-break:keep-all}
+    .home-primary-v17{padding:16px;border-radius:26px;background:linear-gradient(145deg,#fffdf8 0%,#f1eafd 100%);box-shadow:0 16px 34px rgba(77,63,122,.12);border-color:rgba(120,102,177,.2);margin-bottom:96px}
+    .home-primary-v17 .focus-label{background:#fff;color:var(--deep);box-shadow:inset 0 0 0 1px rgba(120,102,177,.18);margin-bottom:8px}
+    .home-primary-v17 .focus-title{font-size:23px;margin-bottom:6px}
+    .home-primary-v17 .focus-help{font-size:13px;line-height:1.4;margin-bottom:10px}
+    .home-primary-v17 .cta{font-size:16px;min-height:52px;box-shadow:0 12px 24px rgba(120,102,177,.2)}
+    .home-secondary-v17{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;padding-top:8px;border-top:1px solid rgba(120,102,177,.16)}
+    .home-secondary-v17 .subtle-action{width:100%;min-height:38px;text-align:left;justify-content:flex-start;background:rgba(255,255,255,.74);border-color:rgba(120,102,177,.2);font-size:12px;line-height:1.22;color:#3f365f;white-space:normal;border-radius:15px}
+    .home-primary-v17 .microcopy{display:none}
     .dashboard-details{border-style:dashed;background:rgba(255,252,247,.58);box-shadow:none}
     .dashboard-details summary{padding:2px 0 4px;font-size:13px;color:#5c5278}
 
@@ -59,8 +61,8 @@
   <div class="screens">
     <section class="screen active" id="screen-dashboard" data-title="홈">
       <div class="top"><div class="brand"><span class="logo"></span>CBT-I Care</div><div class="ver">v1.7</div></div>
-      <div class="home-hero-v17"><span class="release">오늘의 시작</span><h1>먼저 오늘 수면을 기록합니다</h1><p class="lead">계산과 처방은 7일 기록 뒤에 봅니다. 지금 화면에서는 한 가지 행동만 시작하면 됩니다.</p></div>
-      <div class="card section focus-card home-primary-v17" id="todayFocusCard"><span class="focus-label">오늘 할 일</span><h2 class="focus-title" id="todayFocusTitle">수면일기 입력</h2><p class="focus-help" id="todayFocusHelp">어젯밤 잠든 시간, 깬 시간, 침대에서 나온 시간을 1분 안에 적습니다.</p><div class="compact-actions"><button class="cta" data-route="screen-diary">오늘 수면일기 작성하기</button></div><div class="home-secondary-v17" aria-label="보조 행동"><button class="subtle-action" data-route="screen-breath">잠이 안 오면 1분 호흡</button><button class="subtle-action" data-route="screen-safety-detail">수면제한 전 안전 확인</button></div><span class="microcopy">기록이 7일 모이면 수면창 계산을 진료 확인용으로 검토합니다.</span></div>
+      <div class="home-hero-v17"><span class="release">오늘의 시작</span><h1>오늘 수면부터 기록합니다</h1><p class="lead">7일 계산은 나중입니다. 지금은 수면일기 하나만 저장합니다.</p></div>
+      <div class="card section focus-card home-primary-v17" id="todayFocusCard"><span class="focus-label">오늘 할 일</span><h2 class="focus-title" id="todayFocusTitle">수면일기 입력</h2><p class="focus-help" id="todayFocusHelp">잠든 시간, 깬 시간, 침대에서 나온 시간을 1분 안에 적습니다.</p><div class="compact-actions"><button class="cta" data-route="screen-diary">오늘 수면일기 작성하기</button></div><div class="home-secondary-v17" aria-label="보조 행동"><button class="subtle-action" data-route="screen-breath">잠이 안 오면 1분 호흡</button><button class="subtle-action" data-route="screen-safety-detail">수면제한 전 안전 확인</button></div><span class="microcopy">기록이 7일 모이면 수면창 계산을 진료 확인용으로 검토합니다.</span></div>
       <details class="card section dashboard-details" id="dashboardDetails"><summary>기록 후 볼 세부 정보</summary><div class="card section" id="intakeGateCard"><h3>첫 사용 안전 게이트</h3><p class="lead" id="intakeGateText">수면창 계산 전 자살사고·조증·수면무호흡·수면제 감량·안전민감 업무를 먼저 확인합니다.</p><button class="secondary" data-route="screen-safety-detail">안전 기준 확인하기</button></div><div class="grid2 section"><div class="metric"><span>최근 수면효율</span><strong id="dashSE">--</strong><em>실제 저장 데이터 기준</em></div><div class="metric"><span>7일 수면 데이터</span><strong id="dashDays">0/7</strong><em>기록 동기화 진행률</em></div><div class="metric"><span>안전 상태</span><strong id="dashSafety">확인 전</strong><em>위험 신호 분리 표시</em></div><div class="metric"><span>다음 행동</span><strong id="dashAction" style="font-size:17px">일기 저장</strong><em>기록 동기화용 실행</em></div></div>
       <div class="card section"><h3>오늘의 실행 플랜</h3><div class="notice warn" id="sleepWindowGate">아직 7일 전이면 수면창 처방은 보류합니다. 대신 오늘은 기상 시간 고정, 20분 규칙, 수면일기 저장을 우선합니다.</div><div class="list" id="todayPlan"></div><button class="secondary section" data-route="screen-session-detail" data-session="1">현재 단계 자세히</button></div>
       <div class="card section" id="srtRecommendationCard"><h3>수면창 계산 상태</h3><div class="notice warn" id="srtRecommendation" data-srt-status="보류">7일 기록 전: 수면창 권고는 보류합니다. 지금은 처방을 앞당기지 않고, 기록 신뢰도를 쌓는 단계입니다.</div><div class="chips" id="srtReasonChips" aria-label="보류 사유"><span class="chip warn">기록 단계: 7일 미만</span></div><p class="lead" id="srtStatusLabel">기록 준비 단계 · 7일이 모이면 평균 TST 기반 계산을 진료에서 검토합니다.</p></div>

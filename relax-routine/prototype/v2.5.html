@@ -616,12 +616,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     style.id=STYLE_ID;
     style.textContent=`
       #root[data-relax-home-v25="true"] > *{background:linear-gradient(180deg,#f7f3e8 0%,#eee7d7 100%)!important;}
-      #root[data-relax-home-v25="true"] > * > div:first-child{padding:42px 34px 0!important;}
-      #root[data-relax-home-v25="true"] > * > div:first-child > div:nth-child(2){font-size:34px!important;line-height:1.14!important;margin-bottom:12px!important;letter-spacing:-.055em!important;}
-      #root[data-relax-home-v25="true"] > * > div:first-child > div:nth-child(3){margin-bottom:14px!important;}
-      .relax-home-note-v25{margin:8px auto 0!important;max-width:300px!important;color:#5f6b55!important;font-size:12px!important;line-height:1.4!important;word-break:keep-all!important;}
-      .relax-home-section-v25{display:block!important;margin:22px 0 10px!important;color:#47523e!important;font-size:14px!important;font-weight:850!important;letter-spacing:-.03em!important;text-align:left!important;}
-      .relax-routine-card-v25{min-height:64px!important;padding:13px 14px!important;border:1px solid rgba(72,89,58,.2)!important;border-radius:22px!important;background:rgba(255,255,255,.5)!important;box-shadow:0 8px 22px rgba(51,63,42,.06)!important;}
+      #root[data-relax-home-v25="true"] > * > div:first-child{padding:30px 30px 20px!important;}
+      #root[data-relax-home-v25="true"] > * > div:first-child > div:nth-child(2){max-width:320px!important;margin:0 auto 10px!important;font-size:30px!important;line-height:1.16!important;letter-spacing:-.055em!important;word-break:keep-all!important;overflow-wrap:normal!important;}
+      #root[data-relax-home-v25="true"] > * > div:first-child > div:nth-child(3){margin-bottom:10px!important;}
+      .relax-home-note-v25{margin:6px auto 0!important;max-width:292px!important;color:#5f6b55!important;font-size:12px!important;line-height:1.35!important;word-break:keep-all!important;}
+      .relax-home-section-v25{display:block!important;margin:16px 0 8px!important;color:#47523e!important;font-size:14px!important;font-weight:850!important;letter-spacing:-.03em!important;text-align:left!important;}
+      .relax-routine-card-v25{min-height:58px!important;padding:11px 13px!important;border:1px solid rgba(72,89,58,.2)!important;border-radius:20px!important;background:rgba(255,255,255,.5)!important;box-shadow:0 8px 22px rgba(51,63,42,.06)!important;}
       .relax-routine-card-v25 .rr-title{font-size:14px!important;font-weight:900!important;color:#203020!important;}
       .relax-routine-card-v25 .rr-meta{font-size:12px!important;color:#64705a!important;margin-top:3px!important;}
       .relax-routine-card-v25 .rr-play{float:right;width:24px;height:24px;border-radius:50%;background:#e4edc6;color:#29351f;display:inline-grid;place-items:center;font-size:11px;margin-left:8px;}
@@ -661,7 +661,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
   function polishLayout(){
     const root=document.getElementById('root'); if(root)root.dataset.relaxHomeV25='true';
-    setText('Relax Routine','하루 6분, 내 몸에 맞는 이완 루틴');
+    setText('Relax Routine','오늘 몸에 맞는 6분 이완 루틴');
     const heroDesc=root?.firstElementChild?.firstElementChild?.children?.[3];
     if(heroDesc && clean(heroDesc.innerText).includes('근거 기반 이완')){
       heroDesc.textContent='긴장·불안·잠들기 전 과각성에 맞춰 오늘 시작할 훈련을 추천합니다';
