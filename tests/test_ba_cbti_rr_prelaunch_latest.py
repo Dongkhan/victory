@@ -87,3 +87,25 @@ def test_rr_v22_is_lightweight_and_preserves_latest_lineage():
     assert "전문의가 설계한 근거 기반 이완 루틴" in html
     assert "prototype/v2.2.html" in index
     assert 'prototype/v2.1.html">Relax Routine v2.1</a><br>' in index
+
+
+def test_rr_v23_polishes_home_copy_and_removes_duplicate_breathing_cta():
+    html_path = ROOT / "relax-routine/prototype/v2.3.html"
+    html = html_path.read_text(encoding="utf-8")
+    index = read("relax-routine/index.html")
+    raw = html_path.read_bytes()
+    assert "Relax Routine v2.3" in html
+    assert "relax-routine-v23-mobile-state" in html
+    assert "relax-routine-v22-mobile-state" in html
+    assert len(raw) < 1_200_000
+    assert len(gzip.compress(raw)) < 350_000
+    assert "relax-home-copy-layout-hotfix-v23" in html
+    assert "relax-greeting-font-v23" in html
+    assert "좋은 아침이에요. 오늘도 차분하게 시작해볼까요?" in html
+    assert "소리 없이 진행 가능 · 언제든 중단 가능 · 완료 후에만 기록됩니다" in html
+    assert "어지럽거나 불편하면 바로 멈추세요." in html
+    assert "removeDuplicateBreathing" in html
+    assert "지금 바로 호흡" in html and "4-7-8" in html
+    assert "prototype/v2.3.html" in index
+    assert 'prototype/v2.2.html">Relax Routine v2.2</a><br>' in index
+    assert "최신 실행 파일은 v2.3" in index
