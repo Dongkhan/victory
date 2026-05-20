@@ -108,4 +108,28 @@ def test_rr_v23_polishes_home_copy_and_removes_duplicate_breathing_cta():
     assert "지금 바로 호흡" in html and "4-7-8" in html
     assert "prototype/v2.3.html" in index
     assert 'prototype/v2.2.html">Relax Routine v2.2</a><br>' in index
-    assert "최신 실행 파일은 v2.3" in index
+    assert 'prototype/v2.3.html">Relax Routine v2.3</a><br>' in index
+
+
+def test_rr_v24_opens_with_bounded_copy_hotfix_after_v23_regression():
+    html_path = ROOT / "relax-routine/prototype/v2.4.html"
+    html = html_path.read_text(encoding="utf-8")
+    index = read("relax-routine/index.html")
+    raw = html_path.read_bytes()
+    assert "Relax Routine v2.4" in html
+    assert "relax-routine-v24-mobile-state" in html
+    assert "relax-routine-v22-mobile-state" in html
+    assert len(raw) < 1_200_000
+    assert len(gzip.compress(raw)) < 350_000
+    assert "relax-home-copy-layout-hotfix-v24" in html
+    assert "relax-greeting-font-v24" in html
+    assert "소리 없이 진행 가능 · 언제든 중단 가능 · 완료 후에만 기록됩니다" in html
+    assert "어지럽거나 불편하면 바로 멈추세요." in html
+    assert "removeDuplicateBreathing" in html
+    assert "el.remove(); return;" in html
+    hotfix = html.split('relax-home-copy-layout-hotfix-v24', 1)[1]
+    assert "new MutationObserver" not in hotfix
+    assert "setInterval" in hotfix and "runs>18" in hotfix
+    assert "prototype/v2.4.html" in index
+    assert 'prototype/v2.3.html">Relax Routine v2.3</a><br>' in index
+    assert "최신 실행 파일은 v2.4" in index
