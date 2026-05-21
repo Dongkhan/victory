@@ -32,7 +32,7 @@
 - [X] **bug-07**: 100vh → 100dvh 전환 (iOS Safari 주소창 처리) → 측정: CSS에서 `100vh` 검색 결과 0건 (dvh 또는 -webkit-fill-available로 대체)
 - [X] **bug-08**: 새로고침 시 현재 화면 유지 — URL hash 사용 (`#screen-isi`) → 측정: F5 후 같은 화면 표시
 - [X] **bug-09**: localStorage 키 충돌 방지 — 모든 키에 prefix `cbticare:` → 측정: localStorage 키 모두 prefix 시작
-- [ ] **bug-10**: focus 손실 처리 — 화면 전환 시 새 화면의 첫 인터랙티브 요소로 focus → 측정: route change 후 document.activeElement 확인
+- [X] **bug-10**: focus 손실 처리 — 화면 전환 시 새 화면의 첫 인터랙티브 요소로 focus → 측정: route change 후 document.activeElement 확인
 
 ## Track 2: 60초 First Value — 온보딩 (12 항목)
 
