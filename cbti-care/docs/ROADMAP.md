@@ -225,7 +225,7 @@
 ## Track 13: 개발자 위생 (6 항목)
 
 - [X] **dev-01**: DEV_MODE 가드 외 UI dev 노출 0 → 측정: "debug" "dev" "test" 텍스트 UI 노출 0
-- [ ] **dev-02**: console.log 정리 (DEV_MODE 가드 외) → 측정: 정상 사용 시 console clean
+- [X] **dev-02**: console.log 정리 (DEV_MODE 가드 외) → 측정: 정상 사용 시 console clean
 - [ ] **dev-03**: 단일 HTML 의존성 0 → 측정: package.json 없음
 - [ ] **dev-04**: 파일 크기 ≤ 150KB (현재 61KB, 위 모든 작업 후 한계) → 측정: stat ≤ 153600
 - [ ] **dev-05**: HTML W3C validator 통과 → 측정: validator API 결과 clean
