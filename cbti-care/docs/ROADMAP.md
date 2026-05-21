@@ -74,7 +74,7 @@
 ## Phase 6: i18n & 출처 — 6 항목
 
 - [X] **i18n-01**: `<html lang="ko">` 기본, 사용자가 영문 전환 옵션 (설정 화면) → 측정: 설정에 언어 토글 존재
-- [ ] **i18n-02**: 영문 fallback 카피 — Intended Use, 면책, 위기 안내 3개 핵심 섹션만이라도 영문 → 측정: 영문 토글 시 핵심 3개 섹션 영문 표시
+- [X] **i18n-02**: 영문 fallback 카피 — Intended Use, 면책, 위기 안내 3개 핵심 섹션만이라도 영문 → 측정: 영문 토글 시 핵심 3개 섹션 영문 표시
 - [ ] **i18n-03**: 위기 안내 영문 — "Crisis hotlines (KR): 109 Life Line · 1393 Suicide Prevention · 119 Emergency · regional crisis centers" → 측정: 영문 위기 카드 존재
 - [ ] **ref-01**: 참고 문헌 섹션 추가 — Morin CM, Espie CA, Edinger JD 등 CBT-I 핵심 문헌 5개 이상 인용 → 측정: References 섹션 존재 + ≥ 5 항목
 - [ ] **ref-02**: 척도 출처 명시 — ISI (Bastien et al. 2001), PHQ-9 (Spitzer et al. 1999), ESS (Johns 1991) → 측정: 각 척도 사용 화면에 출처 표시
