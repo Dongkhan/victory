@@ -202,7 +202,7 @@
 
 ## Track 11: 에러 처리 (8 항목)
 
-- [ ] **err-01**: localStorage.setItem try/catch + QuotaExceededError 처리 → 측정: AST 검증
+- [X] **err-01**: localStorage.setItem try/catch + QuotaExceededError 처리 → 측정: AST 검증
 - [ ] **err-02**: JSON.parse try/catch (모든 호출) → 측정: AST 검증
 - [ ] **err-03**: 빈 state 처리 — empty state UI 각 화면 → 측정: empty state 텍스트 존재
 - [ ] **err-04**: schemaVersion 마이그레이션 — 5개 LEGACY_KEY 모두 처리 → 측정: 마이그레이션 함수 + 분기 검증
