@@ -105,7 +105,7 @@
 - [X] **prog-02**: 2주차에 SRT 권고 첫 노출 (7일 데이터 기반) → 측정: 누적 일기 ≥ 7일일 때만 SRT 카드
 - [X] **prog-03**: 자극조절 가이드 = 1주차부터 (즉시 적용 가능한 행동) → 측정: 1주차 홈에 stimulus-control 카드
 - [X] **prog-04**: 척도 재평가 알림 = 4주차·8주차 (2주마다 아님) → 측정: 알림 트리거 조건 = weekNumber in [4, 8]
-- [ ] **prog-05**: 8주차 완료 시 졸업 화면 (요약 + 다음 단계 안내) → 측정: weekNumber >= 8 + 모든 일기 완료 시 graduation screen
+- [X] **prog-05**: 8주차 완료 시 졸업 화면 (요약 + 다음 단계 안내) → 측정: weekNumber >= 8 + 모든 일기 완료 시 graduation screen
 
 ## Track 6: 위생 (자동 진행 가능, 우선순위 낮음) — 기존 ROADMAP 잔여
 
