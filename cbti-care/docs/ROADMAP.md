@@ -95,7 +95,7 @@
 - [X] **vis-type-01**: 폰트 스택 — `-apple-system, "SF Pro Text", Pretendard, system-ui, sans-serif` → 측정: font-family 정의에 4개 포함
 - [X] **vis-type-02**: 본문 17px (iOS 표준) → 측정: body { font-size: 17px }
 - [X] **vis-type-03**: 헤더 위계 — h1 28px / h2 22px / h3 20px → 측정: 세 사이즈 정확
-- [ ] **vis-type-04**: line-height — 본문 1.5 / 헤더 1.2 → 측정: 정확값
+- [X] **vis-type-04**: line-height — 본문 1.5 / 헤더 1.2 → 측정: 정확값
 - [ ] **vis-type-05**: font-weight ≤ 3종 (400 / 500 / 600) → 측정: 사용 값 unique ≤ 3
 - [ ] **vis-type-06**: 숫자 tabular-nums (통계 정렬용) → 측정: .stat-number 류 요소에 font-variant-numeric: tabular-nums
 - [ ] **vis-type-07**: Dynamic Type 지원 — `font-size: clamp(15px, 4vw, 19px)` 본문 → 측정: clamp() 사용 본문 영역에 적용
