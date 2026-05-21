@@ -179,7 +179,7 @@
 - [X] **a11y-03**: 아이콘 button (text 0)에 aria-label 명시 → 측정: 정적 검증
 - [X] **a11y-04**: form 요소 label 연결 → 측정: 정적 검증
 - [X] **a11y-05**: 위기 카드 role="dialog" + aria-modal + aria-labelledby → 측정: 정적 검증
-- [ ] **a11y-06**: :focus-visible CSS — outline 2px solid var(--brand) + outline-offset 2px → 측정: CSS 룰 존재
+- [X] **a11y-06**: :focus-visible CSS — outline 2px solid var(--brand) + outline-offset 2px → 측정: CSS 룰 존재
 - [ ] **a11y-07**: contrast 자체 계산 (CSS 색상 기준) — 본문 4.5:1, 헤더 3:1 → 측정: Python contrast 라이브러리로 계산
 - [ ] **a11y-08**: 키보드 탭 순서 — Tab으로 모든 인터랙티브 도달 → 측정: tabindex 음수 0건 (의도된 trap 외)
 - [ ] **a11y-09**: VoiceOver 친화 — 모든 chart에 aria-label 요약 → 측정: SVG 요소에 aria-label
