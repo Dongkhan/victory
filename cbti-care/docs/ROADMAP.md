@@ -149,7 +149,7 @@
 - [X] **sleep-04**: 터치 영역 80x80px (Headspace 기준, 졸릴 때 부정확한 탭) → 측정: .sleep-mode button { min-width: 80px; min-height: 80px }
 - [X] **sleep-05**: 화면 밝기 자동 감소 (CSS filter brightness) → 측정: .sleep-mode { filter: brightness(0.85) }
 - [X] **sleep-06**: 별 drift 애니메이션 (120s 1cycle, 거의 인지 안 됨) → 측정: keyframes drift-stars 120s linear infinite
-- [ ] **sleep-07**: 명상/이완 재생 시 UI 30초 후 자동 페이드 → 측정: .playing 상태 후 30s opacity 0
+- [X] **sleep-07**: 명상/이완 재생 시 UI 30초 후 자동 페이드 → 측정: .playing 상태 후 30s opacity 0
 - [ ] **sleep-08**: 위기 카드는 sleep-mode에서도 풀 밝기 유지 → 측정: .crisis-card는 filter 무력화
 
 ## Track 7: 호흡·이완 기법 (Headspace 패턴) (6 항목)
