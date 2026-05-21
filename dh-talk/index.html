@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DH Talk — LAN Clinic Messenger</title>
+  <style>
+    :root{--bg:#f7fafc;--card:#fff;--ink:#111827;--muted:#64748b;--line:#e2e8f0;--accent:#0f766e}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(145deg,#f8fafc,#eef6f4);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;display:grid;place-items:center;padding:28px 18px;line-height:1.6}
+    main{width:min(760px,100%);background:var(--card);border:1px solid var(--line);border-radius:26px;padding:32px;box-shadow:0 18px 44px rgba(15,23,42,.08)}
+    .eyebrow{font-size:12px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:var(--accent)}h1{font-size:38px;line-height:1.08;margin:8px 0 12px;letter-spacing:-.04em}p,li{color:var(--muted)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 18px;border-radius:999px;text-decoration:none;font-weight:900}.primary{background:var(--accent);color:white}.secondary{border:1px solid var(--line);color:var(--accent);background:#fff}ul{padding-left:20px}@media(max-width:520px){main{padding:24px}h1{font-size:32px}.actions{display:grid}.btn{width:100%}}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">DH Talk · Electron LAN Messenger</div>
+    <h1>원장 ↔ 데스크 LAN 메신저</h1>
+    <p>동행 정신건강의학과의원 내부 PC에서 쓰는 메신저입니다. 환자명 등 민감정보가 외부 클라우드 채팅 SDK로 나가지 않도록 LAN 통신, SQLite 저장, 매크로, 다음 환자 펄스 알람을 중심으로 구성했습니다.</p>
+    <ul>
+      <li>다음 환자 알림: 별도 always-on-top 펄스 창으로 일반 채팅과 분리</li>
+      <li>매크로: 자주 쓰는 문구와 환자 큐 연동</li>
+      <li>파일: 스캔본 드래그앤드롭·붙여넣기 흐름</li>
+      <li>남은 차단 요인: 실제 Windows 다PC LAN 왕복, 펄스 창 UX, 설치본 검증</li>
+    </ul>
+    <div class="actions">
+      <a class="btn primary" href="README.md">README 보기</a>
+      <a class="btn secondary" href="src/renderer/index.html">렌더러 HTML 열기</a>
+      <a class="btn secondary" href="scripts/deploy-checklist.md">배포 체크리스트</a>
+    </div>
+  </main>
+</body>
+</html>
