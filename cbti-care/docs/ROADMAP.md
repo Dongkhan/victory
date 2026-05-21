@@ -85,7 +85,7 @@
 - [X] **vis-color-02**: 텍스트 = `#1B2838` (deep navy, 순흑 아님) → 측정: body color 값 + grep "#000000" 결과 0건
 - [X] **vis-color-03**: 카드 배경 = `#FFFFFF` (배경과 살짝 대비), 옅은 그림자 `0 1px 3px rgba(27, 40, 56, 0.06)` → 측정: .card { box-shadow: ... } 정확값
 - [X] **vis-color-04**: 브랜드 1색 — `--brand: #4A8FB8` (calm slate blue) → 측정: --brand CSS 변수 + 사용 위치 ≥ 5
-- [ ] **vis-color-05**: 보조 1색 — `--accent: #E8B86F` (warm warm sand) → 측정: --accent 변수
+- [X] **vis-color-05**: 보조 1색 — `--accent: #E8B86F` (warm warm sand) → 측정: --accent 변수
 - [ ] **vis-color-06**: 위험 색 위기 카드에만 — `--danger: #C04545` → 측정: --danger 사용 위치는 .crisis-card 또는 .alert-error에만
 - [ ] **vis-color-07**: 다크 모드 자동 — `prefers-color-scheme: dark` 시 배경 `#1B2838`, 텍스트 `#E8D5B7` → 측정: 미디어 룰 존재, 모든 화면 다크 적용
 - [ ] **vis-color-08**: 그림자 colored — `rgba(74, 143, 184, 0.08)` (gray 아닌 brand tint) → 측정: box-shadow에 rgba(0,0,0,...) 0건
