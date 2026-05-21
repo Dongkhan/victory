@@ -157,7 +157,7 @@
 이완 화면에 임상 효과 있는 호흡 기법:
 
 - [X] **breath-01**: 4-2-6 호흡 애니메이션 (이완 화면) — 12초 1cycle 원 확장/축소 → 측정: .breathing-circle keyframes 12s
-- [ ] **breath-02**: 호흡 페이즈별 색 전환 — 들숨 cool blue → 멈춤 → 날숨 warm orange → 측정: keyframes 안 background 전환
+- [X] **breath-02**: 호흡 페이즈별 색 전환 — 들숨 cool blue → 멈춤 → 날숨 warm orange → 측정: keyframes 안 background 전환
 - [ ] **breath-03**: 호흡 cycle 카운터 (5회 / 10회 / 무제한 선택) → 측정: cycle 선택 UI + 카운트 표시
 - [ ] **breath-04**: prefers-reduced-motion 시 정적 가이드 텍스트 (애니메이션 없이 "들숨 4초 · 멈춤 2초 · 날숨 6초") → 측정: media rule + 정적 fallback
 - [ ] **breath-05**: PMR (점진적 근육이완) 가이드 화면 — 16개 근육군, 각 5초 긴장 + 10초 이완 → 측정: PMR 화면에 16-step 가이드
