@@ -214,7 +214,7 @@
 ## Track 12: i18n & 출처 (8 항목)
 
 - [X] **i18n-01**: 설정 언어 토글 (한국어 / English) → 측정: 토글 UI 존재
-- [ ] **i18n-02**: 영문 fallback — Intended Use / 면책 / 위기 안내 3섹션 → 측정: 영문 텍스트 존재
+- [X] **i18n-02**: 영문 fallback — Intended Use / 면책 / 위기 안내 3섹션 → 측정: 영문 텍스트 존재
 - [ ] **i18n-03**: 영문 위기 안내 정확 문구 → 측정: 정확 매치
 - [ ] **ref-01**: References 섹션 — CBT-I 핵심 문헌 5개 (Morin, Espie, Edinger, Spielman, Perlis) → 측정: References 헤더 + 5개 인용
 - [ ] **ref-02**: 척도 출처 — ISI Bastien 2001 / PHQ-9 Spitzer 1999 / ESS Johns 1991 → 측정: 각 척도 화면에 출처
