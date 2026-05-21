@@ -183,7 +183,7 @@
 - [X] **a11y-07**: contrast 자체 계산 (CSS 색상 기준) — 본문 4.5:1, 헤더 3:1 → 측정: Python contrast 라이브러리로 계산
 - [X] **a11y-08**: 키보드 탭 순서 — Tab으로 모든 인터랙티브 도달 → 측정: tabindex 음수 0건 (의도된 trap 외)
 - [X] **a11y-09**: VoiceOver 친화 — 모든 chart에 aria-label 요약 → 측정: SVG 요소에 aria-label
-- [ ] **a11y-10**: 위기 카드 알림 — `role="alert"` 또는 aria-live="assertive" → 측정: 위기 카드 노출 시 즉시 스크린리더 발화
+- [X] **a11y-10**: 위기 카드 알림 — `role="alert"` 또는 aria-live="assertive" → 측정: 위기 카드 노출 시 즉시 스크린리더 발화
 
 ## Track 10: PWA & 모바일 (12 항목)
 
