@@ -18,7 +18,7 @@
 ## Track 0: 메타 — 모든 변경 적용 전 (3 항목)
 
 - [X] **meta-01**: design-tokens.css 섹션 생성 (CSS 변수 한 곳에 정의) → 측정: `<style>` 안에 `:root { --... }` 블록 존재, 변수 ≥ 20개
-- [ ] **meta-02**: 모션 토큰 정의 (transition-fast 200ms / transition-page 500ms / transition-meditation 800ms) → 측정: CSS 변수 --transition-* 3개 존재
+- [X] **meta-02**: 모션 토큰 정의 (transition-fast 200ms / transition-page 500ms / transition-meditation 800ms) → 측정: CSS 변수 --transition-* 3개 존재
 - [ ] **meta-03**: prefers-reduced-motion 미디어 룰 추가 (모든 애니메이션 무력화) → 측정: `@media (prefers-reduced-motion: reduce)` 블록 존재 + transition: none/0ms 적용
 
 ## Track 1: 명백한 결함 — 즉시 수정 (10 항목)
