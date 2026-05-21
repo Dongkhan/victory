@@ -198,7 +198,7 @@
 - [X] **mob-03**: safe-area-inset-bottom — tab-bar padding-bottom max(env, 8px) → 측정: env() 사용
 - [X] **mob-04**: input/textarea font-size ≥ 16px (자동 zoom 방지) → 측정: CSS 값 확인
 - [X] **mob-05**: body overflow-x hidden (가로 스크롤 방지) → 측정: CSS 룰 존재
-- [ ] **mob-06**: -webkit-tap-highlight-color: transparent → 측정: CSS 룰 존재
+- [X] **mob-06**: -webkit-tap-highlight-color: transparent → 측정: CSS 룰 존재
 
 ## Track 11: 에러 처리 (8 항목)
 
