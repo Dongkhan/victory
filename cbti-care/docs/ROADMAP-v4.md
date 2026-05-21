@@ -39,7 +39,7 @@
 
 - [X] **diet-hier-01**: 한 화면 헤더 ≤ 1개 (h1 1개) → 측정: 각 .screen에 h1 정확히 1개
 - [X] **diet-hier-02**: 한 화면 primary CTA ≤ 1개 (강조 버튼 1개만) → 측정: .button.primary 또는 .btn-primary 각 화면 ≤ 1개
-- [ ] **diet-hier-03**: 도움말 텍스트는 접힌 상태 기본값 (ⓘ 아이콘 탭 시 펼침) → 측정: .help-text 류 요소 기본 hidden, 토글 onclick
+- [X] **diet-hier-03**: 도움말 텍스트는 접힌 상태 기본값 (ⓘ 아이콘 탭 시 펼침) → 측정: .help-text 류 요소 기본 hidden, 토글 onclick
 - [ ] **diet-hier-04**: 옵션 5개 초과 시 검색 또는 그룹화 → 측정: select option > 5개면 grouping 또는 input filter
 - [ ] **diet-hier-05**: 동일 화면 내 색상 ≤ 4가지 (배경·텍스트·강조·보조) → 측정: 컴퓨티드 색상 unique count ≤ 4
 
