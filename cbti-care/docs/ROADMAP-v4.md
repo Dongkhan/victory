@@ -69,7 +69,7 @@
 ### 여백·라운드
 
 - [X] **vis-space-01**: 카드 사이 간격 일관 (16px 또는 24px 중 하나만) → 측정: 카드 컨테이너 gap 또는 margin 통일
-- [ ] **vis-space-02**: 카드 안 padding 일관 (16px 또는 20px) → 측정: .card padding 일관
+- [X] **vis-space-02**: 카드 안 padding 일관 (16px 또는 20px) → 측정: .card padding 일관
 - [ ] **vis-space-03**: border-radius 일관 (큰 카드 16px, 작은 버튼 12px, 칩 999px) → 측정: 3가지 라운드 값 만 사용
 
 ### 모션
