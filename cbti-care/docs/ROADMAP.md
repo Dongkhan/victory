@@ -19,7 +19,7 @@
 - [X] **a11y-02**: 모든 `<button>` 요소에 aria-label 또는 비어있지 않은 textContent 보장 → 측정: querySelectorAll('button').every(b => b.textContent.trim() \|\| b.getAttribute('aria-label'))
 - [X] **a11y-03**: 모든 `<a>` 요소에 aria-label 또는 비어있지 않은 textContent 보장 → 측정: 위와 동일하게 a 요소
 - [X] **a11y-04**: 아이콘 전용 버튼(이모지/SVG만)에 aria-label 명시 → 측정: 텍스트 0 글자인 button에 aria-label 있어야
-- [ ] **a11y-05**: focus state CSS 추가 (:focus-visible outline 2px solid currentColor) → 측정: CSS 룰 존재 + 키보드 Tab으로 5개 화면 전환 가능
+- [X] **a11y-05**: focus state CSS 추가 (:focus-visible outline 2px solid currentColor) → 측정: CSS 룰 존재 + 키보드 Tab으로 5개 화면 전환 가능
 - [ ] **a11y-06**: 본문 텍스트 color contrast 4.5:1 이상 (WCAG AA) → 측정: 주요 텍스트 색상 vs 배경 contrast 계산값 ≥ 4.5
 - [ ] **a11y-07**: 큰 텍스트(18pt+) contrast 3:1 이상 → 측정: 헤더 색상 contrast ≥ 3
 - [ ] **a11y-08**: form `<input>`/`<textarea>`/`<select>`에 `<label for>` 또는 aria-label → 측정: 모든 입력 요소에 라벨 연결
