@@ -188,7 +188,7 @@
 ## Track 10: PWA & 모바일 (12 항목)
 
 - [X] **pwa-01**: viewport meta `width=device-width, initial-scale=1, viewport-fit=cover` → 측정: 정확 매치
-- [ ] **pwa-02**: theme-color meta (라이트 / 다크 prefers-color-scheme별) → 측정: 2개 meta 존재
+- [X] **pwa-02**: theme-color meta (라이트 / 다크 prefers-color-scheme별) → 측정: 2개 meta 존재
 - [ ] **pwa-03**: 인라인 manifest (data URL) — name/short_name/start_url/display/background_color/theme_color/icons → 측정: data URL 디코드 후 7개 키
 - [ ] **pwa-04**: 인라인 SVG favicon + apple-touch-icon → 측정: 2개 link 존재
 - [ ] **pwa-05**: apple-mobile-web-app-capable + status-bar-style → 측정: 2개 meta
