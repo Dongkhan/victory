@@ -28,7 +28,7 @@
 - [X] **bug-03**: 척도 진입 시 questionIndex = 0 리셋 + 진행률 0% → 측정: ISI/PHQ-9/ESS 진입 함수에 state reset 명시
 - [X] **bug-04**: 척도 도중 뒤로가기 → "지금까지 응답이 사라집니다. 그만두시겠어요?" 확인 모달 → 측정: questionIndex > 0 + 뒤로가기 = confirm dialog 노출
 - [X] **bug-05**: 일기 작성 도중 뒤로가기 → "임시 저장" 또는 "폐기" 선택 → 측정: dirty flag = true + 뒤로가기 = 2-option modal
-- [ ] **bug-06**: 모달 ESC + 배경 탭 = 닫힘 (위기 카드 제외) → 측정: 모든 .modal 요소에 ESC listener + backdrop onclick handler
+- [X] **bug-06**: 모달 ESC + 배경 탭 = 닫힘 (위기 카드 제외) → 측정: 모든 .modal 요소에 ESC listener + backdrop onclick handler
 - [ ] **bug-07**: 100vh → 100dvh 전환 (iOS Safari 주소창 처리) → 측정: CSS에서 `100vh` 검색 결과 0건 (dvh 또는 -webkit-fill-available로 대체)
 - [ ] **bug-08**: 새로고침 시 현재 화면 유지 — URL hash 사용 (`#screen-isi`) → 측정: F5 후 같은 화면 표시
 - [ ] **bug-09**: localStorage 키 충돌 방지 — 모든 키에 prefix `cbticare:` → 측정: localStorage 키 모두 prefix 시작
