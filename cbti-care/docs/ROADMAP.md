@@ -192,7 +192,7 @@
 - [X] **pwa-03**: 인라인 manifest (data URL) — name/short_name/start_url/display/background_color/theme_color/icons → 측정: data URL 디코드 후 7개 키
 - [X] **pwa-04**: 인라인 SVG favicon + apple-touch-icon → 측정: 2개 link 존재
 - [X] **pwa-05**: apple-mobile-web-app-capable + status-bar-style → 측정: 2개 meta
-- [ ] **pwa-06**: beforeinstallprompt 핸들 + "홈 화면에 추가" 카드 (지원 브라우저만) → 측정: 이벤트 리스너 + 조건부 UI
+- [X] **pwa-06**: beforeinstallprompt 핸들 + "홈 화면에 추가" 카드 (지원 브라우저만) → 측정: 이벤트 리스너 + 조건부 UI
 - [ ] **mob-01**: 터치 영역 44px 이상 (Apple HIG) — 모든 인터랙티브 → 측정: CSS min-width/min-height 44px 적용
 - [ ] **mob-02**: safe-area-inset-top 적용 — header padding-top max(env(safe-area-inset-top), 12px) → 측정: env() 사용
 - [ ] **mob-03**: safe-area-inset-bottom — tab-bar padding-bottom max(env, 8px) → 측정: env() 사용
