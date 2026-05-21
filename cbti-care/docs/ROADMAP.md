@@ -218,7 +218,7 @@
 - [X] **i18n-03**: 영문 위기 안내 정확 문구 → 측정: 정확 매치
 - [X] **ref-01**: References 섹션 — CBT-I 핵심 문헌 5개 (Morin, Espie, Edinger, Spielman, Perlis) → 측정: References 헤더 + 5개 인용
 - [X] **ref-02**: 척도 출처 — ISI Bastien 2001 / PHQ-9 Spitzer 1999 / ESS Johns 1991 → 측정: 각 척도 화면에 출처
-- [ ] **ref-03**: 라이선스 명시 — 설정 > About → 측정: License 섹션
+- [X] **ref-03**: 라이선스 명시 — 설정 > About → 측정: License 섹션
 - [ ] **ref-04**: 도구 출처 명시 — "본 도구 제작: 동행 정신건강의학과의원, 김포" → 측정: About에 명시
 - [ ] **ref-05**: 면책 정확 문구 — About에 "본 도구는 의료기기가 아니며, 진단 또는 처방을 대체하지 않습니다. 임상적 의사결정은 반드시 의료 전문가와 상의하세요." → 측정: About에 정확 매치
 
