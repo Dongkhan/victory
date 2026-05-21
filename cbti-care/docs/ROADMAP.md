@@ -83,7 +83,7 @@
 ## Phase 7: 개발자 노출 & 마무리 — 5 항목
 
 - [X] **dev-01**: DEV_MODE 가드 외 UI에 dev 기능 노출 0건 → 측정: dev/debug 텍스트가 UI에 보이지 않음
-- [ ] **dev-02**: console.log 정리 — 정상 사용 시 console.error/warn 0건 → 측정: 5개 화면 전환 + 일기 1개 작성 + 리포트 조회 시 console clean
+- [X] **dev-02**: console.log 정리 — 정상 사용 시 console.error/warn 0건 → 측정: 5개 화면 전환 + 일기 1개 작성 + 리포트 조회 시 console clean
 - [ ] **dev-03**: 빌드 도구 없이 단일 HTML 유지 — npm/build script 의존성 0 → 측정: HTML 파일 외 빌드 결과물 0
 - [ ] **dev-04**: 파일 크기 100KB 이하 유지 → 측정: stat -c%s prototype/v{N}.html ≤ 102400
 - [ ] **dev-05**: HTML W3C validator 통과 (경고 0, 에러 0) → 측정: validator.w3.org 결과 clean
