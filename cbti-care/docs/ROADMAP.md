@@ -62,7 +62,7 @@
 
 ## Phase 5: 에러 처리 & 데이터 무결성 — 8 항목
 
-- [ ] **err-01**: localStorage.setItem try/catch + quota exceeded 시 사용자 알림 모달 → 측정: setItem 호출 모두 try/catch + QuotaExceededError 처리 분기
+- [X] **err-01**: localStorage.setItem try/catch + quota exceeded 시 사용자 알림 모달 → 측정: setItem 호출 모두 try/catch + QuotaExceededError 처리 분기
 - [ ] **err-02**: JSON.parse 모든 호출 try/catch + 실패 시 default state로 복귀 → 측정: JSON.parse 호출 모두 try 안에 있음
 - [ ] **err-03**: 빈 state 처리 — 첫 사용 시 빈 일기/플랜/리포트 화면에 "아직 데이터가 없습니다" 안내 → 측정: 각 데이터 화면에 empty state 텍스트 존재
 - [ ] **err-04**: schemaVersion 마이그레이션 코드 정의되어 있고 v2.1 데이터 → v{N+1} 무손실 변환 검증 → 측정: 마이그레이션 함수 존재 + 옛 LEGACY_KEY 5개에서 새 키로 정상 이행
