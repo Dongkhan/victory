@@ -61,7 +61,7 @@
 ### 타이포그래피
 
 - [X] **vis-type-01**: 폰트 패밀리 = SF Pro + Pretendard fallback (iOS 시스템 폰트 우선) → 측정: font-family 정의에 -apple-system 또는 Pretendard
-- [ ] **vis-type-02**: 본문 17px (iOS 표준), 헤더 위계 22/28/34 → 측정: body, h1, h2, h3 font-size 값 정확
+- [X] **vis-type-02**: 본문 17px (iOS 표준), 헤더 위계 22/28/34 → 측정: body, h1, h2, h3 font-size 값 정확
 - [ ] **vis-type-03**: line-height = 1.5 본문, 1.2 헤더 → 측정: CSS 값 확인
 - [ ] **vis-type-04**: 글자 굵기 ≤ 3종 (regular 400 / medium 500 / semibold 600) → 측정: font-weight 사용 값 ≤ 3가지
 - [ ] **vis-type-05**: 숫자는 monospace 변형 (tabular-nums) 정렬 → 측정: 통계 숫자 컨테이너에 font-variant-numeric: tabular-nums
