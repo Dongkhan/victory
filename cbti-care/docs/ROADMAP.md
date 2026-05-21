@@ -190,7 +190,7 @@
 - [X] **pwa-01**: viewport meta `width=device-width, initial-scale=1, viewport-fit=cover` → 측정: 정확 매치
 - [X] **pwa-02**: theme-color meta (라이트 / 다크 prefers-color-scheme별) → 측정: 2개 meta 존재
 - [X] **pwa-03**: 인라인 manifest (data URL) — name/short_name/start_url/display/background_color/theme_color/icons → 측정: data URL 디코드 후 7개 키
-- [ ] **pwa-04**: 인라인 SVG favicon + apple-touch-icon → 측정: 2개 link 존재
+- [X] **pwa-04**: 인라인 SVG favicon + apple-touch-icon → 측정: 2개 link 존재
 - [ ] **pwa-05**: apple-mobile-web-app-capable + status-bar-style → 측정: 2개 meta
 - [ ] **pwa-06**: beforeinstallprompt 핸들 + "홈 화면에 추가" 카드 (지원 브라우저만) → 측정: 이벤트 리스너 + 조건부 UI
 - [ ] **mob-01**: 터치 영역 44px 이상 (Apple HIG) — 모든 인터랙티브 → 측정: CSS min-width/min-height 44px 적용
