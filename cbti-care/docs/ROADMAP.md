@@ -52,7 +52,7 @@
 
 ## Phase 4: 모바일 UX 디테일 — 7 항목
 
-- [ ] **mob-01**: 모든 탭/버튼 터치 영역 ≥ 44x44px (Apple HIG) → 측정: querySelectorAll('button, a, [role=button]').every(getBoundingClientRect().width ≥ 44 && height ≥ 44)
+- [X] **mob-01**: 모든 탭/버튼 터치 영역 ≥ 44x44px (Apple HIG) → 측정: querySelectorAll('button, a, [role=button]').every(getBoundingClientRect().width ≥ 44 && height ≥ 44)
 - [ ] **mob-02**: safe-area-inset-top 적용 (헤더 padding-top: max(env(safe-area-inset-top), 12px)) → 측정: CSS env() 사용 확인
 - [ ] **mob-03**: safe-area-inset-bottom 적용 (탭바/하단 고정 영역) → 측정: 동일
 - [ ] **mob-04**: 입력 시 자동 zoom 방지 — input/textarea font-size ≥ 16px → 측정: 모든 input/textarea computed font-size ≥ 16px
