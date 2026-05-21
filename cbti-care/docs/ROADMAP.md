@@ -144,7 +144,7 @@
 야간 사용 시 (또는 사용자가 sleep-mode 선택) 다른 UI:
 
 - [X] **sleep-01**: sleep-mode 토글 — 설정에서 자동 (22-06시) 또는 수동 → 측정: state.sleepMode + CSS class 적용
-- [ ] **sleep-02**: 배경 deep navy `#1B2838` → 측정: .sleep-mode body background
+- [X] **sleep-02**: 배경 deep navy `#1B2838` → 측정: .sleep-mode body background
 - [ ] **sleep-03**: 텍스트 moon-glow `rgba(232, 213, 183, 0.9)` (저대비) → 측정: 정확값
 - [ ] **sleep-04**: 터치 영역 80x80px (Headspace 기준, 졸릴 때 부정확한 탭) → 측정: .sleep-mode button { min-width: 80px; min-height: 80px }
 - [ ] **sleep-05**: 화면 밝기 자동 감소 (CSS filter brightness) → 측정: .sleep-mode { filter: brightness(0.85) }
