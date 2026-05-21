@@ -52,7 +52,7 @@
 
 ### 색·배경
 
-- [ ] **vis-color-01**: 배경 = 매우 옅은 그레이/오프화이트 (#F8F9FA 류), 순백 금지 → 측정: body background 컬러 정확값
+- [X] **vis-color-01**: 배경 = 매우 옅은 그레이/오프화이트 (#F8F9FA 류), 순백 금지 → 측정: body background 컬러 정확값
 - [ ] **vis-color-02**: 카드 배경 = 순백 또는 #FFFFFF, 옅은 그림자 → 측정: .card { background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.04) } 존재
 - [ ] **vis-color-03**: 브랜드 컬러 1개 정의 (예: #3B82F6 calm blue) + 보조 컬러 1개만 → 측정: CSS 변수 --brand 정의 + 사용 위치 통일
 - [ ] **vis-color-04**: 다크 모드 자동 적용 (`prefers-color-scheme: dark`) → 측정: @media (prefers-color-scheme: dark) 룰 존재 + 6개 화면 모두 다크 대응
