@@ -105,7 +105,7 @@
 - [X] **vis-space-01**: spacing scale — 4 / 8 / 12 / 16 / 24 / 32 / 48 (8 base) → 측정: --space-* 변수 7개 정의
 - [X] **vis-space-02**: border-radius scale — 8 (작은) / 16 (카드) / 24 (모달) / 999 (칩) → 측정: --radius-* 4개
 - [X] **vis-space-03**: 카드 padding 일관 (16px 또는 20px만) → 측정: .card padding unique ≤ 2가지
-- [ ] **vis-space-04**: 카드 사이 gap 일관 (12 또는 16) → 측정: 컨테이너 gap unique ≤ 2
+- [X] **vis-space-04**: 카드 사이 gap 일관 (12 또는 16) → 측정: 컨테이너 gap unique ≤ 2
 
 ### 모션 — Headspace 600-800ms 차분한 페이스
 
