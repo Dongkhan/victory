@@ -196,7 +196,7 @@
 - [X] **mob-01**: 터치 영역 44px 이상 (Apple HIG) — 모든 인터랙티브 → 측정: CSS min-width/min-height 44px 적용
 - [X] **mob-02**: safe-area-inset-top 적용 — header padding-top max(env(safe-area-inset-top), 12px) → 측정: env() 사용
 - [X] **mob-03**: safe-area-inset-bottom — tab-bar padding-bottom max(env, 8px) → 측정: env() 사용
-- [ ] **mob-04**: input/textarea font-size ≥ 16px (자동 zoom 방지) → 측정: CSS 값 확인
+- [X] **mob-04**: input/textarea font-size ≥ 16px (자동 zoom 방지) → 측정: CSS 값 확인
 - [ ] **mob-05**: body overflow-x hidden (가로 스크롤 방지) → 측정: CSS 룰 존재
 - [ ] **mob-06**: -webkit-tap-highlight-color: transparent → 측정: CSS 룰 존재
 
