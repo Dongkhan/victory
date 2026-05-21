@@ -128,7 +128,7 @@
 - [X] **input-01**: 시각 입력 input[type="time"] 사용 (iOS time picker 자동 호출) → 측정: 모든 시각 입력 type="time"
 - [X] **input-02**: 척도 응답 큰 버튼 가로 5개 (1-5 Likert) — `<div class="scale-options">` 안에 .scale-btn × 5 → 측정: 척도 응답 영역 구조 일관
 - [X] **input-03**: 척도 응답 즉시 다음 문항 자동 진행 (300ms delay, 시각 피드백 후) → 측정: onclick handler에 setTimeout(next, 300)
-- [ ] **input-04**: 척도 진행 표시 — 상단 dot indicator (5/14처럼) → 측정: 척도 화면 상단에 .progress-dots × N
+- [X] **input-04**: 척도 진행 표시 — 상단 dot indicator (5/14처럼) → 측정: 척도 화면 상단에 .progress-dots × N
 - [ ] **input-05**: 일기 작성 입력 최소화 — 시각 4개 (취침/기상/입면/중도각성) + 슬라이더 1개 (수면질 1-5) → 측정: 일기 화면 input 요소 ≤ 6
 - [ ] **input-06**: 일기 빠른 저장 — 4-탭으로 완료 (1초 이내) → 측정: 모든 일기 필드 default 값 존재 (어제 값 또는 평균)
 
