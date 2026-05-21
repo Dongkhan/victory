@@ -75,7 +75,7 @@
 ### 모션
 
 - [X] **vis-motion-01**: 화면 전환 = slide (오른쪽→왼쪽), 200ms ease → 측정: .screen 전환에 transform: translateX, transition 200ms
-- [ ] **vis-motion-02**: 모달 등장 = fade + scale (150ms), prefers-reduced-motion 시 즉시 → 측정: 모달 CSS에 transition + media rule
+- [X] **vis-motion-02**: 모달 등장 = fade + scale (150ms), prefers-reduced-motion 시 즉시 → 측정: 모달 CSS에 transition + media rule
 
 ## Track 4: 핵심 사용성 (10 항목)
 
