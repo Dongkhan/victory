@@ -209,7 +209,7 @@
 - [X] **err-05**: 일기 maxlength 5000 + 카운터 → 측정: textarea[maxlength=5000] + .char-counter
 - [X] **err-06**: 중복 날짜 일기 — 기존 entry 시 "덮어쓰기" 확인 → 측정: confirm 호출
 - [X] **err-07**: 손상된 localStorage — 복구/초기화 UI → 측정: catch 블록 UI 트리거
-- [ ] **err-08**: 네트워크 오프라인 — 명시적 "오프라인 사용 가능" 표시 → 측정: navigator.onLine 검사 + UI
+- [X] **err-08**: 네트워크 오프라인 — 명시적 "오프라인 사용 가능" 표시 → 측정: navigator.onLine 검사 + UI
 
 ## Track 12: i18n & 출처 (8 항목)
 
