@@ -23,7 +23,7 @@
 
 ## Track 1: 명백한 결함 — 즉시 수정 (10 항목)
 
-- [ ] **bug-01**: 라우트 스택 기반 뒤로가기 — `history.push(prev)` 패턴 + 뒤로가기 시 stack pop → 측정: 플랜→ISI→뒤로 = 플랜 / 리포트→ISI→뒤로 = 리포트 (테스트 시나리오 2개 정의)
+- [X] **bug-01**: 라우트 스택 기반 뒤로가기 — `history.push(prev)` 패턴 + 뒤로가기 시 stack pop → 측정: 플랜→ISI→뒤로 = 플랜 / 리포트→ISI→뒤로 = 리포트 (테스트 시나리오 2개 정의)
 - [ ] **bug-02**: 뒤로가기 라벨 통일 — "← 뒤로" 또는 SF Symbol chevron.left + "뒤로" 일관 → 측정: 모든 sub-screen 헤더 텍스트 byte-identical
 - [ ] **bug-03**: 척도 진입 시 questionIndex = 0 리셋 + 진행률 0% → 측정: ISI/PHQ-9/ESS 진입 함수에 state reset 명시
 - [ ] **bug-04**: 척도 도중 뒤로가기 → "지금까지 응답이 사라집니다. 그만두시겠어요?" 확인 모달 → 측정: questionIndex > 0 + 뒤로가기 = confirm dialog 노출
