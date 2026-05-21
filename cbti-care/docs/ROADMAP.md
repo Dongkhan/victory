@@ -125,7 +125,7 @@
 
 ### 입력 단순화
 
-- [ ] **input-01**: 시각 입력 input[type="time"] 사용 (iOS time picker 자동 호출) → 측정: 모든 시각 입력 type="time"
+- [X] **input-01**: 시각 입력 input[type="time"] 사용 (iOS time picker 자동 호출) → 측정: 모든 시각 입력 type="time"
 - [ ] **input-02**: 척도 응답 큰 버튼 가로 5개 (1-5 Likert) — `<div class="scale-options">` 안에 .scale-btn × 5 → 측정: 척도 응답 영역 구조 일관
 - [ ] **input-03**: 척도 응답 즉시 다음 문항 자동 진행 (300ms delay, 시각 피드백 후) → 측정: onclick handler에 setTimeout(next, 300)
 - [ ] **input-04**: 척도 진행 표시 — 상단 dot indicator (5/14처럼) → 측정: 척도 화면 상단에 .progress-dots × N
