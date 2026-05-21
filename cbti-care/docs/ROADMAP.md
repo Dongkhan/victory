@@ -1,112 +1,148 @@
-# CBT-I Care v2.1 → v3.0 Roadmap
+# CBT-I Care — Product-Grade Roadmap
 
-**작동 방식**: 헤르메스(또는 다른 AI 에이전트)가 위에서부터 미완료 [ ] 항목을 하나씩 처리. 항목 완료 시 [X]로 갱신하고 GitHub에 push.
+**목표**: 환자가 처음 열었을 때 "Sleep Reset / Calm / Apple Health 같다"고 느낄 수준의 완성도.
 
-**완료 정의**: 모든 [ ]이 [X]가 되면 v3.0.
+**핵심 원칙** (인기 수면 앱이 공통으로 잘 하는 것):
+1. 한 화면 = 한 가지 결정 (정보 과부하 금지)
+2. 차분·미니멀 톤 (제품 가치를 인터페이스로 보여줌)
+3. 점진적 공개 (모든 기능을 첫날 보여주지 않음)
+4. 명확한 다음 행동 (매 화면 "지금 무엇을")
+5. 시각화 우선 (숫자보다 그래프·진행률)
+6. 라우팅 무결성 (뒤로가기는 직전 화면)
 
-**규칙**:
-- 한 항목 = 한 버전 = 한 commit
-- 의존 순서대로 위에서부터
-- "원장 sign-off" 표시된 항목은 자동 진행 대상 아님 — 만나면 정지 + 사용자 보고
-- 각 항목은 한 줄 끝에 측정 기준이 명시되어 있음 (✅ 또는 ❌로 판정 가능)
-- `prototype/v{N}.html` → `prototype/v{N+1}.html`로 진행 (R1: 직전 버전 보존)
-
----
-
-## Phase 1: 접근성 (a11y) — 11 항목
-
-- [X] **a11y-01**: `<html lang="ko">` 속성 추가 → 측정: lang 속성 존재
-- [X] **a11y-02**: 모든 `<button>` 요소에 aria-label 또는 비어있지 않은 textContent 보장 → 측정: querySelectorAll('button').every(b => b.textContent.trim() \|\| b.getAttribute('aria-label'))
-- [X] **a11y-03**: 모든 `<a>` 요소에 aria-label 또는 비어있지 않은 textContent 보장 → 측정: 위와 동일하게 a 요소
-- [X] **a11y-04**: 아이콘 전용 버튼(이모지/SVG만)에 aria-label 명시 → 측정: 텍스트 0 글자인 button에 aria-label 있어야
-- [X] **a11y-05**: focus state CSS 추가 (:focus-visible outline 2px solid currentColor) → 측정: CSS 룰 존재 + 키보드 Tab으로 5개 화면 전환 가능
-- [X] **a11y-06**: 본문 텍스트 color contrast 4.5:1 이상 (WCAG AA) → 측정: 주요 텍스트 색상 vs 배경 contrast 계산값 ≥ 4.5
-- [X] **a11y-07**: 큰 텍스트(18pt+) contrast 3:1 이상 → 측정: 헤더 색상 contrast ≥ 3
-- [X] **a11y-08**: form `<input>`/`<textarea>`/`<select>`에 `<label for>` 또는 aria-label → 측정: 모든 입력 요소에 라벨 연결
-- [X] **a11y-09**: 활성 화면(`.screen.active`)에 `aria-current="page"` 또는 라우팅 시 focus 이동 → 측정: 화면 전환 시 새 화면 첫 요소로 focus
-- [X] **a11y-10**: 위기 카드 모달에 role="dialog" + aria-modal="true" + aria-labelledby → 측정: 위기 카드 표시 시 dialog role 확인
-- [X] **a11y-11**: PHQ-9 #9 위기 카드 트랩 (포커스 모달 안에서 순환, ESC로 닫기) → 측정: Tab 키로 모달 밖 요소 도달 불가, ESC 작동
-
-## Phase 2: 카피 일관성 & Intended Use 준수 — 8 항목
-
-- [X] **copy-01**: "진단" 표현 검사 → 측정: HTML 본문에서 "진단" 단어 검색, "진단 도구가 아닙니다" 면책 문맥 외 0건
-- [X] **copy-02**: "처방" 표현 검사 → 측정: "처방" 단어 0건 또는 면책 문맥에만
-- [X] **copy-03**: "약물" 표현 검사 → 측정: 약물 권고/조정 문맥 0건 (약물 정보 안내는 별도 표시 필요)
-- [X] **copy-04**: 면책 카피 일관성 — "본 도구는 의료기기가 아니며 진단/처방을 대체하지 않습니다" 문구가 홈/일기/플랜/리포트 4개 화면 모두에 노출 → 측정: 각 화면에 면책 표시 1회 이상
-- [X] **copy-05**: 위기 안내 문구 표준화 — "109 (생명의전화) · 1393 (자살예방상담전화) · 119 (응급) · 지역 위기지원기관 안내" 정확히 이 순서·형식 → 측정: 위기 카드 + 설정 화면에 동일 문구
-- [X] **copy-06**: 띄어쓰기 일관성 — "CBT-I" / "Cognitive Behavioral Therapy for Insomnia" 표기 통일 → 측정: 본문 검색으로 변형 0건
-- [X] **copy-07**: 오타 검사 — "수면일기" / "수면 일기", "기상시각" / "기상 시각" 등 변형 통일 → 측정: 한 표현당 한 형식
-- [X] **copy-08**: 8주 프로그램 안내가 홈에서 명확 — "주차/총 8주" 표시 → 측정: 홈 화면에 진행 주차 표시 존재
-
-## Phase 3: PWA 기준 — 9 항목
-
-- [X] **pwa-01**: `<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">` → 측정: viewport-fit=cover 포함
-- [X] **pwa-02**: `<meta name="theme-color" content="...">` 추가 (다크 모드 대응 시 prefers-color-scheme별로) → 측정: theme-color meta 존재
-- [X] **pwa-03**: `<link rel="manifest" href="data:...">` (인라인 data URL manifest, 외부 파일 없이) → 측정: manifest 링크 존재 + 유효 JSON
-- [X] **pwa-04**: manifest에 name, short_name, start_url, display: "standalone", background_color, theme_color → 측정: manifest JSON 6개 키 존재
-- [X] **pwa-05**: 인라인 SVG favicon (data URL) → 측정: `<link rel="icon" href="data:image/svg+xml...">` 존재
-- [X] **pwa-06**: 인라인 SVG apple-touch-icon (data URL, 180x180) → 측정: apple-touch-icon link 존재
-- [X] **pwa-07**: iOS web app capable meta — `<meta name="apple-mobile-web-app-capable" content="yes">` → 측정: 존재
-- [X] **pwa-08**: iOS status bar style meta — `<meta name="apple-mobile-web-app-status-bar-style" content="default">` → 측정: 존재
-- [X] **pwa-09**: beforeinstallprompt 이벤트 핸들 + "홈 화면에 추가" 버튼 (지원 브라우저만 노출) → 측정: 이벤트 리스너 등록 + UI 조건부 노출
-
-## Phase 4: 모바일 UX 디테일 — 7 항목
-
-- [X] **mob-01**: 모든 탭/버튼 터치 영역 ≥ 44x44px (Apple HIG) → 측정: querySelectorAll('button, a, [role=button]').every(getBoundingClientRect().width ≥ 44 && height ≥ 44)
-- [X] **mob-02**: safe-area-inset-top 적용 (헤더 padding-top: max(env(safe-area-inset-top), 12px)) → 측정: CSS env() 사용 확인
-- [X] **mob-03**: safe-area-inset-bottom 적용 (탭바/하단 고정 영역) → 측정: 동일
-- [X] **mob-04**: 입력 시 자동 zoom 방지 — input/textarea font-size ≥ 16px → 측정: 모든 input/textarea computed font-size ≥ 16px
-- [X] **mob-05**: 가로 스크롤 방지 — body { overflow-x: hidden; } 또는 모든 컨테이너 max-width: 100% → 측정: scrollWidth ≤ clientWidth
-- [X] **mob-06**: 텍스트 선택 비활성화는 UI 요소에만 (본문 콘텐츠는 선택 가능) → 측정: user-select: none이 .button/.tab에만, p/h2 등엔 없음
-- [X] **mob-07**: tap-highlight-color 투명 또는 brand 색 (-webkit-tap-highlight-color) → 측정: CSS 룰 존재
-
-## Phase 5: 에러 처리 & 데이터 무결성 — 8 항목
-
-- [X] **err-01**: localStorage.setItem try/catch + quota exceeded 시 사용자 알림 모달 → 측정: setItem 호출 모두 try/catch + QuotaExceededError 처리 분기
-- [X] **err-02**: JSON.parse 모든 호출 try/catch + 실패 시 default state로 복귀 → 측정: JSON.parse 호출 모두 try 안에 있음
-- [X] **err-03**: 빈 state 처리 — 첫 사용 시 빈 일기/플랜/리포트 화면에 "아직 데이터가 없습니다" 안내 → 측정: 각 데이터 화면에 empty state 텍스트 존재
-- [X] **err-04**: schemaVersion 마이그레이션 코드 정의되어 있고 v2.1 데이터 → v{N+1} 무손실 변환 검증 → 측정: 마이그레이션 함수 존재 + 옛 LEGACY_KEY 5개에서 새 키로 정상 이행
-- [X] **err-05**: Date 파싱 실패 시 graceful — invalid date는 null로 → 측정: new Date(input) NaN 체크 후 처리
-- [X] **err-06**: 글자 수 상한 — 일기 텍스트 입력 5000자 제한 + UI 카운터 → 측정: maxlength 속성 + 표시 카운터
-- [X] **err-07**: 동일 키 중복 저장 방지 — 같은 날짜 일기 덮어쓰기 확인 모달 → 측정: 기존 entry 존재 시 확인 prompt
-- [X] **err-08**: localStorage 손상 감지 — JSON 파싱 실패 시 "데이터 복구 또는 초기화" 선택지 제공 → 측정: 손상된 state 시 복구 UI 표시
-
-## Phase 6: i18n & 출처 — 6 항목
-
-- [X] **i18n-01**: `<html lang="ko">` 기본, 사용자가 영문 전환 옵션 (설정 화면) → 측정: 설정에 언어 토글 존재
-- [X] **i18n-02**: 영문 fallback 카피 — Intended Use, 면책, 위기 안내 3개 핵심 섹션만이라도 영문 → 측정: 영문 토글 시 핵심 3개 섹션 영문 표시
-- [X] **i18n-03**: 위기 안내 영문 — "Crisis hotlines (KR): 109 Life Line · 1393 Suicide Prevention · 119 Emergency · regional crisis centers" → 측정: 영문 위기 카드 존재
-- [X] **ref-01**: 참고 문헌 섹션 추가 — Morin CM, Espie CA, Edinger JD 등 CBT-I 핵심 문헌 5개 이상 인용 → 측정: References 섹션 존재 + ≥ 5 항목
-- [X] **ref-02**: 척도 출처 명시 — ISI (Bastien et al. 2001), PHQ-9 (Spitzer et al. 1999), ESS (Johns 1991) → 측정: 각 척도 사용 화면에 출처 표시
-- [X] **ref-03**: 라이선스 명시 — PHQ-9 등 공개 척도 사용 권리 명시 → 측정: 설정/About 화면에 라이선스 섹션
-
-## Phase 7: 개발자 노출 & 마무리 — 5 항목
-
-- [X] **dev-01**: DEV_MODE 가드 외 UI에 dev 기능 노출 0건 → 측정: dev/debug 텍스트가 UI에 보이지 않음
-- [X] **dev-02**: console.log 정리 — 정상 사용 시 console.error/warn 0건 → 측정: 5개 화면 전환 + 일기 1개 작성 + 리포트 조회 시 console clean
-- [X] **dev-03**: 빌드 도구 없이 단일 HTML 유지 — npm/build script 의존성 0 → 측정: HTML 파일 외 빌드 결과물 0
-- [X] **dev-04**: 파일 크기 100KB 이하 유지 → 측정: stat -c%s prototype/v{N}.html ≤ 102400
-- [X] **dev-05**: HTML W3C validator 통과 (경고 0, 에러 0) → 측정: validator.w3.org 결과 clean
+**작동 방식**: 위에서부터 미완료 [ ] 처리. 항목당 한 commit (v{N+1}.html + index.html + 이 ROADMAP).
 
 ---
 
-## 원장 Sign-off 필요 항목 (자동 진행 대상 아님)
+## Track 1: 명백한 결함 — 즉시 수정 (8 항목)
 
-이 섹션의 항목들은 헤르메스가 만나도 [X]로 채우지 않고 사용자에게 별도 보고:
+- [ ] **bug-01**: 모든 화면에서 뒤로가기 = 진입 직전 화면 (이전 라우트 스택 기반) → 측정: 플랜→ISI→뒤로 = 플랜 / 리포트→PHQ-9→뒤로 = 리포트
+- [ ] **bug-02**: 뒤로가기 버튼 라벨이 "뒤로" 또는 ← 일관 (현재 탭명 표시 금지) → 측정: 모든 sub-screen 헤더의 뒤로가기 텍스트 동일
+- [ ] **bug-03**: 척도 시작 화면 진입 시 항상 1번 문항으로 리셋 (이전 응답 잔존 금지) → 측정: ISI/PHQ-9/ESS 진입 시 questionIndex = 0
+- [ ] **bug-04**: 척도 도중 뒤로가기 → "그만두시겠어요?" 확인 (응답 손실 방지) → 측정: questionIndex > 0 + 뒤로가기 = 확인 모달
+- [ ] **bug-05**: 일기 작성 도중 뒤로가기 → "임시 저장 또는 폐기" 선택 → 측정: 입력 변경 후 뒤로가기 = 선택 모달
+- [ ] **bug-06**: 모든 모달 ESC 또는 배경 탭으로 닫힘 → 측정: 위기 카드 제외 (위기 카드는 명시적 행동만)
+- [ ] **bug-07**: iOS Safari에서 100vh 스크롤 깨짐 수정 (`100dvh` 또는 `-webkit-fill-available`) → 측정: vh 사용 위치 모두 dvh로 교체
+- [ ] **bug-08**: 새로고침 시 현재 화면 유지 (URL hash 또는 sessionStorage) → 측정: 플랜→ISI 진입 후 F5 = ISI 그대로
 
-- [ ] **clin-01**: SRT 권고 수식 변경 — 현 알고리즘 (Spielman 1987 기반) 유지 vs 최신 변형 채택 → **원장 sign-off**
-- [ ] **clin-02**: ISI 컷오프 변경 — 현 ≥15 임상적 불면 기준 → **원장 sign-off**
-- [ ] **clin-03**: PHQ-9 cutoff 변경 — 현 ≥10 중등도 우울 기준 → **원장 sign-off**
-- [ ] **clin-04**: 새 척도 추가 — DBAS-16, GSES, PSAS 등 → **원장 sign-off**
-- [ ] **clin-05**: 위기 카드 노출 조건 완화 — 현 PHQ-9 #9 ≥1점 즉시 노출 → **원장 sign-off**
+## Track 2: 정보 다이어트 (12 항목) — UX 단순화
+
+### 홈 화면 (현재 가장 무거움)
+
+- [ ] **diet-home-01**: 홈 화면 첫 진입 시 보이는 요소 ≤ 5개 (헤더 1 + 핵심 카드 1 + 보조 카드 ≤ 3) → 측정: 스크롤 없이 보이는 영역 children.length ≤ 5
+- [ ] **diet-home-02**: "오늘의 한 가지 행동" 카드 — 가장 시급한 다음 행동 1개만 강조 (예: "어젯밤 수면 일기 작성하기") → 측정: 홈 상단 카드에 동사형 행동 1개 + CTA 버튼 1개
+- [ ] **diet-home-03**: 주차 진행도 미니멀 표시 — "Week 3 / 8" + 가는 progress bar 한 줄 → 측정: 홈 상단에 진행 표시, 글자 수 ≤ 15
+- [ ] **diet-home-04**: 통계 숫자 첫 화면 노출 0개 (TST·SE·SOL 등은 리포트 탭에서만) → 측정: 홈에 숫자 0건 (시간/퍼센트 등)
+- [ ] **diet-home-05**: 하단 면책 문구 → 설정 화면으로 이동, 홈은 정리 → 측정: 홈에 면책 텍스트 0건
+
+### 정보 위계 일반
+
+- [ ] **diet-hier-01**: 한 화면 헤더 ≤ 1개 (h1 1개) → 측정: 각 .screen에 h1 정확히 1개
+- [ ] **diet-hier-02**: 한 화면 primary CTA ≤ 1개 (강조 버튼 1개만) → 측정: .button.primary 또는 .btn-primary 각 화면 ≤ 1개
+- [ ] **diet-hier-03**: 도움말 텍스트는 접힌 상태 기본값 (ⓘ 아이콘 탭 시 펼침) → 측정: .help-text 류 요소 기본 hidden, 토글 onclick
+- [ ] **diet-hier-04**: 옵션 5개 초과 시 검색 또는 그룹화 → 측정: select option > 5개면 grouping 또는 input filter
+- [ ] **diet-hier-05**: 동일 화면 내 색상 ≤ 4가지 (배경·텍스트·강조·보조) → 측정: 컴퓨티드 색상 unique count ≤ 4
+
+### 카피 다이어트
+
+- [ ] **diet-copy-01**: 문장 평균 길이 ≤ 25자 (한국어 기준), 카피 톤 차분 → 측정: 모든 텍스트 노드 평균 length ≤ 25
+- [ ] **diet-copy-02**: 안내 문구 동사형 시작 ("기록하세요", "확인해보세요"), 명사형 나열 금지 → 측정: button/CTA 텍스트 동사형 비율 ≥ 80%
+
+## Track 3: Apple-like 비주얼 톤 (15 항목)
+
+### 색·배경
+
+- [ ] **vis-color-01**: 배경 = 매우 옅은 그레이/오프화이트 (#F8F9FA 류), 순백 금지 → 측정: body background 컬러 정확값
+- [ ] **vis-color-02**: 카드 배경 = 순백 또는 #FFFFFF, 옅은 그림자 → 측정: .card { background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.04) } 존재
+- [ ] **vis-color-03**: 브랜드 컬러 1개 정의 (예: #3B82F6 calm blue) + 보조 컬러 1개만 → 측정: CSS 변수 --brand 정의 + 사용 위치 통일
+- [ ] **vis-color-04**: 다크 모드 자동 적용 (`prefers-color-scheme: dark`) → 측정: @media (prefers-color-scheme: dark) 룰 존재 + 6개 화면 모두 다크 대응
+- [ ] **vis-color-05**: 위험/경고 색은 위기 카드에만 (붉은색 일반 UI 사용 금지) → 측정: 빨강 계열 색상은 .crisis 또는 .alert 컨텍스트에만
+
+### 타이포그래피
+
+- [ ] **vis-type-01**: 폰트 패밀리 = SF Pro + Pretendard fallback (iOS 시스템 폰트 우선) → 측정: font-family 정의에 -apple-system 또는 Pretendard
+- [ ] **vis-type-02**: 본문 17px (iOS 표준), 헤더 위계 22/28/34 → 측정: body, h1, h2, h3 font-size 값 정확
+- [ ] **vis-type-03**: line-height = 1.5 본문, 1.2 헤더 → 측정: CSS 값 확인
+- [ ] **vis-type-04**: 글자 굵기 ≤ 3종 (regular 400 / medium 500 / semibold 600) → 측정: font-weight 사용 값 ≤ 3가지
+- [ ] **vis-type-05**: 숫자는 monospace 변형 (tabular-nums) 정렬 → 측정: 통계 숫자 컨테이너에 font-variant-numeric: tabular-nums
+
+### 여백·라운드
+
+- [ ] **vis-space-01**: 카드 사이 간격 일관 (16px 또는 24px 중 하나만) → 측정: 카드 컨테이너 gap 또는 margin 통일
+- [ ] **vis-space-02**: 카드 안 padding 일관 (16px 또는 20px) → 측정: .card padding 일관
+- [ ] **vis-space-03**: border-radius 일관 (큰 카드 16px, 작은 버튼 12px, 칩 999px) → 측정: 3가지 라운드 값 만 사용
+
+### 모션
+
+- [ ] **vis-motion-01**: 화면 전환 = slide (오른쪽→왼쪽), 200ms ease → 측정: .screen 전환에 transform: translateX, transition 200ms
+- [ ] **vis-motion-02**: 모달 등장 = fade + scale (150ms), prefers-reduced-motion 시 즉시 → 측정: 모달 CSS에 transition + media rule
+
+## Track 4: 핵심 사용성 (10 항목)
+
+### 온보딩
+
+- [ ] **onb-01**: 최초 진입 = 3단계 온보딩 (목적 / 기간 / 첫 일기 시작) → 측정: 첫 방문 (state 없음) 시 .onboarding 화면 표시
+- [ ] **onb-02**: 온보딩 마지막 화면 = "당신만의 8주 계획이 준비되었어요" + 첫 행동 CTA → 측정: 마지막 단계 텍스트 + CTA 버튼
+- [ ] **onb-03**: 온보딩 건너뛰기 가능 (작은 텍스트 링크) → 측정: skip 버튼 존재
+
+### 시각화
+
+- [ ] **vis-chart-01**: 리포트 탭에 수면 시간 시계열 차트 (간단한 라인, SVG) → 측정: .chart-sleep 요소 + SVG path 렌더
+- [ ] **vis-chart-02**: 수면 효율 (SE) 도넛 또는 progress ring → 측정: SVG circle stroke-dasharray
+- [ ] **vis-chart-03**: 척도 점수 변화 트렌드 (ISI/PHQ-9/ESS) 미니 스파크라인 → 측정: 각 척도 카드에 SVG path 미니 차트
+- [ ] **vis-chart-04**: 빈 데이터 시 차트 자리에 "7일 이상 기록 시 그래프가 나타납니다" 안내 → 측정: empty state 메시지
+
+### 입력 단순화
+
+- [ ] **input-01**: 시각 입력 = 휠/스피너 (텍스트 입력 금지, iOS time picker 사용) → 측정: input[type="time"] 사용
+- [ ] **input-02**: 척도 응답 = 큰 버튼 5개 가로 (라디오 버튼 텍스트 금지) → 측정: 척도 응답 영역에 .scale-btn × 5
+- [ ] **input-03**: 다음 문항 자동 진행 (응답 즉시 다음 페이지, "다음" 버튼 불필요) → 측정: 응답 onclick 핸들러 = 다음 문항 자동 이동
+- [ ] **input-04**: 척도 진행 상황 표시 (5/14 같은 도트 또는 progress bar) → 측정: 척도 상단에 progress 요소
+
+## Track 5: 점진적 공개 (5 항목)
+
+- [ ] **prog-01**: 1주차 사용자에겐 인지재구조 탭 비활성화 (잠금 아이콘 + "Week 2부터") → 측정: state.weekNumber < 2일 때 탭 disabled
+- [ ] **prog-02**: 2주차에 SRT 권고 첫 노출 (7일 데이터 기반) → 측정: 누적 일기 ≥ 7일일 때만 SRT 카드
+- [ ] **prog-03**: 자극조절 가이드 = 1주차부터 (즉시 적용 가능한 행동) → 측정: 1주차 홈에 stimulus-control 카드
+- [ ] **prog-04**: 척도 재평가 알림 = 4주차·8주차 (2주마다 아님) → 측정: 알림 트리거 조건 = weekNumber in [4, 8]
+- [ ] **prog-05**: 8주차 완료 시 졸업 화면 (요약 + 다음 단계 안내) → 측정: weekNumber >= 8 + 모든 일기 완료 시 graduation screen
+
+## Track 6: 위생 (자동 진행 가능, 우선순위 낮음) — 기존 ROADMAP 잔여
+
+기존 a11y / PWA / 카피 / err / i18n / dev 항목들을 그대로 가져옴. 위 트랙 모두 완료 후 진행:
+
+- [ ] **hyg-01 ~ hyg-30**: (기존 ROADMAP의 자동 항목 그대로, 우선순위 후순위)
+  - 모두 [X] 되어도 위 Track 1-5 미완료 시 "v3.0 도달 아님"
+
+---
+
+## 시각·인지 검증 필요 (자동 진행 대상 아님)
+
+- [ ] **vis-check-01**: 실제 iOS Safari + Android Chrome 5분 사용 인상 = "Sleep Reset 같다" → 원장 또는 환자 5명 인터뷰
+- [ ] **vis-check-02**: 색상 contrast 4.5:1 실측 (모든 텍스트) → 시각 검증
+- [ ] **vis-check-03**: 터치 영역 44px 실측 → 실기기 확인
+- [ ] **vis-check-04**: 첫 인상 5초 테스트 — 5명에게 5초 보여주고 "무엇을 하는 앱?" 정답률 ≥ 4/5 → 사용자 테스트
+
+## 원장 sign-off 필요 (자동 진행 대상 아님)
+
+기존 그대로:
+- clin-01 ~ clin-05: SRT 권고 수식, 컷오프, 척도 추가, 위기 카드 조건
 
 ---
 
 ## 진행 추적
 
-- 시작: 2026-05-21
-- 완료 예상: v3.0 도달 시
-- 총 항목: 54개 (자동 49 + sign-off 5)
-- 자동 진행 가능: 49개
+총 항목:
+- Track 1 (버그): 8
+- Track 2 (다이어트): 12
+- Track 3 (비주얼): 15
+- Track 4 (사용성): 10
+- Track 5 (점진 공개): 5
+- Track 6 (위생): 기존 잔여
+- 시각 검증: 4 (자동 X)
+- sign-off: 5 (자동 X)
 
-매 항목 완료 시 이 파일의 [ ]을 [X]로 갱신 + 같은 commit에 포함.
+**자동 진행 가능 (Track 1-5)**: 50개
+**v3.0 도달 정의**: Track 1-5 모두 [X] + Track 6 일정 비율 이상
+
+위에서부터 처리. 한 항목 = 한 commit.
