@@ -87,7 +87,7 @@
 
 ### 시각화
 
-- [ ] **vis-chart-01**: 리포트 탭에 수면 시간 시계열 차트 (간단한 라인, SVG) → 측정: .chart-sleep 요소 + SVG path 렌더
+- [X] **vis-chart-01**: 리포트 탭에 수면 시간 시계열 차트 (간단한 라인, SVG) → 측정: .chart-sleep 요소 + SVG path 렌더
 - [ ] **vis-chart-02**: 수면 효율 (SE) 도넛 또는 progress ring → 측정: SVG circle stroke-dasharray
 - [ ] **vis-chart-03**: 척도 점수 변화 트렌드 (ISI/PHQ-9/ESS) 미니 스파크라인 → 측정: 각 척도 카드에 SVG path 미니 차트
 - [ ] **vis-chart-04**: 빈 데이터 시 차트 자리에 "7일 이상 기록 시 그래프가 나타납니다" 안내 → 측정: empty state 메시지
