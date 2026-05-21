@@ -146,7 +146,7 @@
 - [X] **sleep-01**: sleep-mode 토글 — 설정에서 자동 (22-06시) 또는 수동 → 측정: state.sleepMode + CSS class 적용
 - [X] **sleep-02**: 배경 deep navy `#1B2838` → 측정: .sleep-mode body background
 - [X] **sleep-03**: 텍스트 moon-glow `rgba(232, 213, 183, 0.9)` (저대비) → 측정: 정확값
-- [ ] **sleep-04**: 터치 영역 80x80px (Headspace 기준, 졸릴 때 부정확한 탭) → 측정: .sleep-mode button { min-width: 80px; min-height: 80px }
+- [X] **sleep-04**: 터치 영역 80x80px (Headspace 기준, 졸릴 때 부정확한 탭) → 측정: .sleep-mode button { min-width: 80px; min-height: 80px }
 - [ ] **sleep-05**: 화면 밝기 자동 감소 (CSS filter brightness) → 측정: .sleep-mode { filter: brightness(0.85) }
 - [ ] **sleep-06**: 별 drift 애니메이션 (120s 1cycle, 거의 인지 안 됨) → 측정: keyframes drift-stars 120s linear infinite
 - [ ] **sleep-07**: 명상/이완 재생 시 UI 30초 후 자동 페이드 → 측정: .playing 상태 후 30s opacity 0
