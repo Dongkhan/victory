@@ -98,7 +98,7 @@
 - [X] **vis-type-04**: line-height — 본문 1.5 / 헤더 1.2 → 측정: 정확값
 - [X] **vis-type-05**: font-weight ≤ 3종 (400 / 500 / 600) → 측정: 사용 값 unique ≤ 3
 - [X] **vis-type-06**: 숫자 tabular-nums (통계 정렬용) → 측정: .stat-number 류 요소에 font-variant-numeric: tabular-nums
-- [ ] **vis-type-07**: Dynamic Type 지원 — `font-size: clamp(15px, 4vw, 19px)` 본문 → 측정: clamp() 사용 본문 영역에 적용
+- [X] **vis-type-07**: Dynamic Type 지원 — `font-size: clamp(15px, 4vw, 19px)` 본문 → 측정: clamp() 사용 본문 영역에 적용
 
 ### 여백·라운드
 
