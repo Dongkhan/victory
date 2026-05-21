@@ -17,6 +17,8 @@ alert:
 
 hermes:
   enabled: false
-  url: "http://76.13.179.163:8090"
+  # enabled=true일 때만 사용. 실사용은 https:// URL 필수. http는 개발/로컬 테스트에서만 allow_insecure_http=true와 함께 허용.
+  url: ""
+  allow_insecure_http: false
 
 retention_days: 30

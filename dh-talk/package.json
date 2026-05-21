@@ -17,7 +17,8 @@
     "build": "vite build",
     "build:win": "vite build && electron-builder --win",
     "start": "electron .",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "test": "node --test"
   },
   "dependencies": {
     "better-sqlite3": "^12.10.0",
