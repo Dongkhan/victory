@@ -44,7 +44,7 @@
 - [X] **pwa-02**: `<meta name="theme-color" content="...">` 추가 (다크 모드 대응 시 prefers-color-scheme별로) → 측정: theme-color meta 존재
 - [X] **pwa-03**: `<link rel="manifest" href="data:...">` (인라인 data URL manifest, 외부 파일 없이) → 측정: manifest 링크 존재 + 유효 JSON
 - [X] **pwa-04**: manifest에 name, short_name, start_url, display: "standalone", background_color, theme_color → 측정: manifest JSON 6개 키 존재
-- [ ] **pwa-05**: 인라인 SVG favicon (data URL) → 측정: `<link rel="icon" href="data:image/svg+xml...">` 존재
+- [X] **pwa-05**: 인라인 SVG favicon (data URL) → 측정: `<link rel="icon" href="data:image/svg+xml...">` 존재
 - [ ] **pwa-06**: 인라인 SVG apple-touch-icon (data URL, 180x180) → 측정: apple-touch-icon link 존재
 - [ ] **pwa-07**: iOS web app capable meta — `<meta name="apple-mobile-web-app-capable" content="yes">` → 측정: 존재
 - [ ] **pwa-08**: iOS status bar style meta — `<meta name="apple-mobile-web-app-status-bar-style" content="default">` → 측정: 존재
