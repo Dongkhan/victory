@@ -56,7 +56,7 @@
 - [X] **mob-02**: safe-area-inset-top 적용 (헤더 padding-top: max(env(safe-area-inset-top), 12px)) → 측정: CSS env() 사용 확인
 - [X] **mob-03**: safe-area-inset-bottom 적용 (탭바/하단 고정 영역) → 측정: 동일
 - [X] **mob-04**: 입력 시 자동 zoom 방지 — input/textarea font-size ≥ 16px → 측정: 모든 input/textarea computed font-size ≥ 16px
-- [ ] **mob-05**: 가로 스크롤 방지 — body { overflow-x: hidden; } 또는 모든 컨테이너 max-width: 100% → 측정: scrollWidth ≤ clientWidth
+- [X] **mob-05**: 가로 스크롤 방지 — body { overflow-x: hidden; } 또는 모든 컨테이너 max-width: 100% → 측정: scrollWidth ≤ clientWidth
 - [ ] **mob-06**: 텍스트 선택 비활성화는 UI 요소에만 (본문 콘텐츠는 선택 가능) → 측정: user-select: none이 .button/.tab에만, p/h2 등엔 없음
 - [ ] **mob-07**: tap-highlight-color 투명 또는 brand 색 (-webkit-tap-highlight-color) → 측정: CSS 룰 존재
 
