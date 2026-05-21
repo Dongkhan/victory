@@ -68,7 +68,7 @@
 - [X] **diet-hier-02**: 한 화면 primary CTA ≤ 1개 → 측정: .btn-primary 각 .screen ≤ 1
 - [X] **diet-hier-03**: 도움말 텍스트 default 접힘 (ⓘ 탭 시 펼침) → 측정: .help-text default display: none + onclick toggle
 - [X] **diet-hier-04**: 한 화면 색상 ≤ 4가지 (배경/텍스트/강조/보조) → 측정: 컴퓨티드 unique colors ≤ 4
-- [ ] **diet-hier-05**: 옵션 5개 초과 시 검색 또는 그룹화 → 측정: select option > 5면 optgroup 또는 filter input
+- [X] **diet-hier-05**: 옵션 5개 초과 시 검색 또는 그룹화 → 측정: select option > 5면 optgroup 또는 filter input
 
 ### 카피 다이어트
 
