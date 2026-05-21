@@ -40,7 +40,7 @@
 
 ## Phase 3: PWA 기준 — 9 항목
 
-- [ ] **pwa-01**: `<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">` → 측정: viewport-fit=cover 포함
+- [X] **pwa-01**: `<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">` → 측정: viewport-fit=cover 포함
 - [ ] **pwa-02**: `<meta name="theme-color" content="...">` 추가 (다크 모드 대응 시 prefers-color-scheme별로) → 측정: theme-color meta 존재
 - [ ] **pwa-03**: `<link rel="manifest" href="data:...">` (인라인 data URL manifest, 외부 파일 없이) → 측정: manifest 링크 존재 + 유효 JSON
 - [ ] **pwa-04**: manifest에 name, short_name, start_url, display: "standalone", background_color, theme_color → 측정: manifest JSON 6개 키 존재
