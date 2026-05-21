@@ -45,7 +45,7 @@
 - [X] **pwa-03**: `<link rel="manifest" href="data:...">` (인라인 data URL manifest, 외부 파일 없이) → 측정: manifest 링크 존재 + 유효 JSON
 - [X] **pwa-04**: manifest에 name, short_name, start_url, display: "standalone", background_color, theme_color → 측정: manifest JSON 6개 키 존재
 - [X] **pwa-05**: 인라인 SVG favicon (data URL) → 측정: `<link rel="icon" href="data:image/svg+xml...">` 존재
-- [ ] **pwa-06**: 인라인 SVG apple-touch-icon (data URL, 180x180) → 측정: apple-touch-icon link 존재
+- [X] **pwa-06**: 인라인 SVG apple-touch-icon (data URL, 180x180) → 측정: apple-touch-icon link 존재
 - [ ] **pwa-07**: iOS web app capable meta — `<meta name="apple-mobile-web-app-capable" content="yes">` → 측정: 존재
 - [ ] **pwa-08**: iOS status bar style meta — `<meta name="apple-mobile-web-app-status-bar-style" content="default">` → 측정: 존재
 - [ ] **pwa-09**: beforeinstallprompt 이벤트 핸들 + "홈 화면에 추가" 버튼 (지원 브라우저만 노출) → 측정: 이벤트 리스너 등록 + UI 조건부 노출
