@@ -111,7 +111,7 @@
 
 - [X] **vis-motion-01**: 화면 전환 슬라이드 — translateX, 500ms cubic-bezier(0.25, 0.1, 0.25, 1) → 측정: .screen transition 정확값
 - [X] **vis-motion-02**: 모달 등장 fade + scale — 200ms ease-out, scale 0.95→1 → 측정: .modal CSS 정확값
-- [ ] **vis-motion-03**: 세션 완료 셀러브레이션 — 800ms scale 0.9→1.02→1 → 측정: .completion-animation keyframes 존재
+- [X] **vis-motion-03**: 세션 완료 셀러브레이션 — 800ms scale 0.9→1.02→1 → 측정: .completion-animation keyframes 존재
 
 ## Track 5: 핵심 기능 사용성 (15 항목)
 
