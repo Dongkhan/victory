@@ -119,7 +119,7 @@
 
 - [X] **chart-01**: 리포트 탭에 수면 시간 시계열 (SVG 인라인 라인 차트, 7일/14일/30일 토글) → 측정: SVG path + 3개 range 버튼
 - [X] **chart-02**: 수면 효율 progress ring (SVG circle stroke-dasharray) → 측정: SVG circle 요소 + 동적 stroke 계산
-- [ ] **chart-03**: 척도 점수 변화 미니 sparkline (각 척도 카드에 14일 흐름) → 측정: 각 척도 카드에 SVG 미니 차트
+- [X] **chart-03**: 척도 점수 변화 미니 sparkline (각 척도 카드에 14일 흐름) → 측정: 각 척도 카드에 SVG 미니 차트
 - [ ] **chart-04**: 빈 데이터 시 차트 위치에 안내 — "7일 이상 일기 작성 후 차트가 나타납니다" → 측정: empty state 텍스트 + 차트 영역 placeholder
 - [ ] **chart-05**: 차트 색상 brand 단색 + 옅은 fill (gradient: brand 30% → 0%) → 측정: SVG fill linearGradient 정의
 
