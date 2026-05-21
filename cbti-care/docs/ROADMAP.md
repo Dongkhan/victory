@@ -206,7 +206,7 @@
 - [X] **err-02**: JSON.parse try/catch (모든 호출) → 측정: AST 검증
 - [X] **err-03**: 빈 state 처리 — empty state UI 각 화면 → 측정: empty state 텍스트 존재
 - [X] **err-04**: schemaVersion 마이그레이션 — 5개 LEGACY_KEY 모두 처리 → 측정: 마이그레이션 함수 + 분기 검증
-- [ ] **err-05**: 일기 maxlength 5000 + 카운터 → 측정: textarea[maxlength=5000] + .char-counter
+- [X] **err-05**: 일기 maxlength 5000 + 카운터 → 측정: textarea[maxlength=5000] + .char-counter
 - [ ] **err-06**: 중복 날짜 일기 — 기존 entry 시 "덮어쓰기" 확인 → 측정: confirm 호출
 - [ ] **err-07**: 손상된 localStorage — 복구/초기화 UI → 측정: catch 블록 UI 트리거
 - [ ] **err-08**: 네트워크 오프라인 — 명시적 "오프라인 사용 가능" 표시 → 측정: navigator.onLine 검사 + UI
