@@ -69,7 +69,7 @@
 - [X] **err-05**: Date 파싱 실패 시 graceful — invalid date는 null로 → 측정: new Date(input) NaN 체크 후 처리
 - [X] **err-06**: 글자 수 상한 — 일기 텍스트 입력 5000자 제한 + UI 카운터 → 측정: maxlength 속성 + 표시 카운터
 - [X] **err-07**: 동일 키 중복 저장 방지 — 같은 날짜 일기 덮어쓰기 확인 모달 → 측정: 기존 entry 존재 시 확인 prompt
-- [ ] **err-08**: localStorage 손상 감지 — JSON 파싱 실패 시 "데이터 복구 또는 초기화" 선택지 제공 → 측정: 손상된 state 시 복구 UI 표시
+- [X] **err-08**: localStorage 손상 감지 — JSON 파싱 실패 시 "데이터 복구 또는 초기화" 선택지 제공 → 측정: 손상된 state 시 복구 UI 표시
 
 ## Phase 6: i18n & 출처 — 6 항목
 
