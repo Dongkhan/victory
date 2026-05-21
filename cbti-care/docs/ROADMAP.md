@@ -174,7 +174,7 @@
 
 ## Track 9: 접근성 (Apple HIG 강조) (10 항목)
 
-- [ ] **a11y-01**: `<html lang="ko">` → 측정: 속성 존재
+- [X] **a11y-01**: `<html lang="ko">` → 측정: 속성 존재
 - [ ] **a11y-02**: 모든 button/a aria-label 또는 textContent → 측정: BeautifulSoup 검증
 - [ ] **a11y-03**: 아이콘 button (text 0)에 aria-label 명시 → 측정: 정적 검증
 - [ ] **a11y-04**: form 요소 label 연결 → 측정: 정적 검증
