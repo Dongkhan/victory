@@ -177,7 +177,7 @@
 - [X] **a11y-01**: `<html lang="ko">` → 측정: 속성 존재
 - [X] **a11y-02**: 모든 button/a aria-label 또는 textContent → 측정: BeautifulSoup 검증
 - [X] **a11y-03**: 아이콘 button (text 0)에 aria-label 명시 → 측정: 정적 검증
-- [ ] **a11y-04**: form 요소 label 연결 → 측정: 정적 검증
+- [X] **a11y-04**: form 요소 label 연결 → 측정: 정적 검증
 - [ ] **a11y-05**: 위기 카드 role="dialog" + aria-modal + aria-labelledby → 측정: 정적 검증
 - [ ] **a11y-06**: :focus-visible CSS — outline 2px solid var(--brand) + outline-offset 2px → 측정: CSS 룰 존재
 - [ ] **a11y-07**: contrast 자체 계산 (CSS 색상 기준) — 본문 4.5:1, 헤더 3:1 → 측정: Python contrast 라이브러리로 계산
