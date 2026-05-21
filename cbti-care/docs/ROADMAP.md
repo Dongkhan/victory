@@ -23,7 +23,7 @@
 - [X] **a11y-06**: 본문 텍스트 color contrast 4.5:1 이상 (WCAG AA) → 측정: 주요 텍스트 색상 vs 배경 contrast 계산값 ≥ 4.5
 - [X] **a11y-07**: 큰 텍스트(18pt+) contrast 3:1 이상 → 측정: 헤더 색상 contrast ≥ 3
 - [X] **a11y-08**: form `<input>`/`<textarea>`/`<select>`에 `<label for>` 또는 aria-label → 측정: 모든 입력 요소에 라벨 연결
-- [ ] **a11y-09**: 활성 화면(`.screen.active`)에 `aria-current="page"` 또는 라우팅 시 focus 이동 → 측정: 화면 전환 시 새 화면 첫 요소로 focus
+- [X] **a11y-09**: 활성 화면(`.screen.active`)에 `aria-current="page"` 또는 라우팅 시 focus 이동 → 측정: 화면 전환 시 새 화면 첫 요소로 focus
 - [ ] **a11y-10**: 위기 카드 모달에 role="dialog" + aria-modal="true" + aria-labelledby → 측정: 위기 카드 표시 시 dialog role 확인
 - [ ] **a11y-11**: PHQ-9 #9 위기 카드 트랩 (포커스 모달 안에서 순환, ESC로 닫기) → 측정: Tab 키로 모달 밖 요소 도달 불가, ESC 작동
 
