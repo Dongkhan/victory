@@ -23,7 +23,7 @@
 - [X] **bug-05**: 일기 작성 도중 뒤로가기 → "임시 저장 또는 폐기" 선택 → 측정: 입력 변경 후 뒤로가기 = 선택 모달
 - [X] **bug-06**: 모든 모달 ESC 또는 배경 탭으로 닫힘 → 측정: 위기 카드 제외 (위기 카드는 명시적 행동만)
 - [X] **bug-07**: iOS Safari에서 100vh 스크롤 깨짐 수정 (`100dvh` 또는 `-webkit-fill-available`) → 측정: vh 사용 위치 모두 dvh로 교체
-- [ ] **bug-08**: 새로고침 시 현재 화면 유지 (URL hash 또는 sessionStorage) → 측정: 플랜→ISI 진입 후 F5 = ISI 그대로
+- [X] **bug-08**: 새로고침 시 현재 화면 유지 (URL hash 또는 sessionStorage) → 측정: 플랜→ISI 진입 후 F5 = ISI 그대로
 
 ## Track 2: 정보 다이어트 (12 항목) — UX 단순화
 
