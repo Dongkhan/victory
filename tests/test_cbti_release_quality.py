@@ -2,12 +2,16 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-HTML = ROOT / "cbti-care" / "prototype" / "v0.7.html"
+def latest_cbti_html():
+    files = sorted((ROOT / 'cbti-care' / 'prototype').glob('v2.*.html'), key=lambda p: int(p.stem.split('.')[1]))
+    return files[-1]
+
+HTML = latest_cbti_html()
 INDEX = ROOT / "cbti-care" / "index.html"
 
 
 def read_html() -> str:
-    assert HTML.exists(), "CBT-I v0.7 release-quality app must exist"
+    assert HTML.exists(), "latest CBT-I release-quality app must exist"
     return HTML.read_text(encoding="utf-8")
 
 
@@ -16,7 +20,7 @@ def test_legacy_release_quality_v07_link_is_preserved():
     assert 'prototype/v0.7.html' in index
     assert 'QA 7일 데이터 입력' in index
     assert not re.search(r'v0\.7\.html.*<small>latest</small>', index)
-    assert re.search(r'v1\.7\.html.*<small>latest</small>', index)
+    assert re.search(r'v2\.\d+\.html.*<small>latest</small>', index)
     assert 'prototype/v1.6.html">CBT-I Care v1.6</a><br>' in index
 
 

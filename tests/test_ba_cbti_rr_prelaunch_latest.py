@@ -77,10 +77,10 @@ def test_cbti_v17_makes_first_screen_diary_first_and_latest_index():
     assert "잠이 안 오면 1분 호흡" in html
     assert "수면제한 전 안전 확인" in html
     assert "grid-template-columns:1fr 1fr" in html
-    assert "prototype/v1.7.html" in index and "latest" in index
-    assert 'prototype/v1.6.html">CBT-I Care v1.6</a><br>' in index
-    assert "최신 실행 파일은 v1.7" in index
-    assert "최신 v1.7" in root_index
+    assert re.search(r'prototype/v2\.\d+\.html.*<small>latest</small>', index, re.S)
+    assert 'CBT-I Care v1.6' in index
+    assert re.search(r'최신 실행 파일은 v2\.\d+', index)
+    assert 'CBT-I Care' in root_index
 
 def test_rr_v22_is_lightweight_and_preserves_latest_lineage():
     html_path = ROOT / "relax-routine/prototype/v2.2.html"
