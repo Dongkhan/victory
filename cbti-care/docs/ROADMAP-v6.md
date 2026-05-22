@@ -55,7 +55,7 @@ manifest·theme-color는 존재하나 service worker가 없어 진짜 오프라�
 
 - [X] **test-01**: CBT-I 버전 하드코딩 테스트를 현 latest 기준으로 갱신 → 측정: `pytest tests/` 실패 0건
 - [X] **test-02**: latest 버전을 동적으로 탐지하는 헬퍼로 전환(버전 올라가도 안 깨지게) → 측정: 테스트가 `prototype/` 최신 파일 자동 인식
-- [ ] **test-03**: index.html broken-link 검증 테스트 추가(Track 1 회귀 방지) → 측정: 링크-라벨 일치 검증 테스트 존재
+- [X] **test-03**: index.html broken-link 검증 테스트 추가(Track 1 회귀 방지) → 측정: 링크-라벨 일치 검증 테스트 존재
 - [ ] **test-04**: 안전 함수 5종 byte-identical 회귀 테스트 추가 → 측정: 안전 함수 해시 고정 테스트 통과
 
 ## Track 6: 최종 코드 위생 (4 항목)
