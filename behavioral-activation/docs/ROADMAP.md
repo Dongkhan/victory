@@ -34,7 +34,7 @@
 - [X] **bug-02**: 라우트 스택 기반 뒤로가기 — 진입 직전 화면으로 복귀 → 측정: Today->Action Lab->뒤로 = Today
 - [X] **bug-03**: 행동 처방·체크 도중 뒤로가기 시 진행 손실 확인 모달 → 측정: dirty 상태 + 뒤로가기 = 확인 모달
 - [X] **bug-04**: 모달 ESC + 배경 탭 = 닫힘 (안전 화면 제외) → 측정: 모든 `.modal`에 ESC + backdrop handler
-- [ ] **bug-05**: 새로고침 시 현재 탭 유지 — URL hash 사용 → 측정: F5 후 같은 탭
+- [X] **bug-05**: 새로고침 시 현재 탭 유지 — URL hash 사용 → 측정: F5 후 같은 탭
 - [ ] **bug-06**: localStorage 키 prefix 통일 — 모든 키 `activacare:` 시작 → 측정: 저장 키 모두 prefix 시작
 
 ## Track 2: 접근성 (a11y) (7 항목)
