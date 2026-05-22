@@ -63,7 +63,7 @@ manifest·theme-color는 존재하나 service worker가 없어 진짜 오프라�
 - [X] **hyg-01**: `placeholder` 잔여 3건 검토 — 실제 입력 placeholder면 유지, 미완성 표식이면 해결 → 측정: 미완성 표식 placeholder 0건
 - [X] **hyg-02**: DEV/QA 기능(`QA 7일 데이터 입력` 등)이 일반 UI에 노출되지 않는지 확인 → 측정: DEV_MODE 가드 밖 QA 버튼 0건
 - [X] **hyg-03**: HTML W3C validator 통과 → 측정: validator 결과 clean
-- [ ] **hyg-04**: 앱 내 모든 surface 버전 표기가 latest와 일치(상단 pill 포함) → 측정: 버전 문자열 unique = 1
+- [X] **hyg-04**: 앱 내 모든 surface 버전 표기가 latest와 일치(상단 pill 포함) → 측정: 버전 문자열 unique = 1
 
 ---
 
