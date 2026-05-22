@@ -29,7 +29,7 @@
 
 - [X] **doc-01**: `docs/ROADMAP-v5.md` 부재 해소 — commit이 "ROADMAP-v5"를 141회 참조하나 파일이 없음. `docs/ROADMAP.md`를 `ROADMAP-v5.md`로 명명하거나, `ROADMAP.md` 상단에 "= ROADMAP-v5" 별칭 주석 추가 → 측정: ROADMAP-v5 식별 가능한 파일/주석 존재
 - [X] **doc-02**: `docs/IMPROVEMENT-PRD.md`의 Baseline(`v2.1`)·Target(`v3.0`) 표기를 현재 상태로 갱신 → 측정: Baseline = 현 latest, 진행 현황 반영
-- [ ] **doc-03**: `cbti-care/CLAUDE.md`의 "현재 베이스라인 `v2.1.html`" 표기를 현 latest로 갱신 → 측정: CLAUDE.md baseline = 현 latest
+- [X] **doc-03**: `cbti-care/CLAUDE.md`의 "현재 베이스라인 `v2.1.html`" 표기를 현 latest로 갱신 → 측정: CLAUDE.md baseline = 현 latest
 - [ ] **doc-04**: 파일 크기 기준 불일치 해소 — PRD는 "100KB 이하", ROADMAP은 "150KB 이하". 한 기준으로 통일하고 두 문서 동기화 → 측정: 두 문서 동일 수치
 
 ## Track 3: 경량화 (4 항목)

@@ -7,7 +7,7 @@
 CBT-I Care는 **8주 CBT-I 보조 자가관리 도구**의 HTML 프로토타입입니다.
 React/RN으로 이식하기 전 단계로, 단일 HTML 파일에서 임상 완성도와 사용성을 끝까지 끌어올리는 중입니다.
 
-- **현재 베이스라인**: `prototype/v2.255.html` (ROADMAP-v6 진행 기준 latest)
+- **현재 베이스라인**: `prototype/v2.271.html` (ROADMAP-v6 자동 항목 구현 완료 기준 latest)
 - **목표**: `docs/IMPROVEMENT-PRD.md`와 `docs/ROADMAP.md`의 체크박스를 모두 [X]로 만드는 것
 - **다음 트랙(범위 밖)**: RN/Expo 이식, IRB, 앱스토어 — 이 디렉토리 범위 밖
 
