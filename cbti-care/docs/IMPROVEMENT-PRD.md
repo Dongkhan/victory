@@ -2,7 +2,7 @@
 
 **Status**: Draft → 헤르메스 자동 작업의 기준 문서
 **Owner**: 동행 정신건강의학과의원 원장
-**Baseline**: `prototype/v2.1.html` (현 latest, 61KB, 단일 HTML)
+**Baseline**: `prototype/v2.254.html` (ROADMAP-v5 자동 항목 완료 후 ROADMAP-v6 마무리 단계)
 **Target**: `prototype/v3.0.html` (개선 사이클 완료 시점)
 **Scope**: HTML 단일 파일 수준에서 완성도를 끝까지 끌어올리기. RN/Expo 이식·IRB·앱스토어는 범위 밖.
 
@@ -37,7 +37,7 @@ CBT-I Care는 **8주 인지행동치료 기반 불면증 보조 자가관리 도
 
 ---
 
-## 2. 현재 v2.1 평가
+## 2. 현재 v2.254 평가
 
 ### 2.1 잘 되어 있는 것 (유지 + 보호)
 - 5개 안전 함수가 잘 분리됨
