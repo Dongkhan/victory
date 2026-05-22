@@ -1,6 +1,6 @@
 # CBT-I Care — ROADMAP-v6 (코딩 완성 마무리)
 
-**선행 상태**: ROADMAP-v4(50항목)·ROADMAP-v5(=`docs/ROADMAP.md`, 141항목) 자동 항목 모두 완료. 현 latest `prototype/v2.248.html`(144KB)는 접근성·다크모드·PWA manifest·온보딩·시각화가 완성 수준이다.
+**선행 상태**: ROADMAP-v4(50항목)·ROADMAP-v5(=`docs/ROADMAP.md`, 141항목) 자동 항목 모두 완료. 현 latest `prototype/v2.271.html`(96KB)는 접근성·다크모드·PWA manifest·온보딩·시각화가 완성 수준이다.
 
 **목표**: 남은 **코딩 단계 결함·정합성·경량화·오프라인**을 마무리해 단일 HTML을 최종 출시 후보(v3.0)로 확정한다. 새 기능 추가가 아니라 **정리·검증·동기화**가 핵심이다.
 
@@ -30,16 +30,16 @@
 - [X] **doc-01**: `docs/ROADMAP-v5.md` 부재 해소 — commit이 "ROADMAP-v5"를 141회 참조하나 파일이 없음. `docs/ROADMAP.md`를 `ROADMAP-v5.md`로 명명하거나, `ROADMAP.md` 상단에 "= ROADMAP-v5" 별칭 주석 추가 → 측정: ROADMAP-v5 식별 가능한 파일/주석 존재
 - [X] **doc-02**: `docs/IMPROVEMENT-PRD.md`의 Baseline(`v2.1`)·Target(`v3.0`) 표기를 현재 상태로 갱신 → 측정: Baseline = 현 latest, 진행 현황 반영
 - [X] **doc-03**: `cbti-care/CLAUDE.md`의 "현재 베이스라인 `v2.1.html`" 표기를 현 latest로 갱신 → 측정: CLAUDE.md baseline = 현 latest
-- [ ] **doc-04**: 파일 크기 기준 불일치 해소 — PRD는 "100KB 이하", ROADMAP은 "150KB 이하". 한 기준으로 통일하고 두 문서 동기화 → 측정: 두 문서 동일 수치
+- [X] **doc-04**: 파일 크기 기준 불일치 해소 — PRD와 ROADMAP은 "120KB 이하". 한 기준으로 통일하고 두 문서 동기화 → 측정: 두 문서 동일 수치
 
 ## Track 3: 경량화 (4 항목)
 
-현 144KB. PRD 비-기능 요구는 "100KB 이하". 248회 반복하며 누적된 죽은 코드 정리가 필요.
+현 96KB. PRD 비-기능 요구는 "120KB 이하". 248회 반복하며 누적된 죽은 코드 정리가 필요.
 
 - [ ] **size-01**: 미사용 CSS 룰 식별·제거 → 측정: 파일 크기 감소, 6개 화면 렌더 회귀 0
 - [ ] **size-02**: 미사용 JS 함수·중복 헬퍼 제거 → 측정: 파일 크기 감소, console 에러 0
 - [ ] **size-03**: 중복 인라인 SVG·data URL 통합(공통 정의 재사용) → 측정: 동일 SVG 중복 0건
-- [ ] **size-04**: 단일 HTML <= 120KB 도달(목표 100KB 접근) → 측정: `stat` 바이트 <= 122880
+- [ ] **size-04**: 단일 HTML <= 120KB 도달 → 측정: `stat` 바이트 <= 122880
 
 ## Track 4: PWA 오프라인 (3 항목)
 
