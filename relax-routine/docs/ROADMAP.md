@@ -28,7 +28,7 @@
 ## Track 0: 메타 — 토큰 기반 정비 (3 항목)
 
 - [X] **meta-01**: `<style>` 안에 `:root { --... }` 디자인 토큰 블록 신설 — 색·간격·라운드·모션 변수를 한 곳에 정의 → 측정: `:root` 변수 >= 20개 존재
-- [ ] **meta-02**: 모션 토큰 정의 — `--transition-fast 200ms` / `--transition-page 500ms` / `--transition-calm 800ms` → 측정: `--transition-*` 변수 3개 존재
+- [X] **meta-02**: 모션 토큰 정의 — `--transition-fast 200ms` / `--transition-page 500ms` / `--transition-calm 800ms` → 측정: `--transition-*` 변수 3개 존재
 - [ ] **meta-03**: 간격·라운드 스케일 토큰화 — `--space-*`(4/8/12/16/24/32), `--radius-*`(8/16/24/999) → 측정: `--space-*` 6개 + `--radius-*` 4개 정의
 
 ## Track 1: 명백한 결함 — 즉시 수정 (8 항목)
