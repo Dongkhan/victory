@@ -27,19 +27,19 @@
 
 ## Track 0: 메타 — 토큰 기반 정비 (3 항목)
 
-- [X] **meta-01**: `<style>` 안에 `:root { --... }` 디자인 토큰 블록 신설 — 색·간격·라운드·모션 변수를 한 곳에 정의 → 측정: `:root` 변수 >= 20개 존재
-- [X] **meta-02**: 모션 토큰 정의 — `--transition-fast 200ms` / `--transition-page 500ms` / `--transition-calm 800ms` → 측정: `--transition-*` 변수 3개 존재
-- [X] **meta-03**: 간격·라운드 스케일 토큰화 — `--space-*`(4/8/12/16/24/32), `--radius-*`(8/16/24/999) → 측정: `--space-*` 6개 + `--radius-*` 4개 정의
+- [ ] **meta-01**: `<style>` 안에 `:root { --... }` 디자인 토큰 블록 신설 — 색·간격·라운드·모션 변수를 한 곳에 정의 → 측정: `:root` 변수 >= 20개 존재
+- [ ] **meta-02**: 모션 토큰 정의 — `--transition-fast 200ms` / `--transition-page 500ms` / `--transition-calm 800ms` → 측정: `--transition-*` 변수 3개 존재
+- [ ] **meta-03**: 간격·라운드 스케일 토큰화 — `--space-*`(4/8/12/16/24/32), `--radius-*`(8/16/24/999) → 측정: `--space-*` 6개 + `--radius-*` 4개 정의
 
 ## Track 1: 명백한 결함 — 즉시 수정 (8 항목)
 
-- [X] **bug-01**: `<html>`에 `lang="ko"` 속성 추가 (현재 누락) → 측정: `<html lang="ko">` 존재
-- [X] **bug-02**: `100vh` -> `100dvh` 전환 (iOS Safari 주소창 처리) — 현재 2건 잔존 → 측정: `100vh` 검색 결과 0건
-- [X] **bug-03**: `console.log/warn/error` 정리 — 현재 5건. DEV 가드 밖 호출 제거 → 측정: 정상 사용 시 console 출력 0건
-- [X] **bug-04**: 라우트 스택 기반 뒤로가기 — 진입 직전 화면으로 복귀 → 측정: 홈->세션->뒤로 = 홈 / 기록->세션->뒤로 = 기록
-- [X] **bug-05**: 세션·기록 도중 뒤로가기 시 진행 손실 확인 모달 → 측정: dirty 상태 + 뒤로가기 = 확인 모달 노출
-- [X] **bug-06**: 모달 ESC + 배경 탭 = 닫힘 (안전 안내 카드 제외) → 측정: 모든 `.modal`에 ESC listener + backdrop onclick
-- [X] **bug-07**: 새로고침 시 현재 화면 유지 — URL hash 사용 → 측정: 세션 화면에서 F5 후 같은 화면
+- [ ] **bug-01**: `<html>`에 `lang="ko"` 속성 추가 (현재 누락) → 측정: `<html lang="ko">` 존재
+- [ ] **bug-02**: `100vh` -> `100dvh` 전환 (iOS Safari 주소창 처리) — 현재 2건 잔존 → 측정: `100vh` 검색 결과 0건
+- [ ] **bug-03**: `console.log/warn/error` 정리 — 현재 5건. DEV 가드 밖 호출 제거 → 측정: 정상 사용 시 console 출력 0건
+- [ ] **bug-04**: 라우트 스택 기반 뒤로가기 — 진입 직전 화면으로 복귀 → 측정: 홈->세션->뒤로 = 홈 / 기록->세션->뒤로 = 기록
+- [ ] **bug-05**: 세션·기록 도중 뒤로가기 시 진행 손실 확인 모달 → 측정: dirty 상태 + 뒤로가기 = 확인 모달 노출
+- [ ] **bug-06**: 모달 ESC + 배경 탭 = 닫힘 (안전 안내 카드 제외) → 측정: 모든 `.modal`에 ESC listener + backdrop onclick
+- [ ] **bug-07**: 새로고침 시 현재 화면 유지 — URL hash 사용 → 측정: 세션 화면에서 F5 후 같은 화면
 - [ ] **bug-08**: localStorage 키 prefix 통일 — 모든 키 `relaxroutine:` 시작 → 측정: 저장 키 모두 prefix 시작
 
 ## Track 2: 경량화 — 모바일 첫 로딩 (4 항목)
