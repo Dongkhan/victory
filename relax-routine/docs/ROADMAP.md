@@ -38,7 +38,7 @@
 - [X] **bug-03**: `console.log/warn/error` 정리 — 현재 5건. DEV 가드 밖 호출 제거 → 측정: 정상 사용 시 console 출력 0건
 - [X] **bug-04**: 라우트 스택 기반 뒤로가기 — 진입 직전 화면으로 복귀 → 측정: 홈->세션->뒤로 = 홈 / 기록->세션->뒤로 = 기록
 - [X] **bug-05**: 세션·기록 도중 뒤로가기 시 진행 손실 확인 모달 → 측정: dirty 상태 + 뒤로가기 = 확인 모달 노출
-- [ ] **bug-06**: 모달 ESC + 배경 탭 = 닫힘 (안전 안내 카드 제외) → 측정: 모든 `.modal`에 ESC listener + backdrop onclick
+- [X] **bug-06**: 모달 ESC + 배경 탭 = 닫힘 (안전 안내 카드 제외) → 측정: 모든 `.modal`에 ESC listener + backdrop onclick
 - [ ] **bug-07**: 새로고침 시 현재 화면 유지 — URL hash 사용 → 측정: 세션 화면에서 F5 후 같은 화면
 - [ ] **bug-08**: localStorage 키 prefix 통일 — 모든 키 `relaxroutine:` 시작 → 측정: 저장 키 모두 prefix 시작
 
