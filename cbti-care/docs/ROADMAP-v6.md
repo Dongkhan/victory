@@ -47,7 +47,7 @@ manifest·theme-color는 존재하나 service worker가 없어 진짜 오프라�
 
 - [X] **pwa-01**: 인라인 service worker 등록 — 정적 자원(현재 HTML)만 캐시. **user data 절대 캐시 금지** → 측정: `serviceWorker.register` 존재 + 캐시 대상에 localStorage 키 0건
 - [X] **pwa-02**: 오프라인 진입 시 정상 로드 확인 → 측정: 네트워크 차단 후 재방문 시 화면 정상
-- [ ] **pwa-03**: SW 버전 업데이트 처리 — 새 버전 배포 시 캐시 무효화 → 측정: SW에 cache-name 버전 + activate 시 구 캐시 삭제
+- [X] **pwa-03**: SW 버전 업데이트 처리 — 새 버전 배포 시 캐시 무효화 → 측정: SW에 cache-name 버전 + activate 시 구 캐시 삭제
 
 ## Track 5: 테스트 동기화 (4 항목)
 
