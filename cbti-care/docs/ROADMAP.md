@@ -227,7 +227,7 @@
 - [X] **dev-01**: DEV_MODE 가드 외 UI dev 노출 0 → 측정: "debug" "dev" "test" 텍스트 UI 노출 0
 - [X] **dev-02**: console.log 정리 (DEV_MODE 가드 외) → 측정: 정상 사용 시 console clean
 - [X] **dev-03**: 단일 HTML 의존성 0 → 측정: package.json 없음
-- [X] **dev-04**: 파일 크기 ≤ 150KB (현재 61KB, 위 모든 작업 후 한계) → 측정: stat ≤ 153600
+- [X] **dev-04**: 파일 크기 120KB 이하 (현재 61KB, 위 모든 작업 후 한계) → 측정: stat 120KB 이하
 - [X] **dev-05**: HTML W3C validator 통과 → 측정: validator API 결과 clean
 - [X] **dev-06**: 라이트/다크 모드 스크린샷 자동 생성 (CI용, 사용자 확인) → 측정: 별도 generate-screenshots.sh 존재 (자동 진행 대상은 아님)
 
