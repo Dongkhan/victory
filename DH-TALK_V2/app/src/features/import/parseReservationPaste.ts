@@ -5,25 +5,38 @@ export interface ParsedReservation {
   appointmentTime?: string;
 }
 
-const timePattern = /^(?<time>(?:[01]?\d|2[0-3])[:시][0-5]\d?)\s*(?<name>.+)$/;
+const timeTokenPattern = /^(?:[01]?\d|2[0-3])(?::?[0-5]\d|시[0-5]?\d?)?$/;
+const timeAtStartPattern = /^(?<time>(?:[01]?\d|2[0-3])[:시][0-5]\d?)\s*(?<name>.+)$/;
 
 export function parseReservationPaste(text: string): ParsedReservation[] {
   return text
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean)
-    .map((line) => {
-      const csvParts = line.split(',').map((part) => part.trim()).filter(Boolean);
-      if (csvParts.length >= 2 && /^\d{1,2}:?\d{0,2}$/.test(csvParts[0])) {
-        return { appointmentTime: normalizeTime(csvParts[0]), name: csvParts[1] };
-      }
-      const match = line.match(timePattern);
-      if (match?.groups?.time && match.groups.name) {
-        return { appointmentTime: normalizeTime(match.groups.time), name: match.groups.name.trim() };
-      }
-      return { name: line };
-    })
+    .map(parseReservationLine)
     .filter((row) => row.name.length > 0);
+}
+
+function parseReservationLine(line: string): ParsedReservation {
+  const delimitedParts = line.split(/[\t,]/).map((part) => part.trim()).filter(Boolean);
+  if (delimitedParts.length >= 2) {
+    const timePart = delimitedParts.find(isTimeToken);
+    const namePart = delimitedParts.find((part) => !isTimeToken(part));
+    if (timePart && namePart) {
+      return { appointmentTime: normalizeTime(timePart), name: namePart };
+    }
+  }
+
+  const match = line.match(timeAtStartPattern);
+  if (match?.groups?.time && match.groups.name) {
+    return { appointmentTime: normalizeTime(match.groups.time), name: match.groups.name.trim() };
+  }
+
+  return { name: line };
+}
+
+function isTimeToken(value: string): boolean {
+  return timeTokenPattern.test(value.replace(/\s/g, ''));
 }
 
 export function toTodayPatients(rows: ParsedReservation[], date: string): Array<Omit<TodayPatient, 'id' | 'sortOrder'>> {

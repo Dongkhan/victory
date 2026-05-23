@@ -3,6 +3,7 @@ import type { CallAlert, MacroTemplate, TodayPatient, TransferFileCard } from '.
 import { createLocalPatientRepository, createSupabasePatientRepository } from './data/patientRepository';
 import { subscribeToPatientChanges } from './data/patientRealtime';
 import { CallAlertStack } from './features/alerts/CallAlertStack';
+import { pruneCallAlertsForRetention } from './features/alerts/callAlertRetention';
 import { FileTransferPanel } from './features/files/FileTransferPanel';
 import { parseReservationPaste, toTodayPatients } from './features/import/parseReservationPaste';
 import { MacroPanel } from './features/macros/MacroPanel';
@@ -49,11 +50,15 @@ export default function App() {
   const [alerts, setAlerts] = useLocalStorageState<CallAlert[]>('dh-talk-v2:alerts', []);
   const [files, setFiles] = useState<TransferFileCard[]>([]);
   const [soundEnabled, setSoundEnabled] = useLocalStorageState<boolean>('dh-talk-v2:sound-enabled', false);
-  const syncMode = supabase ? 'Supabase 준비됨 · Realtime 연결 예정' : 'Local 저장 모드 · Supabase 키 없음';
+  const syncMode = supabase ? '실시간 연동 중' : '이 PC에만 저장됨 · 다른 PC와 연동 안 됨';
 
   useEffect(() => {
     writeLocalStorageState('dh-talk-v2:patients', patients);
   }, [patients]);
+
+  useEffect(() => {
+    setAlerts((current) => pruneCallAlertsForRetention(current));
+  }, [setAlerts]);
 
   useEffect(() => {
     if (!supabase) return undefined;
@@ -75,26 +80,30 @@ export default function App() {
   async function sendMessage(body: string) {
     if (!selectedPatient) return;
     const now = new Date().toISOString();
-    setAlerts((current) => [
-      ...current,
-      {
-        id: `a-${Date.now()}`,
-        body,
-        patientName: selectedPatient.name,
-        sender: '원장실',
-        createdAt: now,
-        status: 'unread'
-      }
-    ]);
+    const alert: CallAlert = {
+      id: `a-${Date.now()}`,
+      body,
+      patientName: selectedPatient.name,
+      sender: '원장실',
+      createdAt: now,
+      status: 'unread'
+    };
+    setAlerts((current) => pruneCallAlertsForRetention([...current, alert], new Date(now)));
     await updatePatient(selectedPatient.id, { lastCalledAt: now, status: 'in_consult' });
+  }
+
+  async function resetTodayPatients() {
+    const confirmed = window.confirm('오늘 대기흐름보드를 모두 초기화합니다. 이 작업은 되돌릴 수 없습니다. 계속할까요?');
+    if (!confirmed) return;
+    await resetPatients([]);
   }
 
   return (
     <main className="app-shell">
       <header className="app-header">
         <div>
-          <p className="eyebrow">DH-TALK V2 MVP</p>
-          <h1>서버컴 없이 쓰는 환자 흐름·호출 보드</h1>
+          <p className="eyebrow">DH-TALK V2</p>
+          <h1>DH_TALK-V2</h1>
         </div>
         <div className="sync-pill">{syncMode}</div>
       </header>
@@ -105,7 +114,7 @@ export default function App() {
           <textarea value={reservationPaste} onChange={(event) => setReservationPaste(event.target.value)} />
         </div>
         <button type="button" onClick={() => void importReservations()}>예약표 추가</button>
-        <button type="button" onClick={() => void resetPatients([])}>오늘 초기화</button>
+        <button type="button" onClick={() => void resetTodayPatients()}>오늘 초기화</button>
       </section>
 
       <div className="main-grid">

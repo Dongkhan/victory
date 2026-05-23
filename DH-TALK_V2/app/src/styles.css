@@ -6,7 +6,7 @@
 
 * { box-sizing: border-box; }
 
-body { margin: 0; min-width: 1120px; }
+body { margin: 0; min-width: 0; }
 
 button, input, textarea, select { font: inherit; }
 button { border: 0; border-radius: 12px; padding: 10px 14px; background: #e2e8f0; color: #172033; cursor: pointer; font-weight: 700; }
@@ -67,3 +67,19 @@ details input, details textarea { width: 100%; margin-top: 8px; }
 .call-alert h3 { margin: 8px 0 12px; font-size: 24px; }
 .call-alert p { margin: 6px 0; color: #cbd5e1; }
 .call-alert button { width: 100%; margin-top: 12px; background: #f8fafc; color: #111827; }
+
+@media (max-width: 900px) {
+  .app-shell { padding: 16px; }
+  .app-header { align-items: flex-start; flex-direction: column; }
+  .app-header h1 { font-size: 26px; }
+  .sync-pill { border-radius: 14px; width: 100%; }
+
+  .import-panel { grid-template-columns: 1fr; align-items: stretch; }
+  .main-grid { grid-template-columns: 1fr; }
+  .quick-add { grid-template-columns: 1fr; }
+  .patient-card { grid-template-columns: 1fr; align-items: stretch; }
+  .card-actions { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .macro-grid { grid-template-columns: 1fr; }
+  .file-card { grid-template-columns: 1fr; align-items: stretch; }
+  .call-alert-stack { left: 12px; right: 12px; bottom: 12px; width: auto; }
+}
