@@ -30,6 +30,7 @@ npm run build
 
 ## 아직 로컬 MVP인 부분
 
-- Supabase Auth/Realtime/Storage 연결 전
+- Supabase Auth/Realtime/Storage 연결 준비
+- Supabase 미설정 시 Local 저장 모드로 동작
 - 파일 업로드는 실제 저장소 업로드 전, 카드 표시까지만 구현
 - Windows Always-on-top 비활성 팝업은 별도 notifier 단계에서 구현

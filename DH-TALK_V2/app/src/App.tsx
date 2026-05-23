@@ -1,4 +1,4 @@
-import { useMemo, useReducer, useState } from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
 import type { CallAlert, MacroTemplate, TodayPatient, TransferFileCard } from './domain/types';
 import { CallAlertStack } from './features/alerts/CallAlertStack';
 import { FileTransferPanel } from './features/files/FileTransferPanel';
@@ -6,6 +6,8 @@ import { parseReservationPaste, toTodayPatients } from './features/import/parseR
 import { MacroPanel } from './features/macros/MacroPanel';
 import { PatientBoard } from './features/patients/PatientBoard';
 import { patientBoardReducer } from './features/patients/patientBoardReducer';
+import { supabase } from './lib/supabaseClient';
+import { useLocalStorageState } from './lib/useLocalStorageState';
 
 const today = new Date().toISOString().slice(0, 10);
 
@@ -23,14 +25,20 @@ const initialMacros: MacroTemplate[] = [
 ];
 
 export default function App() {
-  const [patients, dispatch] = useReducer(patientBoardReducer, initialPatients);
-  const [selectedPatientId, setSelectedPatientId] = useState(initialPatients[0]?.id);
-  const [macros, setMacros] = useState(initialMacros);
+  const initialStoredPatients = readLocalStorageState('dh-talk-v2:patients', initialPatients);
+  const [patients, dispatch] = useReducer(patientBoardReducer, initialStoredPatients);
+  const [selectedPatientId, setSelectedPatientId] = useState(initialStoredPatients[0]?.id);
+  const [macros, setMacros] = useLocalStorageState<MacroTemplate[]>('dh-talk-v2:macros', initialMacros);
   const [reservationPaste, setReservationPaste] = useState('09:30 홍길동\n10:00 김영희');
   const [directMessage, setDirectMessage] = useState('{name}님 들어오세요.');
-  const [alerts, setAlerts] = useState<CallAlert[]>([]);
-  const [files, setFiles] = useState<TransferFileCard[]>([]);
-  const [soundEnabled, setSoundEnabled] = useState(false);
+  const [alerts, setAlerts] = useLocalStorageState<CallAlert[]>('dh-talk-v2:alerts', []);
+  const [files, setFiles] = useLocalStorageState<TransferFileCard[]>('dh-talk-v2:files', []);
+  const [soundEnabled, setSoundEnabled] = useLocalStorageState<boolean>('dh-talk-v2:sound-enabled', false);
+  const syncMode = supabase ? 'Supabase 준비됨 · Realtime 연결 예정' : 'Local 저장 모드 · Supabase 키 없음';
+
+  useEffect(() => {
+    writeLocalStorageState('dh-talk-v2:patients', patients);
+  }, [patients]);
 
   const selectedPatient = useMemo(
     () => patients.find((patient) => patient.id === selectedPatientId),
@@ -66,7 +74,7 @@ export default function App() {
           <p className="eyebrow">DH-TALK V2 MVP</p>
           <h1>서버컴 없이 쓰는 환자 흐름·호출 보드</h1>
         </div>
-        <div className="sync-pill">Local MVP · Supabase 연결 전</div>
+        <div className="sync-pill">{syncMode}</div>
       </header>
 
       <section className="import-panel">
@@ -127,4 +135,21 @@ export default function App() {
       />
     </main>
   );
+}
+
+function readLocalStorageState<T>(key: string, fallback: T): T {
+  try {
+    const stored = window.localStorage.getItem(key);
+    return stored ? (JSON.parse(stored) as T) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeLocalStorageState<T>(key: string, value: T) {
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Ignore persistence failures on locked-down clinic browsers.
+  }
 }
