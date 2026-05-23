@@ -36,4 +36,5 @@ export interface TransferFileCard {
   sizeBytes: number;
   uploadedAt: string;
   expiresAt: string;
+  downloadUrl?: string;
 }

@@ -1,5 +1,6 @@
 import type { ChangeEvent } from 'react';
 import type { TransferFileCard } from '../../domain/types';
+import { createTransferFileCard, getDownloadLabel } from './prepareTransferFile';
 import { validateFile } from './validateFile';
 
 interface FileTransferPanelProps {
@@ -17,15 +18,7 @@ export function FileTransferPanel({ files, onAddFile }: FileTransferPanelProps) 
       event.target.value = '';
       return;
     }
-    const now = new Date();
-    const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-    onAddFile({
-      id: `f-${Date.now()}`,
-      filename: file.name,
-      sizeBytes: file.size,
-      uploadedAt: now.toISOString(),
-      expiresAt: expiresAt.toISOString()
-    });
+    onAddFile(createTransferFileCard(file));
     event.target.value = '';
   }
 
@@ -48,7 +41,13 @@ export function FileTransferPanel({ files, onAddFile }: FileTransferPanelProps) 
             <strong>{file.filename}</strong>
             <span>{formatBytes(file.sizeBytes)}</span>
             <span>7일 후 만료</span>
-            <button type="button">다운로드 준비중</button>
+            {file.downloadUrl ? (
+              <a className="download-button" href={file.downloadUrl} download={file.filename}>
+                {getDownloadLabel(file)}
+              </a>
+            ) : (
+              <button type="button" disabled>{getDownloadLabel(file)}</button>
+            )}
           </article>
         ))}
       </div>

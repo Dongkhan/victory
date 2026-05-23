@@ -47,13 +47,15 @@ textarea { resize: vertical; min-height: 92px; }
 .macro-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
 .macro-card { border: 2px solid #cbd5e1; border-radius: 16px; padding: 12px; background: #fbfdff; }
 .macro-card p { min-height: 44px; margin: 10px 0; line-height: 1.45; }
+.macro-actions { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
 .macro-send { width: 100%; color: white; }
+.macro-quick-send { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
 details { border-top: 1px solid #e2e8f0; padding-top: 8px; }
 details input, details textarea { width: 100%; margin-top: 8px; }
 .direct-message { display: grid; gap: 8px; margin-bottom: 10px; font-weight: 800; }
 
 .file-list { display: grid; gap: 10px; }
-.upload-button { display: inline-flex; align-items: center; justify-content: center; border-radius: 12px; padding: 10px 14px; background: #0f766e; color: white; font-weight: 800; cursor: pointer; }
+.upload-button, .download-button { display: inline-flex; align-items: center; justify-content: center; border-radius: 12px; padding: 10px 14px; background: #0f766e; color: white; font-weight: 800; cursor: pointer; text-decoration: none; }
 .upload-button input { display: none; }
 .file-card { display: grid; grid-template-columns: 1fr auto auto auto; gap: 10px; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; }
 .muted { color: #64748b; }

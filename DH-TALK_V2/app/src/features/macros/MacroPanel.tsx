@@ -24,9 +24,16 @@ export function MacroPanel({
 }: MacroPanelProps) {
   const sortedMacros = [...macros].sort((a, b) => a.sortOrder - b.sortOrder);
 
+  function renderTemplate(template: string) {
+    return renderMacro(template, selectedPatient?.name);
+  }
+
   function sendTemplate(template: string) {
-    const rendered = renderMacro(template, selectedPatient?.name);
-    onSend(rendered);
+    onSend(renderTemplate(template));
+  }
+
+  function applyTemplate(template: string) {
+    onDirectMessageChange(renderTemplate(template));
   }
 
   return (
@@ -42,15 +49,27 @@ export function MacroPanel({
       <div className="macro-grid">
         {sortedMacros.map((macro) => (
           <article className="macro-card" key={macro.id} style={{ borderColor: macro.color }}>
-            <button
-              type="button"
-              className="macro-send"
-              style={{ background: macro.color }}
-              onClick={() => sendTemplate(macro.template)}
-              disabled={!selectedPatient}
-            >
-              {macro.title}
-            </button>
+            <div className="macro-actions">
+              <button
+                type="button"
+                className="macro-send"
+                style={{ background: macro.color }}
+                onClick={() => applyTemplate(macro.template)}
+                disabled={!selectedPatient}
+                aria-label={`문구 넣기: ${macro.title}`}
+              >
+                {macro.title}
+              </button>
+              <button
+                type="button"
+                className="macro-quick-send"
+                onClick={() => sendTemplate(macro.template)}
+                disabled={!selectedPatient}
+                aria-label={`바로 보내기: ${macro.title}`}
+              >
+                바로
+              </button>
+            </div>
             <p>{selectedPatient ? renderMacro(macro.template, selectedPatient.name) : macro.template}</p>
             <details>
               <summary>수정</summary>

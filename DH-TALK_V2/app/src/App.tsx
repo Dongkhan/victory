@@ -47,7 +47,7 @@ export default function App() {
   const [reservationPaste, setReservationPaste] = useState('09:30 홍길동\n10:00 김영희');
   const [directMessage, setDirectMessage] = useState('{name}님 들어오세요.');
   const [alerts, setAlerts] = useLocalStorageState<CallAlert[]>('dh-talk-v2:alerts', []);
-  const [files, setFiles] = useLocalStorageState<TransferFileCard[]>('dh-talk-v2:files', []);
+  const [files, setFiles] = useState<TransferFileCard[]>([]);
   const [soundEnabled, setSoundEnabled] = useLocalStorageState<boolean>('dh-talk-v2:sound-enabled', false);
   const syncMode = supabase ? 'Supabase 준비됨 · Realtime 연결 예정' : 'Local 저장 모드 · Supabase 키 없음';
 
