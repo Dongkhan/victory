@@ -32,5 +32,7 @@ npm run build
 
 - Supabase Auth/Realtime/Storage 연결 준비
 - Supabase 미설정 시 Local 저장 모드로 동작
+- 환자 보드는 repository 계층을 통해 Local/Supabase 전환 가능
+- Supabase 설정 시 `patients_today` Realtime 변경을 수신해 목록 새로고침
 - 파일 업로드는 실제 저장소 업로드 전, 카드 표시까지만 구현
 - Windows Always-on-top 비활성 팝업은 별도 notifier 단계에서 구현

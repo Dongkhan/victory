@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useReducer, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { CallAlert, MacroTemplate, TodayPatient, TransferFileCard } from './domain/types';
+import { createLocalPatientRepository, createSupabasePatientRepository } from './data/patientRepository';
+import { subscribeToPatientChanges } from './data/patientRealtime';
 import { CallAlertStack } from './features/alerts/CallAlertStack';
 import { FileTransferPanel } from './features/files/FileTransferPanel';
 import { parseReservationPaste, toTodayPatients } from './features/import/parseReservationPaste';
 import { MacroPanel } from './features/macros/MacroPanel';
 import { PatientBoard } from './features/patients/PatientBoard';
-import { patientBoardReducer } from './features/patients/patientBoardReducer';
+import { usePatientBoard } from './features/patients/usePatientBoard';
 import { supabase } from './lib/supabaseClient';
 import { useLocalStorageState } from './lib/useLocalStorageState';
 
@@ -25,8 +27,21 @@ const initialMacros: MacroTemplate[] = [
 ];
 
 export default function App() {
-  const initialStoredPatients = readLocalStorageState('dh-talk-v2:patients', initialPatients);
-  const [patients, dispatch] = useReducer(patientBoardReducer, initialStoredPatients);
+  const [initialStoredPatients] = useState(() => readLocalStorageState('dh-talk-v2:patients', initialPatients));
+  const patientRepository = useMemo(
+    () => (supabase ? createSupabasePatientRepository(supabase) : createLocalPatientRepository(initialStoredPatients)),
+    [initialStoredPatients]
+  );
+  const {
+    patients,
+    addPatient,
+    bulkAddPatients,
+    updatePatient,
+    deletePatient,
+    movePatient,
+    resetPatients,
+    refresh
+  } = usePatientBoard({ date: today, repository: patientRepository, fallbackPatients: initialStoredPatients });
   const [selectedPatientId, setSelectedPatientId] = useState(initialStoredPatients[0]?.id);
   const [macros, setMacros] = useLocalStorageState<MacroTemplate[]>('dh-talk-v2:macros', initialMacros);
   const [reservationPaste, setReservationPaste] = useState('09:30 홍길동\n10:00 김영희');
@@ -40,17 +55,24 @@ export default function App() {
     writeLocalStorageState('dh-talk-v2:patients', patients);
   }, [patients]);
 
+  useEffect(() => {
+    if (!supabase) return undefined;
+    return subscribeToPatientChanges(supabase, today, () => {
+      void refresh();
+    });
+  }, [refresh]);
+
   const selectedPatient = useMemo(
     () => patients.find((patient) => patient.id === selectedPatientId),
     [patients, selectedPatientId]
   );
 
-  function importReservations() {
+  async function importReservations() {
     const rows = parseReservationPaste(reservationPaste);
-    dispatch({ type: 'bulkAdd', patients: toTodayPatients(rows, today) });
+    await bulkAddPatients(toTodayPatients(rows, today));
   }
 
-  function sendMessage(body: string) {
+  async function sendMessage(body: string) {
     if (!selectedPatient) return;
     const now = new Date().toISOString();
     setAlerts((current) => [
@@ -64,7 +86,7 @@ export default function App() {
         status: 'unread'
       }
     ]);
-    dispatch({ type: 'update', id: selectedPatient.id, patch: { lastCalledAt: now, status: 'in_consult' } });
+    await updatePatient(selectedPatient.id, { lastCalledAt: now, status: 'in_consult' });
   }
 
   return (
@@ -82,8 +104,8 @@ export default function App() {
           <p className="eyebrow">예약표 붙여넣기</p>
           <textarea value={reservationPaste} onChange={(event) => setReservationPaste(event.target.value)} />
         </div>
-        <button type="button" onClick={importReservations}>예약표 추가</button>
-        <button type="button" onClick={() => dispatch({ type: 'reset', patients: [] })}>오늘 초기화</button>
+        <button type="button" onClick={() => void importReservations()}>예약표 추가</button>
+        <button type="button" onClick={() => void resetPatients([])}>오늘 초기화</button>
       </section>
 
       <div className="main-grid">
@@ -91,12 +113,10 @@ export default function App() {
           patients={patients}
           selectedPatientId={selectedPatientId}
           onSelect={(patient) => setSelectedPatientId(patient.id)}
-          onAdd={(name, appointmentTime) =>
-            dispatch({ type: 'add', patient: { date: today, name, appointmentTime, status: 'waiting', operationalNote: '' } })
-          }
-          onUpdate={(id, patch) => dispatch({ type: 'update', id, patch })}
-          onDelete={(id) => dispatch({ type: 'delete', id })}
-          onMove={(id, direction) => dispatch({ type: 'move', id, direction })}
+          onAdd={(name, appointmentTime) => void addPatient(name, appointmentTime)}
+          onUpdate={(id, patch) => void updatePatient(id, patch)}
+          onDelete={(id) => void deletePatient(id)}
+          onMove={(id, direction) => void movePatient(id, direction)}
         />
 
         <div className="right-column">

@@ -50,8 +50,8 @@ VITE_SUPABASE_ANON_KEY=YOUR_ANON_KEY
 
 ## 5. 다음 구현 순서
 
-1. 환자 보드 CRUD를 `patients_today`에 연결
-2. 환자 보드 Realtime 구독
+1. 환자 보드 CRUD를 `patients_today`에 연결 완료
+2. 환자 보드 Realtime 구독 준비 완료
 3. 호출 메시지를 `messages`와 `call_alerts`에 저장
 4. 직원 화면에서 `call_alerts` Realtime 수신
 5. 파일은 Supabase Storage bucket과 `transfer_files` 메타데이터 연결
