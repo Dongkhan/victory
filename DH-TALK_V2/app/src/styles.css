@@ -1,0 +1,67 @@
+:root {
+  color: #172033;
+  background: #eef3f8;
+  font-family: Inter, Pretendard, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body { margin: 0; min-width: 1120px; }
+
+button, input, textarea, select { font: inherit; }
+button { border: 0; border-radius: 12px; padding: 10px 14px; background: #e2e8f0; color: #172033; cursor: pointer; font-weight: 700; }
+button:hover:not(:disabled) { filter: brightness(0.97); }
+button:disabled { cursor: not-allowed; opacity: 0.45; }
+button.primary { background: #2563eb; color: white; }
+button.danger { background: #fee2e2; color: #b91c1c; }
+button.full { width: 100%; }
+
+input, textarea, select { border: 1px solid #cbd5e1; border-radius: 12px; padding: 10px 12px; background: white; color: #172033; }
+textarea { resize: vertical; min-height: 92px; }
+
+.app-shell { padding: 28px; }
+.app-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+.app-header h1 { margin: 4px 0 0; font-size: 30px; }
+.eyebrow { margin: 0; color: #64748b; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.sync-pill, .count-badge { background: #dbeafe; color: #1d4ed8; padding: 9px 12px; border-radius: 999px; font-weight: 800; }
+
+.import-panel { display: grid; grid-template-columns: 1fr auto auto; align-items: end; gap: 12px; background: white; border: 1px solid #dbe3ee; border-radius: 20px; padding: 16px; margin-bottom: 18px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05); }
+.import-panel textarea { width: 100%; min-height: 72px; margin-top: 8px; }
+
+.main-grid { display: grid; grid-template-columns: minmax(540px, 1fr) minmax(420px, 0.9fr); gap: 18px; align-items: start; }
+.right-column { display: grid; gap: 18px; }
+.panel { background: white; border: 1px solid #dbe3ee; border-radius: 20px; padding: 18px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05); }
+.panel-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+.panel-header h2 { margin: 4px 0 0; font-size: 22px; }
+
+.quick-add { display: grid; grid-template-columns: 90px 1fr auto; gap: 10px; margin-bottom: 14px; }
+.patient-list { display: grid; gap: 10px; }
+.patient-card { display: grid; grid-template-columns: minmax(160px, 1fr) 116px minmax(160px, 1fr) auto; gap: 10px; align-items: center; border: 2px solid #e2e8f0; border-radius: 16px; padding: 12px; cursor: pointer; background: #f8fafc; }
+.patient-card.selected { border-color: #2563eb; background: #eff6ff; }
+.patient-card-main { display: grid; gap: 4px; }
+.patient-card-main strong { font-size: 18px; }
+.patient-card-main span { color: #64748b; font-size: 13px; }
+.card-actions { display: flex; gap: 6px; }
+.card-actions button { padding: 8px 10px; }
+
+.macro-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
+.macro-card { border: 2px solid #cbd5e1; border-radius: 16px; padding: 12px; background: #fbfdff; }
+.macro-card p { min-height: 44px; margin: 10px 0; line-height: 1.45; }
+.macro-send { width: 100%; color: white; }
+details { border-top: 1px solid #e2e8f0; padding-top: 8px; }
+details input, details textarea { width: 100%; margin-top: 8px; }
+.direct-message { display: grid; gap: 8px; margin-bottom: 10px; font-weight: 800; }
+
+.file-list { display: grid; gap: 10px; }
+.upload-button { display: inline-flex; align-items: center; justify-content: center; border-radius: 12px; padding: 10px 14px; background: #0f766e; color: white; font-weight: 800; cursor: pointer; }
+.upload-button input { display: none; }
+.file-card { display: grid; grid-template-columns: 1fr auto auto auto; gap: 10px; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; }
+.muted { color: #64748b; }
+
+.call-alert-stack { position: fixed; right: 22px; bottom: 22px; z-index: 50; display: grid; gap: 12px; width: 380px; pointer-events: none; }
+.call-alert-stack > * { pointer-events: auto; }
+.sound-toggle { justify-self: end; background: white; border: 1px solid #cbd5e1; padding: 8px 10px; border-radius: 999px; font-weight: 800; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12); }
+.call-alert { background: #111827; color: white; border: 1px solid #334155; border-radius: 20px; padding: 18px; box-shadow: 0 20px 45px rgba(15, 23, 42, 0.28); }
+.call-alert h3 { margin: 8px 0 12px; font-size: 24px; }
+.call-alert p { margin: 6px 0; color: #cbd5e1; }
+.call-alert button { width: 100%; margin-top: 12px; background: #f8fafc; color: #111827; }
