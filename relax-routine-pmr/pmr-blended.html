@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#a3d52a">
+<title>Relax Routine PMR — Body Glow + Sleep 통합안</title>
+<style>
+:root{
+  --bg:#f5f1e8;--app:#FAFAF7;--surface:#FFFDF8;--soft:#F4F1EA;--text:#1B2838;--muted:#66705f;
+  --brand:#a3d52a;--brand-dark:#5E8E3E;--blue:#7AA7A2;--line:#DDD8CA;--gold:#C58B37;
+  --night:#101820;--night2:#0a0e14;--shadow:0 24px 70px rgba(27,40,56,.18);--ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#fff9ec 0,#f5f1e8 42%,#e9e1d2 100%);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text)}
+a{color:inherit}.topnav{max-width:1120px;margin:0 auto;padding:18px 18px 0;display:flex;gap:10px;flex-wrap:wrap}.topnav a{text-decoration:none;background:#eef8ce;border:1px solid #c8e874;color:#38531b;border-radius:999px;padding:9px 13px;font-size:13px;font-weight:900}.hero{max-width:1120px;margin:0 auto;padding:30px 18px 16px}.eyebrow{letter-spacing:.18em;font-size:12px;font-weight:900;color:var(--brand-dark)}h1{margin:10px 0 10px;font-size:clamp(30px,5vw,56px);letter-spacing:-.05em;line-height:1.02}.hero p{max-width:780px;margin:0;color:var(--muted);line-height:1.65}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.chip{border:1px solid var(--line);background:rgba(255,253,248,.76);border-radius:999px;padding:8px 12px;font-size:13px;color:#46503f;font-weight:800}.stage{max-width:1120px;margin:0 auto;padding:8px 18px 54px;display:grid;grid-template-columns:400px minmax(320px,1fr);gap:28px;align-items:start}.phone{position:sticky;top:18px;width:390px;max-width:92vw;height:820px;border-radius:52px;background:#101613;padding:13px;box-shadow:var(--shadow)}.screen{position:relative;overflow:hidden;width:100%;height:100%;border-radius:40px;background:linear-gradient(180deg,#fbfaf3 0,#f7f1e7 100%);display:flex;flex-direction:column;transition:background .45s var(--ease),color .45s var(--ease)}.screen.sleep{background:linear-gradient(180deg,#111827 0,#101820 58%,#080d14 100%);color:#F7F7ED}.status{height:36px;display:flex;align-items:end;justify-content:space-between;padding:0 24px 8px;font-size:12px;font-weight:900}.content{padding:8px 22px 132px;overflow:auto;scrollbar-width:none;flex:1}.content::-webkit-scrollbar{display:none}.brand{font-size:11px;letter-spacing:.18em;color:var(--brand-dark);font-weight:900}.sleep .brand{color:#d6ff78}.title{font-size:30px;line-height:1.05;letter-spacing:-.045em;font-weight:950;margin:8px 0}.sub{font-size:14px;line-height:1.55;color:var(--muted)}.sleep .sub{color:#b7c2b8}.modebar{display:grid;grid-template-columns:1fr 1fr;background:#ece6d8;border:1px solid var(--line);border-radius:999px;padding:4px;margin:16px 0 12px}.sleep .modebar{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.1)}.mode{border:0;background:transparent;border-radius:999px;padding:10px;font-weight:950;color:#5f6558}.sleep .mode{color:#bac4b7}.mode.active{background:var(--brand);color:#20310c;box-shadow:0 10px 18px rgba(94,142,62,.2)}.duration{display:flex;gap:8px;margin:12px 0}.pill{border:1px solid var(--line);background:#fffdf8;color:#4a5542;border-radius:999px;padding:9px 12px;font-weight:900;font-size:12px}.sleep .pill{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.1);color:#dfe9dc}.pill.on{background:#eff8cf;border-color:#c8e874;color:#38531b}.sleep .pill.on{background:rgba(163,213,42,.2);color:#e7ffac}.card{background:rgba(255,253,248,.92);border:1px solid rgba(221,216,202,.88);border-radius:24px;padding:16px;box-shadow:0 10px 30px rgba(27,40,56,.08);margin-top:14px}.sleep .card{background:rgba(255,255,255,.075);border-color:rgba(255,255,255,.1);box-shadow:none}.row{display:flex;gap:10px;align-items:center}.icon{width:42px;height:42px;border-radius:16px;background:#eff7d2;display:grid;place-items:center;font-weight:900;color:var(--brand-dark)}.sleep .icon{background:rgba(163,213,42,.18);color:#cdf56c}.grow{flex:1}.meta{font-size:12px;color:var(--muted);font-weight:800}.sleep .meta{color:#aeb8aa}.bodymap{height:270px;position:relative;border-radius:30px;background:radial-gradient(circle at 50% 28%,#fff 0,#f6f2e9 52%,#efe7d8 100%);margin-top:14px;overflow:hidden}.sleep .bodymap{background:radial-gradient(circle at 50% 28%,#233142 0,#131b25 68%,#0b1018 100%)}.night-orb{position:absolute;inset:auto 0 18px 0;margin:auto;width:210px;height:210px;border-radius:999px;background:radial-gradient(circle,#d9f57a 0,#7aa7a2 34%,rgba(122,167,162,.16) 68%,transparent 70%);opacity:0;transform:scale(.72);transition:.45s var(--ease);animation:breathe 5.5s ease-in-out infinite}.sleep .night-orb{opacity:.78}.figure{position:absolute;left:50%;top:28px;transform:translateX(-50%);width:112px;height:220px;transition:opacity .3s}.sleep .figure{opacity:.62}.part{position:absolute;background:#dfe8c8;border:2px solid #fff;border-radius:999px;box-shadow:0 0 0 12px rgba(163,213,42,.05);transition:.3s var(--ease)}.sleep .part{background:#42545a;border-color:#5b6e70}.head{left:38px;top:0;width:36px;height:36px}.jaw{left:34px;top:31px;width:44px;height:18px}.torso{left:28px;top:50px;width:56px;height:86px}.arm{top:56px;width:23px;height:100px}.arm.l{left:3px;transform:rotate(12deg)}.arm.r{right:3px;transform:rotate(-12deg)}.leg{top:134px;width:26px;height:82px}.leg.l{left:28px}.leg.r{right:28px}.part.glow{background:#a3d52a!important;box-shadow:0 0 0 12px rgba(163,213,42,.13),0 0 44px rgba(163,213,42,.9)!important;animation:pulse 2.1s var(--ease) infinite}.sleep .part.glow{background:#d9f57a!important;box-shadow:0 0 0 14px rgba(217,245,122,.12),0 0 54px rgba(217,245,122,.75)!important}.timer{position:absolute;right:16px;top:16px;background:rgba(255,253,248,.88);border-radius:999px;padding:8px 12px;font-weight:950}.sleep .timer{background:rgba(255,255,255,.1)}.phase{position:absolute;left:16px;bottom:16px;right:16px;background:rgba(255,253,248,.9);border:1px solid rgba(221,216,202,.8);border-radius:22px;padding:12px}.sleep .phase{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.1)}.phase b{display:block;margin-bottom:4px}.mini{font-size:12px;color:var(--muted);line-height:1.45}.sleep .mini{color:#aeb8aa}.progress{height:8px;background:#e6e0d0;border-radius:999px;margin:12px 0;overflow:hidden}.sleep .progress{background:rgba(255,255,255,.12)}.fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--brand-dark),var(--brand));width:12%;transition:width .35s}.cta{border:0;width:100%;min-height:56px;border-radius:999px;background:var(--brand);color:#20310c;font-weight:950;font-size:16px;margin-top:14px;box-shadow:0 12px 26px rgba(94,142,62,.24);cursor:pointer}.cta.secondary{background:#eef2df;color:#39512c;box-shadow:none}.sleep .cta.secondary{background:rgba(255,255,255,.12);color:#f8ffe8}.tabs{position:absolute;left:14px;right:14px;bottom:12px;height:76px;border-radius:29px;background:rgba(255,253,248,.86);backdrop-filter:blur(18px);border:1px solid rgba(221,216,202,.75);display:grid;grid-template-columns:repeat(4,1fr);padding:8px;gap:4px}.sleep .tabs{background:rgba(14,20,28,.78);border-color:rgba(255,255,255,.09)}.tab{border-radius:20px;display:grid;place-items:center;font-size:11px;color:var(--muted);font-weight:850}.tab.active{background:#eef8ce;color:#38531b}.sleep .tab.active{background:rgba(163,213,42,.18);color:#d6ff78}.safe{font-size:12px;line-height:1.45;color:#70502d;background:#fff8e6;border:1px solid #ead7ae;border-radius:18px;padding:10px;margin-top:12px}.sleep .safe{background:rgba(255,220,130,.08);border-color:rgba(255,220,130,.2);color:#ecd9a3}.panel h2{font-size:26px;margin:8px 0 10px;letter-spacing:-.03em}.panel p{color:var(--muted);line-height:1.62}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.tile{background:rgba(255,253,248,.82);border:1px solid var(--line);border-radius:24px;padding:16px}.tile b{display:block;margin-bottom:7px}.flow{display:grid;gap:10px;margin-top:14px}.step{display:flex;gap:12px;align-items:flex-start;background:rgba(255,253,248,.82);border:1px solid var(--line);border-radius:22px;padding:14px}.num{width:34px;height:34px;border-radius:14px;background:#eef8ce;display:grid;place-items:center;font-weight:950;color:#38531b;flex:0 0 auto}.report{margin-top:14px;border-radius:28px;background:#fffdf8;border:1px solid var(--line);padding:18px}.reportgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metric{background:#f6f2e8;border-radius:18px;padding:12px}.metric strong{font-size:24px}.footerlinks{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.footerlinks a{font-weight:900;color:#38531b;text-decoration:none;background:#eef8ce;border:1px solid #c8e874;border-radius:999px;padding:10px 14px}@keyframes pulse{0%,100%{filter:saturate(.9);transform:scale(1)}50%{filter:saturate(1.2);transform:scale(1.05)}}@keyframes breathe{0%,100%{transform:scale(.84);opacity:.62}50%{transform:scale(1.05);opacity:.92}}
+@media(max-width:860px){.stage{display:block}.phone{position:relative;top:0;margin:0 auto 26px;height:780px}.grid,.reportgrid{grid-template-columns:1fr}.hero{padding-top:22px}.content{padding-bottom:140px}}
+</style>
+</head>
+<body>
+<nav class="topnav"><a href="./">← PMR Lab</a><a href="01-body-glow.html">1번 원안</a><a href="03-sleep-pmr.html">3번 원안</a></nav>
+<header class="hero">
+  <div class="eyebrow">RELAX ROUTINE PMR · INTEGRATED RESULT</div>
+  <h1>Body Glow + Sleep PMR<br>통합 결과물</h1>
+  <p>1번의 바디맵 기반 시각 피드백을 기본 실행 화면으로 쓰고, 3번의 수면 전 저조도 모드를 같은 PMR 엔진에 붙인 버전입니다. 낮에는 “몸 긴장 낮추기”, 밤에는 “잠들기 전 내려놓기”로 같은 구조를 다르게 경험하게 합니다.</p>
+  <div class="chips"><span class="chip">기본: Body Glow</span><span class="chip">야간: Sleep Mode</span><span class="chip">3·7·12분</span><span class="chip">통증 부위 skip</span><span class="chip">진료 기록 흡수 가능</span></div>
+</header>
+<main class="stage">
+  <section class="phone" aria-label="통합 PMR 모바일 화면">
+    <div class="screen" id="screen">
+      <div class="status"><span id="clock">9:41</span><span id="statusLabel">PMR</span></div>
+      <div class="content">
+        <div class="brand" id="brand">RELAX ROUTINE</div>
+        <div class="title" id="mainTitle">몸부터 조용히<br>낮추기</div>
+        <div class="sub" id="mainSub">긴장되는 부위를 하나씩 켜고 끄듯이 풀어봅니다.</div>
+        <div class="modebar" role="tablist" aria-label="PMR mode">
+          <button class="mode active" id="dayBtn" type="button">낮 PMR</button>
+          <button class="mode" id="sleepBtn" type="button">수면 PMR</button>
+        </div>
+        <div class="duration" aria-label="duration selector">
+          <button class="pill" data-min="3" type="button">3분</button>
+          <button class="pill on" data-min="7" type="button">7분</button>
+          <button class="pill" data-min="12" type="button">12분</button>
+        </div>
+        <div class="bodymap" aria-label="현재 근육군 바디맵">
+          <div class="night-orb" aria-hidden="true"></div>
+          <div class="timer" id="timer">07:00</div>
+          <div class="figure">
+            <i class="part head" data-part="얼굴"></i><i class="part jaw" data-part="턱"></i><i class="part torso glow" data-part="어깨·가슴"></i><i class="part arm l" data-part="왼팔"></i><i class="part arm r" data-part="오른팔"></i><i class="part leg l" data-part="왼다리"></i><i class="part leg r" data-part="오른다리"></i>
+          </div>
+          <div class="phase"><b id="phaseTitle">어깨를 살짝 올립니다</b><div class="mini" id="phaseText">아프지 않을 만큼만 5초. 이제 천천히 놓습니다.</div></div>
+        </div>
+        <div class="progress"><div class="fill" id="fill"></div></div>
+        <div class="card row"><div class="icon" id="guideIcon">↘</div><div class="grow"><b id="guideTitle">다음: 팔과 손</b><div class="meta" id="guideMeta">힘주기 5초 · 놓기 10초 · 알아차리기</div></div></div>
+        <button class="cta" id="primary" type="button">7분 기본 PMR 시작</button>
+        <button class="cta secondary" id="secondary" type="button">통증 부위 건너뛰기</button>
+        <div class="safe" id="safeCopy">통증, 저림, 어지러움이 있으면 해당 부위는 힘주지 않고 감각 관찰만 합니다.</div>
+      </div>
+      <nav class="tabs"><div class="tab active">홈</div><div class="tab">루틴</div><div class="tab">기록</div><div class="tab">설정</div></nav>
+    </div>
+  </section>
+  <section class="panel">
+    <h2>최종 채택 구조</h2>
+    <p>메인은 1번처럼 “보이는 PMR”로 갑니다. 다만 밤에는 3번처럼 화면 대비와 상호작용을 낮추고, 완료 후 기록 입력을 강요하지 않는 수면용 변형으로 전환합니다.</p>
+    <div class="grid">
+      <div class="tile"><b>Day PMR</b><span>일반 안정화. 바디맵, 근육군 glow, 전후 긴장 체크, 3분·7분·12분 선택.</span></div>
+      <div class="tile"><b>Sleep PMR</b><span>수면 전. 다크 UI, 호흡 orb, 음성 중심, 끝나면 그대로 쉬기.</span></div>
+      <div class="tile"><b>Tension Picker 흡수</b><span>별도 화면이 아니라 시작 전 “오늘 긴장 부위” 선택으로 축소.</span></div>
+      <div class="tile"><b>Clinic Report 흡수</b><span>기록 탭에서 수행 횟수와 긴장 변화만 조용히 요약.</span></div>
+    </div>
+    <div class="flow">
+      <div class="step"><div class="num">1</div><div><b>홈 CTA 2개</b><div class="mini">“지금 몸 긴장 풀기”는 Day PMR, “잠들기 전 이완하기”는 Sleep PMR로 연결.</div></div></div>
+      <div class="step"><div class="num">2</div><div><b>공통 PMR 엔진</b><div class="mini">근육군 순서, 타이머, skip, 안전 문구는 공유하고 테마와 종료 방식만 다르게 처리.</div></div></div>
+      <div class="step"><div class="num">3</div><div><b>수면 모드 종료</b><div class="mini">완료 후 “기록하기”를 밀지 않고, 다음 날 아침 짧은 체크로 회수.</div></div></div>
+    </div>
+    <div class="report">
+      <b>진료 연동 최소 리포트</b>
+      <div class="reportgrid">
+        <div class="metric"><div class="meta">7일 수행</div><strong>5회</strong></div>
+        <div class="metric"><div class="meta">평균 긴장 변화</div><strong>-2.1</strong></div>
+        <div class="metric"><div class="meta">주 사용 모드</div><strong>Sleep</strong></div>
+      </div>
+      <p class="mini">PMR이 치료 효과를 보장한다는 표현은 피하고, 환자의 실제 수행과 주관적 긴장 변화만 진료 참고정보로 보여줍니다.</p>
+    </div>
+    <div class="footerlinks"><a href="./">PMR Lab index</a><a href="overview.html">5종 전체 비교</a></div>
+  </section>
+</main>
+<script>
+const screen=document.getElementById('screen');
+const dayBtn=document.getElementById('dayBtn');
+const sleepBtn=document.getElementById('sleepBtn');
+const clock=document.getElementById('clock');
+const statusLabel=document.getElementById('statusLabel');
+const brand=document.getElementById('brand');
+const mainTitle=document.getElementById('mainTitle');
+const mainSub=document.getElementById('mainSub');
+const timer=document.getElementById('timer');
+const primary=document.getElementById('primary');
+const secondary=document.getElementById('secondary');
+const phaseTitle=document.getElementById('phaseTitle');
+const phaseText=document.getElementById('phaseText');
+const fill=document.getElementById('fill');
+const guideIcon=document.getElementById('guideIcon');
+const guideTitle=document.getElementById('guideTitle');
+const guideMeta=document.getElementById('guideMeta');
+const safeCopy=document.getElementById('safeCopy');
+const pills=[...document.querySelectorAll('.pill')];
+const parts=[...document.querySelectorAll('.part')];
+let mode='day', minutes=7, step=0;
+const sequence=[
+  ['jaw','턱과 얼굴 힘을 아주 살짝 줍니다','이를 악물지 말고 입 주변 긴장만 알아차립니다.'],
+  ['torso','어깨를 살짝 올립니다','아프지 않을 만큼만 5초. 이제 천천히 놓습니다.'],
+  ['arm','팔과 손을 조였다가 풉니다','주먹은 강하게 쥐지 말고 손가락이 펴지는 감각을 봅니다.'],
+  ['torso','가슴과 복부를 부드럽게 느낍니다','숨을 참지 않고, 내쉬면서 복부가 내려가는 느낌을 봅니다.'],
+  ['leg','다리와 발의 무게를 내려놓습니다','발끝까지 힘이 빠지는 방향만 관찰합니다.']
+];
+function render(){
+  const sleep=mode==='sleep';
+  screen.classList.toggle('sleep',sleep);
+  dayBtn.classList.toggle('active',!sleep); sleepBtn.classList.toggle('active',sleep);
+  clock.textContent=sleep?'23:18':'9:41'; statusLabel.textContent=sleep?'수면':'PMR'; brand.textContent=sleep?'SLEEP PMR':'RELAX ROUTINE';
+  mainTitle.innerHTML=sleep?'화면을 낮추고<br>몸을 내려놓기':'몸부터 조용히<br>낮추기';
+  mainSub.textContent=sleep?'소리와 빛을 줄이고 끝난 뒤 조작 없이 쉬는 수면 전 PMR입니다.':'긴장되는 부위를 하나씩 켜고 끄듯이 풀어봅니다.';
+  timer.textContent=String(minutes).padStart(2,'0')+':00';
+  primary.textContent=sleep?`${minutes}분 수면 PMR 시작`:`${minutes}분 기본 PMR 시작`;
+  secondary.textContent=sleep?'음성만 듣기':'통증 부위 건너뛰기';
+  guideIcon.textContent=sleep?'🌙':'↘'; guideTitle.textContent=sleep?'다음 안내 뒤 화면이 더 어두워집니다':'다음: 팔과 손';
+  guideMeta.textContent=sleep?'어깨 → 팔 → 복부 → 다리 · 완료 후 그대로 쉬기':'힘주기 5초 · 놓기 10초 · 알아차리기';
+  safeCopy.textContent=sleep?'잠들기 전 전용입니다. 운전 중이거나 이동 중에는 사용하지 않습니다.':'통증, 저림, 어지러움이 있으면 해당 부위는 힘주지 않고 감각 관찰만 합니다.';
+  updateStep();
+}
+function updateStep(){
+  const [target,title,text]=sequence[step%sequence.length];
+  phaseTitle.textContent=title; phaseText.textContent=text;
+  parts.forEach(p=>p.classList.remove('glow'));
+  parts.forEach(p=>{if((target==='arm'&&p.classList.contains('arm'))||(target==='leg'&&p.classList.contains('leg'))||p.classList.contains(target))p.classList.add('glow')});
+  fill.style.width=`${Math.min(96,12+step*18)}%`;
+}
+dayBtn.onclick=()=>{mode='day';render()}; sleepBtn.onclick=()=>{mode='sleep';render()};
+pills.forEach(p=>p.onclick=()=>{minutes=Number(p.dataset.min);pills.forEach(x=>x.classList.toggle('on',x===p));render()});
+primary.onclick=()=>{step=(step+1)%sequence.length;primary.textContent='다음 근육군으로';updateStep()};
+secondary.onclick=()=>{step=(step+1)%sequence.length;updateStep()};
+render();
+</script>
+</body>
+</html>
