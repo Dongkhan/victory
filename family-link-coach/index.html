@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>디지털 패밀리 코치 v1</title>
+  <style>
+    :root{
+      --bg:#eef3f7; --phone:#101828; --screen:#f7fafc; --ink:#172033; --muted:#667085;
+      --line:#e4e9f0; --card:#ffffff; --blue:#2563eb; --blue2:#dbeafe; --green:#16a34a;
+      --orange:#f97316; --red:#ef4444; --purple:#7c3aed; --shadow:0 24px 60px rgba(15,23,42,.22);
+      --radius:26px;
+    }
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(135deg,#dbeafe,#eef2ff 42%,#ecfeff);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:22px}
+    .stage{display:grid;grid-template-columns:390px 360px;gap:28px;align-items:center;max-width:980px;width:100%}
+    .phone{width:390px;height:844px;background:var(--phone);border-radius:48px;padding:14px;box-shadow:var(--shadow);position:relative}
+    .screen{height:100%;border-radius:38px;background:var(--screen);overflow:hidden;position:relative}
+    .status{height:34px;padding:10px 22px 0;display:flex;justify-content:space-between;font-weight:700;font-size:13px;color:#263142}.island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:116px;height:27px;background:#0b1220;border-radius:999px;z-index:4}
+    header{padding:10px 22px 12px}.eyebrow{font-size:12px;font-weight:800;color:var(--blue);letter-spacing:.02em}.title{font-size:26px;font-weight:900;line-height:1.15;margin:5px 0}.subtitle{font-size:13px;color:var(--muted);line-height:1.45}
+    main{height:calc(100% - 134px);overflow:auto;padding:0 18px 150px;scrollbar-width:none} main::-webkit-scrollbar{display:none}.screen.no-nav main{height:calc(100% - 90px);padding-bottom:28px}.screen.no-nav .bottom{display:none}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:16px;margin:12px 0;box-shadow:0 8px 24px rgba(15,23,42,.05)}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:12px}.label{font-size:12px;color:var(--muted);font-weight:700}.value{font-size:15px;font-weight:850}.pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:800;background:#eef2ff;color:#3730a3}.pill.green{background:#dcfce7;color:#166534}.pill.orange{background:#ffedd5;color:#9a3412}.pill.red{background:#fee2e2;color:#991b1b}.pill.blue{background:#dbeafe;color:#1d4ed8}
+    .meter{height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin-top:9px}.meter span{display:block;height:100%;background:linear-gradient(90deg,var(--green),#22c55e);border-radius:999px}.meter.orange span{background:linear-gradient(90deg,#f59e0b,#f97316)}
+    button,.btn{border:0;border-radius:16px;padding:13px 14px;font-weight:850;font-size:14px;background:var(--blue);color:white;cursor:pointer}.btn.secondary{background:#eef2ff;color:#3730a3}.btn.ghost{background:#f3f4f6;color:#374151}.btn.warn{background:#fff7ed;color:#c2410c}.btn.full{width:100%;margin-top:10px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.chip{border:1px solid var(--line);background:#fff;border-radius:15px;padding:12px 10px;font-size:13px;font-weight:800;text-align:center}.chip.active{border-color:#93c5fd;background:#eff6ff;color:#1d4ed8}.list{display:grid;gap:10px}.item{display:flex;gap:11px;align-items:flex-start}.dot{width:9px;height:9px;border-radius:50%;background:var(--blue);margin-top:7px;flex:0 0 auto}.item p{margin:0;font-size:13px;line-height:1.42}.item b{display:block;font-size:14px;margin-bottom:2px}.contract{background:#fffef7;border-color:#fde68a}.contract h3{margin:0 0 10px;font-size:16px}.contract ol{margin:0;padding-left:20px}.contract li{font-size:13px;line-height:1.55;margin:5px 0}.script{font-size:14px;line-height:1.55;background:#f8fafc;border-radius:18px;padding:14px;border:1px dashed #cbd5e1}.screen-title{font-size:19px;font-weight:900;margin:0 0 4px}.section-title{font-size:15px;font-weight:900;margin:6px 0 10px}.bottom{position:absolute;left:0;right:0;bottom:0;background:rgba(255,255,255,.92);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:8px 16px 18px;display:grid;grid-template-columns:repeat(5,1fr);gap:2px}.tab{border-radius:15px;padding:8px 4px;text-align:center;font-size:10px;font-weight:800;color:#64748b;cursor:pointer}.tab .ico{font-size:20px;display:block;margin-bottom:2px}.tab.active{background:#eff6ff;color:#1d4ed8}.hidden{display:none!important}.hero{background:linear-gradient(135deg,#1d4ed8,#7c3aed);color:#fff;border:0}.hero .label,.hero .subtitle{color:rgba(255,255,255,.78)}.hero .pill{background:rgba(255,255,255,.18);color:#fff}.side{background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.75);border-radius:28px;padding:24px;box-shadow:0 18px 40px rgba(15,23,42,.12)}.side h1{font-size:28px;line-height:1.15;margin:0 0 12px}.side p{color:#475467;line-height:1.6;font-size:15px}.side ul{padding-left:18px;color:#334155;line-height:1.75}.kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#0f172a;color:white;border-radius:10px;padding:3px 7px;font-size:12px}.mini{font-size:12px;color:#667085;line-height:1.45}.modal{position:absolute;inset:0;background:rgba(15,23,42,.35);display:flex;align-items:flex-end;padding:14px;z-index:10}.sheet{background:white;border-radius:28px;padding:18px;width:100%;box-shadow:0 20px 40px rgba(15,23,42,.25)}.close{background:#f1f5f9;color:#334155}.notice{font-size:12px;color:#64748b;line-height:1.5;background:#f8fafc;border-radius:16px;padding:12px}@media(max-width:860px){body{padding:0}.stage{grid-template-columns:1fr;place-items:center}.side{display:none}.phone{width:100vw;height:100vh;border-radius:0;padding:0}.screen{border-radius:0}.island{display:none}}
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="phone">
+      <div class="screen" id="screen">
+        <div class="island"></div>
+        <div class="status"><span>9:41</span><span>●●●  87%</span></div>
+        <header>
+          <div class="eyebrow" id="eyebrow">디지털 패밀리 코치</div>
+          <div class="title" id="headTitle">오늘의 약속</div>
+          <div class="subtitle" id="headSub">통제보다 예측 가능성, 처벌보다 회복을 우선합니다.</div>
+        </header>
+        <main id="app"></main>
+        <nav class="bottom" id="nav">
+          <div class="tab active" data-tab="home"><span class="ico">🏠</span>홈</div>
+          <div class="tab" data-tab="profile"><span class="ico">🧭</span>분석</div>
+          <div class="tab" data-tab="contract"><span class="ico">📄</span>계약</div>
+          <div class="tab" data-tab="script"><span class="ico">💬</span>대화</div>
+          <div class="tab" data-tab="guide"><span class="ico">⚙️</span>설정</div>
+        </nav>
+      </div>
+    </div>
+    <aside class="side">
+      <h1>Family Link를 보완하는 별도 앱 v1</h1>
+      <p>OS 제어를 처음부터 무리하게 구현하지 않고, 부모-자녀 계약·맞춤 규칙·갈등 스크립트·Family Link 설정 가이드로 즉시 검증하는 모바일 웹 프로토타입입니다.</p>
+      <ul>
+        <li>아이 유형: 전환 어려움 + 수면 지연 + 게임 몰입형</li>
+        <li>핵심 가치: 차단이 아니라 디지털 자기조절 훈련</li>
+        <li>초기 수익화: 진료실 보조도구, 부모교육 패키지, 상담센터용</li>
+      </ul>
+      <p class="mini">화면 탭을 클릭해 흐름을 확인하세요. 모바일에서는 전체 화면 앱처럼 보입니다.</p>
+    </aside>
+  </div>
+<script>
+const state={child:'민준',age:'초5',pattern:['전환 어려움','수면 지연','게임 몰입'],extra:0,points:4,script:'stop'};
+const heads={
+ home:['오늘의 약속','통제보다 예측 가능성, 처벌보다 회복을 우선합니다.'],
+ profile:['아이 유형 분석','증상명이 아니라 현재 디지털 사용 패턴을 기준으로 규칙을 추천합니다.'],
+ contract:['가족 디지털 계약서','말싸움이 아니라 미리 합의한 문서로 조정합니다.'],
+ script:['갈등 상황 대화문','부모가 바로 읽고 사용할 수 있는 짧은 문장입니다.'],
+ guide:['Family Link 설정 가이드','앱이 직접 우회하지 않고 부모가 안전하게 설정하도록 안내합니다.']
+};
+function el(html){return html.trim()}
+function render(tab='home'){
+ document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));
+ document.getElementById('headTitle').textContent=heads[tab][0]; document.getElementById('headSub').textContent=heads[tab][1];
+ const app=document.getElementById('app'); document.getElementById('screen').classList.remove('no-nav');
+ if(tab==='home') app.innerHTML=home();
+ if(tab==='profile') app.innerHTML=profile();
+ if(tab==='contract') app.innerHTML=contract();
+ if(tab==='script') app.innerHTML=script();
+ if(tab==='guide') app.innerHTML=guide();
+ bind();
+}
+function home(){return el(`
+ <section class="card hero">
+  <div class="row"><div><div class="label">${state.child} · ${state.age}</div><div class="screen-title">오늘은 종료 전환 연습일</div></div><span class="pill">D-5 주간리뷰</span></div>
+  <div class="meter"><span style="width:64%"></span></div><div class="subtitle" style="margin-top:8px">약속 이행 4/6 · 보상점수 ${state.points}점</div>
+ </section>
+ <section class="card"><div class="row"><div><div class="label">오늘 사용 규칙</div><div class="value">게임 40분 · 숏폼 20분 · 취침 22:00</div></div><span class="pill green">정상</span></div>
+  <div class="grid3" style="margin-top:14px"><div class="chip active">게임<br>28분 남음</div><div class="chip">YouTube<br>12분 남음</div><div class="chip">연락앱<br>허용</div></div>
+ </section>
+ <section class="card"><div class="section-title">추가시간 요청</div><p class="mini">아이가 요청하면 부모는 허용, 내일 차감, 주말 이동, 거절문장 중 선택합니다.</p><button class="btn full" id="openRequest">10분 추가 요청 처리</button></section>
+ <section class="card"><div class="section-title">오늘의 회복 규칙</div><div class="list">
+  <div class="item"><span class="dot"></span><p><b>종료 알림 후 10분 내 마무리</b>성공하면 보상점수 +1</p></div>
+  <div class="item"><span class="dot" style="background:var(--orange)"></span><p><b>몰래 사용 시</b>오늘 거실 충전, 내일 기본시간 회복</p></div>
+ </div></section>
+ <section class="notice">위치추적·메시지 열람·몰래 감시는 기본 기능에서 제외합니다. 목표는 수면, 학습, 가족갈등 개선입니다.</section>
+ `)}
+function profile(){return el(`
+ <section class="card"><div class="row"><div><div class="label">현재 패턴</div><div class="screen-title">전환 어려움 + 수면 지연 + 게임 몰입형</div></div><span class="pill orange">중등도</span></div>
+ <div class="meter orange"><span style="width:72%"></span></div></section>
+ <section class="card"><div class="section-title">추천 규칙</div><div class="list">
+  <div class="item"><span class="dot"></span><p><b>게임은 숙제 후 40분</b>시작 전 종료시각을 먼저 확인</p></div>
+  <div class="item"><span class="dot"></span><p><b>10분 전환 알림</b>갑자기 끊지 않고 저장·마무리 시간을 둠</p></div>
+  <div class="item"><span class="dot"></span><p><b>22시 거실 충전</b>수면 보호를 최우선 규칙으로 둠</p></div>
+  <div class="item"><span class="dot"></span><p><b>위반 후 회복</b>장기 압수보다 다음 날 회복 가능한 구조</p></div>
+ </div></section>
+ <section class="card"><div class="section-title">위험 신호 체크</div><div class="grid2"><div class="chip active">밤 몰래 사용</div><div class="chip active">종료 분노</div><div class="chip">학교 지각</div><div class="chip">친구 갈등</div></div></section>
+ <section class="notice">ADHD, 우울, 불안은 앱에서 진단하지 않습니다. 규칙 추천은 부모교육과 생활지도 목적입니다.</section>`)}
+function contract(){return el(`
+ <section class="card contract"><h3>이번 주 우리 가족 휴대폰 약속</h3><ol>
+  <li>평일 게임은 숙제 완료 후 40분 사용한다.</li><li>YouTube Shorts와 짧은 영상은 평일 20분까지만 사용한다.</li><li>밤 10시 이후 휴대폰은 거실에서 충전한다.</li><li>전화, 문자, 가족 연락용 메신저는 기본 허용한다.</li><li>5일 이상 약속을 지키면 토요일 게임 30분을 추가한다.</li><li>약속을 어기면 다음 날 게임 20분을 줄이고, 그다음 날 기본시간으로 회복한다.</li><li>규칙 변경은 일요일 저녁 주간 리뷰에서만 이야기한다.</li>
+ </ol></section>
+ <section class="card"><div class="section-title">서명</div><div class="grid2"><div class="chip">부모 서명<br>동의함</div><div class="chip">아이 서명<br>동의함</div></div><button class="btn secondary full">PDF로 저장</button></section>
+ <section class="card"><div class="section-title">주간 리뷰 질문</div><div class="list"><div class="item"><span class="dot"></span><p>가장 잘 지킨 규칙은 무엇인가?</p></div><div class="item"><span class="dot"></span><p>가장 많이 무너진 시간대는 언제인가?</p></div><div class="item"><span class="dot"></span><p>다음 주에 10분 조정할 항목은 무엇인가?</p></div></div></section>`)}
+const scripts={
+ stop:['그만하라고 해도 안 끊음','지금 바로 끊기 힘든 건 알아. 그래서 10분 전 알림을 둔 거야. 이번에는 계약대로 종료하고, 일요일 리뷰 때 시간이 부족했는지 같이 조정하자.'],
+ sneak:['몰래 사용함','몰래 쓴 것 때문에 신뢰가 줄었어. 오늘은 휴대폰을 거실에 두고, 내일 기본 규칙으로 다시 시작하자. 오래 벌주는 게 아니라 회복하는 방식으로 하자.'],
+ friends:['친구들은 다 된다고 함','친구 집 규칙과 우리 집 규칙은 다를 수 있어. 우리 기준은 네 수면, 기분, 학교생활이 무너지지 않는 선이야.'],
+ homework:['숙제 전에 게임함','게임을 못 하게 하려는 게 아니야. 먼저 해야 할 일을 끝내면 게임 시간이 더 편해져. 지금 숙제 시작 15분을 하고 나서 다시 확인하자.'],
+ parent:['부모가 화를 냄','지금은 서로 감정이 올라와서 규칙을 바꾸기 어렵다. 오늘은 계약서대로 하고, 내가 화낸 부분은 주간 리뷰 때 다시 이야기하겠다.']
+};
+function script(){let s=scripts[state.script];return el(`
+ <section class="card"><div class="section-title">상황 선택</div><div class="grid2">
+  ${Object.entries(scripts).map(([k,v])=>`<div class="chip ${state.script===k?'active':''}" data-script="${k}">${v[0]}</div>`).join('')}
+ </div></section><section class="card"><div class="label">${s[0]}</div><div class="script">“${s[1]}”</div><button class="btn secondary full" id="copyScript">문장 복사</button></section>
+ <section class="card"><div class="section-title">부모 원칙</div><div class="list"><div class="item"><span class="dot"></span><p>실시간 말싸움보다 계약서 기준으로 말한다.</p></div><div class="item"><span class="dot"></span><p>처벌 기간을 길게 잡지 않고 회복 경로를 둔다.</p></div><div class="item"><span class="dot"></span><p>수면 시간은 협상 대상에서 최대한 제외한다.</p></div></div></section>`)}
+function guide(){return el(`
+ <section class="card"><div class="row"><div><div class="label">추천 Family Link 설정값</div><div class="screen-title">평일 90분 · 취침 22:00</div></div><span class="pill blue">수동 설정</span></div></section>
+ <section class="card"><div class="section-title">앱별 제한</div><div class="list"><div class="item"><span class="dot"></span><p><b>YouTube</b>20분</p></div><div class="item"><span class="dot"></span><p><b>게임 앱</b>숙제 후 40분</p></div><div class="item"><span class="dot"></span><p><b>전화·문자·가족 메신저</b>항상 허용</p></div><div class="item"><span class="dot"></span><p><b>새 앱 설치</b>부모 승인 필요</p></div></div></section>
+ <section class="card"><div class="section-title">설정 순서</div><div class="list"><div class="item"><span class="dot"></span><p>Family Link 열기 → 자녀 선택</p></div><div class="item"><span class="dot"></span><p>제어 → 앱 제한 → YouTube 20분 설정</p></div><div class="item"><span class="dot"></span><p>취침시간 → 오후 10시부터 오전 7시까지</p></div><div class="item"><span class="dot"></span><p>항상 허용 앱에 전화·문자·가족 연락 앱 추가</p></div></div></section>
+ <section class="notice">v1은 Family Link를 우회하거나 자동 조작하지 않습니다. 추후 Android Device Policy 기반 자체 제어 앱은 별도 정책 검토 후 개발합니다.</section>`)}
+function bind(){
+ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>render(t.dataset.tab));
+ document.querySelectorAll('[data-script]').forEach(c=>c.onclick=()=>{state.script=c.dataset.script;render('script')});
+ const req=document.getElementById('openRequest'); if(req) req.onclick=()=>openModal();
+ const copy=document.getElementById('copyScript'); if(copy) copy.onclick=()=>{navigator.clipboard?.writeText(scripts[state.script][1]); copy.textContent='복사됨'};
+}
+function openModal(){
+ const m=document.createElement('div');m.className='modal';m.innerHTML=`<div class="sheet"><div class="row"><div><div class="label">민준의 요청</div><div class="screen-title">게임 10분 더 하고 싶어요</div></div><span class="pill orange">친구와 진행 중</span></div><div class="grid2" style="margin-top:14px"><button class="btn">허용</button><button class="btn warn">내일 10분 차감</button><button class="btn secondary">주말로 이동</button><button class="btn ghost">거절 문장 보기</button></div><button class="btn close full">닫기</button></div>`;document.getElementById('screen').appendChild(m);m.querySelector('.close').onclick=()=>m.remove();m.querySelectorAll('.sheet .btn:not(.close)').forEach(b=>b.onclick=()=>{b.textContent='선택됨';setTimeout(()=>m.remove(),500)});
+}
+render('home');
+</script>
+</body>
+</html>
