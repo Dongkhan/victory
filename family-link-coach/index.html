@@ -181,11 +181,21 @@ function contractTemplate(build){return `<section class="card contract"><div cla
 function setup(){const items=[['limit','일일 한도','평일과 주말 한도를 다르게 정하고 첫 주 목표와 맞춥니다.'],['apps','앱별 제한','학습, 연락, 안전 관련 앱과 게임·영상 앱을 구분합니다.'],['bedtime','취침시간','충전 장소, 알람 대체 방법, 가족 연락 예외를 정합니다.'],['contacts','항상 허용 앱','전화, 문자, 가족 연락, 학교·학원 연락을 확인합니다.'],['purchase','구매 승인','유료 결제 전 보호자 확인과 게임 내 결제 기준을 정합니다.'],['review','설정 후 가족 리뷰','설정 내용을 자녀에게 설명하고 주간 리뷰 날짜를 확인합니다.']]; return el(`
  <section class="card"><div class="section-title">공식 보호 도구 설정 체크리스트</div><p class="copy">이 가이드는 공식 보호 도구의 설정을 대신 실행하지 않습니다. 부모가 공식 앱에서 직접 확인해야 할 항목을 가족 약속에 맞게 정리합니다.</p></section>
  <section class="card stack">${items.map(i=>`<div class="chip ${state.checklist[i[0]]?'done':''}" data-setup="${i[0]}">✓ ${i[1]}<small>${i[2]}</small></div>`).join('')}</section>
+ <section class="card"><div class="section-title">가족 약속 → 공식 보호 도구 설정 번역</div>${settingTranslatorCards()}</section>
  <section class="notice">공식 도움말에서 확인하세요: Google Family Link 도움말, Apple Screen Time 도움말. 청소년이 악용할 수 있는 기술적 요령은 P0에 넣지 않습니다.</section>
  <button class="btn full" id="saveSetup">체크리스트 저장하고 홈으로</button><button class="btn ghost full" data-go="contractBuild">계약서로 돌아가기</button>`)}
+function settingTranslatorCards(){
+ const rows=[
+  ['취침 전 충전 장소',`${state.bedtime} 이후 ${state.chargePlace}`,'취침시간, 항상 허용 앱, 알람 대체 방법을 공식 앱에서 부모가 직접 확인'],
+  ['게임 마무리',`${state.request.minutes}분 추가시간 요청과 종료 10분 전 예고`,'앱별 제한, 보너스 시간 기준, 주간 리뷰 날짜를 함께 확인'],
+  ['안전 연락 예외',state.allowedApps.join(', '),'전화·문자·가족 연락·학교 연락은 처벌 조건과 분리해 확인']
+ ];
+ return `<div class="list">${rows.map(r=>`<div class="item"><span class="dot"></span><p><b>${r[0]}</b><span class="mini">가족 약속: ${r[1]}<br>설정 확인: ${r[2]}</span></p></div>`).join('')}</div>`
+}
 function home(){const done=Object.values(state.checklist).filter(Boolean).length; return el(`
  <section class="card hero"><div class="row"><div><div class="label">${state.child} · ${state.grade}</div><div class="screen-title">이번 주 핵심은 종료 예고와 수면 보호</div></div><span class="pill">리뷰 D-5</span></div><div class="meter"><span style="width:${Math.max(18,done/6*100)}%"></span></div><div class="subtitle" style="margin-top:8px">설정 체크 ${done}/6 · 자기조절 기록 ${state.selfLog.length}개 · 요청 상태 ${state.request.status}</div></section>
  <section class="card"><div class="section-title">오늘의 핵심 규칙</div><div class="list"><div class="item"><span class="dot"></span><p><b>종료 10분 전 예고</b>저장·답장 시간을 미리 둡니다.</p></div><div class="item"><span class="dot"></span><p><b>${state.bedtime} ${state.chargePlace}</b>안전 연락은 별도로 열어 둡니다.</p></div></div></section>
+ <section class="card"><div class="section-title">자율권 회복 단계</div><div class="list"><div class="item"><span class="dot"></span><p><b>이번 주</b>부모와 함께 종료 예고와 충전 장소를 확인합니다.</p></div><div class="item"><span class="dot"></span><p><b>다음 단계</b>요청서를 스스로 작성하고 주간 리뷰에서 예외 규칙을 제안합니다.</p></div><div class="item"><span class="dot"></span><p><b>완화 검토</b>1~2주간 리뷰가 이어지면 일부 앱 제한 완화를 가족 회의에서 검토합니다.</p></div></div><p class="mini">자율권 회복은 자동 보상이 아니라 가족 리뷰에서 확인하는 조건입니다. 수면·식사·안전 연락은 보상이나 처벌 조건으로 쓰지 않습니다.</p></section>
  <section class="card"><div class="row"><div><div class="label">대기 중 요청</div><div class="value">${state.request.minutes}분 · ${state.request.reason}</div></div><span class="pill orange">${state.request.status}</span></div><button class="btn full" data-go="request">요청에 답하기</button></section>
  <section class="card"><div class="section-title">부모교육 1분 카드</div><p class="copy"><b>${educationCards[1][0]}</b><br>${educationCards[1][1]}</p><button class="btn secondary full" onclick="openScriptSheet()">부모 말문 보기</button></section>
  <section class="card"><div class="section-title">자녀에게 보이는 정보</div><p class="mini">계약서 확인 여부, 요청 횟수, 대체활동 시작/일부완료/완료 요약, 자기조절 기록 요약. 비공개 메모 원문은 홈에 표시하지 않습니다.</p></section>
@@ -205,6 +215,7 @@ function review(){return el(`
  <section class="card"><div class="section-title">1. 자녀 경험부터</div><div class="grid2">${['종료 시간이 너무 갑작스러웠다','수면 규칙이 어려웠다','친구 연락 예외가 필요했다','대체활동이 맞지 않았다','추가시간 요청 기준이 불분명했다','부모가 화난 상태에서 말해서 어려웠다'].map(x=>`<div class="chip ${state.weekly.child===x?'active':''}" data-weekly-child="${x}">${x}</div>`).join('')}</div></section>
  <section class="card"><div class="section-title">2. 부모 관찰</div><div class="list"><div class="item"><span class="dot"></span><p>아이 이야기를 끊지 않고 들었나요?</p></div><div class="item"><span class="dot"></span><p>규칙을 갑자기 바꾼 적이 있나요?</p></div><div class="item"><span class="dot"></span><p>잘된 행동을 하나 이상 확인했나요?</p></div></div><div class="script" style="margin-top:12px">“이번 주 리뷰를 10분만 하자. 먼저 네가 느낀 어려운 점 하나, 잘된 점 하나를 말해줘. 오늘은 규칙을 하나만 바꾸고 끝내자.”</div></section>
  <section class="card"><div class="section-title">3. 이번 주 요약</div><div class="kpi"><div><b>${state.request.status==='대기 중'?1:0}</b><span>요청 대기</span></div><div><b>${state.selfLog.length}</b><span>활동 기록</span></div><div><b>${Object.values(state.checklist).filter(Boolean).length}/6</b><span>설정 체크</span></div></div><p class="mini">자녀 감정 원문, 비공개 메모, 민감 기록은 자동 공개하지 않습니다.</p></section>
+ <section class="card"><div class="section-title">4주 파일럿에서 확인할 것</div><div class="list"><div class="item"><span class="dot"></span><p><b>부모</b>종료 시 말싸움이 줄었는지, 추가시간 요청서가 협상 대신 쓰였는지 확인합니다.</p></div><div class="item"><span class="dot"></span><p><b>자녀</b>규칙 이유를 이해했는지, 회복 플랜을 처벌이 아닌 재시도로 느꼈는지 확인합니다.</p></div><div class="item"><span class="dot"></span><p><b>제품</b>계약서 생성, 설정 체크, 첫 주 리뷰, 2주차 재방문을 핵심 지표로 봅니다.</p></div></div></section>
  <section class="card"><div class="section-title">4. 다음 주 규칙 하나 조정</div><div class="grid2">${['시간 조정','예외 추가','종료 예고 방식 변경','대체활동 변경','추가시간 요청 기준 수정','충전 장소 수정'].map(x=>`<div class="chip ${state.weekly.adjust===x?'active':''}" data-adjust="${x}">${x}</div>`).join('')}</div><button class="btn full" id="saveReview">다음 주 약속으로 저장</button></section>
  <section class="notice safety">자해·자살 언급, 폭력, 학대, 심한 절망감, 혼란, 기본 생활 유지 어려움이 있으면 주간 규칙 조정보다 즉시 보호자·전문가·응급 도움을 우선하세요.</section>`)}
 function bind(){

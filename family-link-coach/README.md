@@ -12,6 +12,7 @@ Family Link를 직접 대체하거나 우회하지 않고, 부모-자녀 디지�
 - 인쇄용 스타터팩 안내: [STARTER_PACK_README_KO.md](./STARTER_PACK_README_KO.md)
 - 인쇄용 스타터팩 ZIP: [family-digital-starter-pack-markdown-ko.zip](./family-digital-starter-pack-markdown-ko.zip)
 - P0 QA 리뷰: [QA_P0_REVIEW_KO.md](./QA_P0_REVIEW_KO.md)
+- P1 개선안 분석: [P1_IMPROVEMENT_ANALYSIS_KO.md](./P1_IMPROVEMENT_ANALYSIS_KO.md)
 
 ## 주요 산출물 범위
 
