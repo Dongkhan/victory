@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#a3d52a">
-<title>Relax Routine PMR Lab</title>
+<title>Relax Routine PMR — Sleep PMR</title>
 <style>
 :root{
   --bg:#f5f1e8;--app:#FAFAF7;--surface:#FFFDF8;--soft:#F4F1EA;--text:#1B2838;--muted:#66705f;
@@ -21,21 +21,26 @@
 </style>
 </head>
 <body>
+<nav class="topnav"><a href="./">← PMR Lab</a><a href="overview.html">전체 비교</a></nav>
 <header class="hero">
-  <div class="eyebrow">DH MIND CLINIC · RELAX ROUTINE PMR LAB</div>
-  <h1>PMR 개선안 5종<br>개별 프로토타입</h1>
-  <p>기존 Relax Routine 앱과 분리한 PMR 실험 공간입니다. 한 화면에 전부 넣은 파일만 두지 않고, 각 개선안을 독립 페이지로 나눠 Vercel에서 바로 확인할 수 있게 정리했습니다.</p>
-  <div class="legend"><span class="chip">전체 보기</span><span class="chip">개별 5종</span><span class="chip">모바일 단일 HTML</span><span class="chip">기존 RR 미수정</span></div>
+  <div class="eyebrow">RELAX ROUTINE PMR · 03</div>
+  <h1>Sleep PMR</h1>
+  <p>밤에 쓰기 좋은 저조도 UI, 호흡 orb, 음성 중심 PMR 플레이어.</p>
+  <div class="legend"><span class="chip">수면 전 몰입 모드</span><span class="chip">단일 HTML</span><span class="chip">모바일 우선</span></div>
 </header>
-<main class="hub">
-  <section class="hubgrid" aria-label="PMR prototypes">
-    <a class="hubcard" href="01-body-glow.html"><b>Body Glow PMR</b><span>시각적 PMR 플레이어<br>현재 근육군이 빛나는 2D 바디맵으로 PMR 순서를 직관화한 기본 플레이어.</span><em class="open">열기 →</em></a>
-    <a class="hubcard" href="02-tension-picker.html"><b>Tension Picker</b><span>긴장 부위 기반 개인화<br>오늘 가장 불편한 부위와 각성도를 먼저 고르고 추천 PMR로 진입하는 흐름.</span><em class="open">열기 →</em></a>
-    <a class="hubcard" href="03-sleep-pmr.html"><b>Sleep PMR</b><span>수면 전 몰입 모드<br>밤에 쓰기 좋은 저조도 UI, 호흡 orb, 음성 중심 PMR 플레이어.</span><em class="open">열기 →</em></a>
-    <a class="hubcard" href="04-clinic-report.html"><b>Clinic Report PMR</b><span>진료 연동 리포트<br>수행 횟수와 전후 긴장 변화를 진료 때 보여줄 수 있는 요약으로 변환.</span><em class="open">열기 →</em></a>
-    <a class="hubcard" href="05-pmr-ladder.html"><b>PMR Ladder</b><span>훈련 단계화<br>17근육군 정식 PMR에서 7군, 4군, Body Scan, 즉시 cue로 줄여가는 학습 경로.</span><em class="open">열기 →</em></a>
-    <a class="hubcard" href="overview.html"><b>All-in-one Overview</b><span>5개 개선안을 한 페이지에서 나란히 비교하는 보드형 화면.</span><em class="open">전체 보기 →</em></a>
+<main class="single-board">
+  <section class="concept">
+    <div class="label"><b>03 Sleep PMR</b><span>수면 전 몰입</span></div>
+    <div class="phone"><div class="screen dark"><div class="status"><span>23:18</span><span>수면</span></div><div class="content">
+      <div class="brand">SLEEP PMR</div><div class="title">화면을 낮추고<br>몸을 내려놓기</div><div class="sub">끝난 뒤 조작하지 않아도 되는 수면 전 PMR. 하단 네비게이션은 유지하되 낮은 대비.</div>
+      <div class="night-orb"></div>
+      <div class="card"><div class="row"><div class="icon">🌙</div><div class="grow"><b>12분 수면 전 PMR</b><div class="meta">어깨 → 팔 → 복부 → 다리</div></div></div><div class="slider"><div class="fill" style="width:35%"></div></div><div class="mini">다음 안내 뒤 화면이 더 어두워집니다.</div></div>
+      <button class="cta">잠들 준비 시작</button><button class="cta secondary">음성만 듣기</button><div class="safe">운전 중이거나 이동 중에는 사용하지 않습니다.</div>
+    </div><nav class="tabs"><div class="tab active">홈</div><div class="tab">루틴</div><div class="tab">기록</div><div class="tab">설정</div></nav></div></div>
   </section>
 </main>
+<script>
+document.querySelectorAll('.cta').forEach(btn=>btn.addEventListener('click',()=>{btn.textContent=btn.textContent.includes('시작')?'실행 화면으로 이동 예정':btn.textContent;btn.style.transform='scale(.985)';setTimeout(()=>btn.style.transform='',160)}));
+</script>
 </body>
 </html>

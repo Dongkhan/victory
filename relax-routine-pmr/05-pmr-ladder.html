@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#a3d52a">
-<title>Relax Routine PMR Lab</title>
+<title>Relax Routine PMR — PMR Ladder</title>
 <style>
 :root{
   --bg:#f5f1e8;--app:#FAFAF7;--surface:#FFFDF8;--soft:#F4F1EA;--text:#1B2838;--muted:#66705f;
@@ -21,21 +21,25 @@
 </style>
 </head>
 <body>
+<nav class="topnav"><a href="./">← PMR Lab</a><a href="overview.html">전체 비교</a></nav>
 <header class="hero">
-  <div class="eyebrow">DH MIND CLINIC · RELAX ROUTINE PMR LAB</div>
-  <h1>PMR 개선안 5종<br>개별 프로토타입</h1>
-  <p>기존 Relax Routine 앱과 분리한 PMR 실험 공간입니다. 한 화면에 전부 넣은 파일만 두지 않고, 각 개선안을 독립 페이지로 나눠 Vercel에서 바로 확인할 수 있게 정리했습니다.</p>
-  <div class="legend"><span class="chip">전체 보기</span><span class="chip">개별 5종</span><span class="chip">모바일 단일 HTML</span><span class="chip">기존 RR 미수정</span></div>
+  <div class="eyebrow">RELAX ROUTINE PMR · 05</div>
+  <h1>PMR Ladder</h1>
+  <p>17근육군 정식 PMR에서 7군, 4군, Body Scan, 즉시 cue로 줄여가는 학습 경로.</p>
+  <div class="legend"><span class="chip">훈련 단계화</span><span class="chip">단일 HTML</span><span class="chip">모바일 우선</span></div>
 </header>
-<main class="hub">
-  <section class="hubgrid" aria-label="PMR prototypes">
-    <a class="hubcard" href="01-body-glow.html"><b>Body Glow PMR</b><span>시각적 PMR 플레이어<br>현재 근육군이 빛나는 2D 바디맵으로 PMR 순서를 직관화한 기본 플레이어.</span><em class="open">열기 →</em></a>
-    <a class="hubcard" href="02-tension-picker.html"><b>Tension Picker</b><span>긴장 부위 기반 개인화<br>오늘 가장 불편한 부위와 각성도를 먼저 고르고 추천 PMR로 진입하는 흐름.</span><em class="open">열기 →</em></a>
-    <a class="hubcard" href="03-sleep-pmr.html"><b>Sleep PMR</b><span>수면 전 몰입 모드<br>밤에 쓰기 좋은 저조도 UI, 호흡 orb, 음성 중심 PMR 플레이어.</span><em class="open">열기 →</em></a>
-    <a class="hubcard" href="04-clinic-report.html"><b>Clinic Report PMR</b><span>진료 연동 리포트<br>수행 횟수와 전후 긴장 변화를 진료 때 보여줄 수 있는 요약으로 변환.</span><em class="open">열기 →</em></a>
-    <a class="hubcard" href="05-pmr-ladder.html"><b>PMR Ladder</b><span>훈련 단계화<br>17근육군 정식 PMR에서 7군, 4군, Body Scan, 즉시 cue로 줄여가는 학습 경로.</span><em class="open">열기 →</em></a>
-    <a class="hubcard" href="overview.html"><b>All-in-one Overview</b><span>5개 개선안을 한 페이지에서 나란히 비교하는 보드형 화면.</span><em class="open">전체 보기 →</em></a>
+<main class="single-board">
+  <section class="concept">
+    <div class="label"><b>05 PMR Ladder</b><span>17→7→4→스캔</span></div>
+    <div class="phone"><div class="screen"><div class="status"><span>9:41</span><span>훈련</span></div><div class="content">
+      <div class="brand">PMR TRAINING PATH</div><div class="title">길게 배우고<br>짧게 쓰기</div><div class="sub">처음엔 정식 PMR, 익숙해지면 7근육군·4근육군·Body Scan으로 줄인다.</div>
+      <div class="ladder"><div class="step done"><div class="num">1</div><div><b>17근육군 정식 PMR</b><div class="mini">20분 · 교육용</div></div></div><div class="step now"><div class="num">2</div><div><b>7근육군 축약 PMR</b><div class="mini">7분 · 현재 추천</div></div></div><div class="step"><div class="num">3</div><div><b>4근육군 초단축</b><div class="mini">3분 · 긴급 안정</div></div></div><div class="step"><div class="num">4</div><div><b>Body Scan</b><div class="mini">긴장 없이 감각 관찰</div></div></div><div class="step"><div class="num">5</div><div><b>즉시 이완 cue</b><div class="mini">손 펴기 + 어깨 내리기</div></div></div></div>
+      <button class="cta">오늘 단계 계속하기</button><button class="cta secondary">처음부터 다시 배우기</button>
+    </div><nav class="tabs"><div class="tab">홈</div><div class="tab active">루틴</div><div class="tab">기록</div><div class="tab">설정</div></nav></div></div>
   </section>
 </main>
+<script>
+document.querySelectorAll('.cta').forEach(btn=>btn.addEventListener('click',()=>{btn.textContent=btn.textContent.includes('시작')?'실행 화면으로 이동 예정':btn.textContent;btn.style.transform='scale(.985)';setTimeout(()=>btn.style.transform='',160)}));
+</script>
 </body>
 </html>
