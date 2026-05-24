@@ -70,8 +70,93 @@
 - limited_apps
 - reward_rule
 - recovery_rule
+- token_daily_cap
+- token_weekly_carryover_rate
+- digital_reward_daily_limit_minutes
+- shortform_reward_enabled
 - status: draft | active | archived
 - created_at
+
+### token_wallets
+
+- id
+- child_id
+- balance
+- weekly_earned
+- weekly_spent
+- carryover_balance
+- max_balance
+- created_at
+- updated_at
+
+### token_events
+
+- id
+- child_id
+- rule_set_id
+- event_type: earn | spend | hold | release | expire | adjust
+- amount
+- reason_code
+- reason_text
+- source: child_self_check | parent_confirm | weekly_review | system
+- related_checkin_id
+- related_reward_id
+- created_by_user_id
+- created_at
+
+### self_checkins
+
+- id
+- child_id
+- checkin_type: before_use | stop | bedtime | weekly
+- intended_use: study | contact | creation | game | shortform | video | idle | other
+- start_condition_met
+- planned_end_at
+- actual_stop_quality: immediate | within_10m | late | not_recorded
+- mood_before
+- mood_after
+- difficulty_tag
+- created_at
+
+### rewards
+
+- id
+- family_id
+- child_id nullable
+- title
+- category: digital_time | family_activity | hobby | rule_proposal | material_limited
+- cost
+- frequency_limit
+- requires_parent_approval
+- sleep_guardrail
+- food_guardrail
+- affection_guardrail
+- active
+- created_at
+
+### reward_redemptions
+
+- id
+- child_id
+- reward_id
+- cost
+- status: requested | approved | used | denied | expired
+- requested_at
+- decided_at
+- used_at
+- parent_note
+
+### recovery_missions
+
+- id
+- child_id
+- trigger_event_id
+- mission_type
+- title
+- status: suggested | accepted | completed | skipped
+- token_on_completion
+- created_at
+- completed_at
 
 ### contracts
 
@@ -107,6 +192,82 @@
 - next_week_adjustment
 - created_at
 
+### activity_templates
+
+- id
+- age_group: child | teen | both
+- category
+- title
+- description
+- default_duration_minutes
+- required_partner: none | parent | friend
+- location: indoor | outdoor | either
+- energy_level: low | medium | high
+- bedtime_safe
+- digital_allowed: none | learning | creative
+- token_reward_base
+- contraindications
+- created_at
+
+### child_activity_preferences
+
+- id
+- child_id
+- preferred_categories
+- disliked_categories
+- parent_available_windows
+- outdoor_allowed
+- notes
+- updated_at
+
+### activity_recommendations
+
+- id
+- child_id
+- template_id
+- reason_code
+- context
+- recommended_at
+- accepted_at
+- skipped_at
+
+### activity_logs
+
+- id
+- child_id
+- template_id
+- status: completed | partial | skipped | refused | rescheduled
+- duration_minutes
+- parent_verified
+- token_awarded
+- started_at
+- completed_at
+
+### mood_logs
+
+- id
+- child_id
+- activity_log_id
+- before_mood
+- before_intensity
+- after_mood
+- after_intensity
+- craving_before
+- craving_after
+- agency_after
+- sleep_readiness_after
+- created_at
+
+### token_transactions
+
+- id
+- child_id
+- source_type: activity | transition | bedtime | review | adjustment
+- source_id
+- amount
+- reason
+- created_at
+
 ## 3. 주요 화면
 
 1. 부모 온보딩
@@ -114,11 +275,13 @@
 3. 유형 분석 결과
 4. 추천 규칙
 5. 가족 계약서
-6. 오늘의 약속 홈
-7. 추가시간 요청 처리
-8. 갈등 상황 스크립트
-9. Family Link 설정 가이드
-10. 주간 리뷰
+6. 대체활동 추천 홈
+7. 활동 완료/기분 변화 체크
+8. 오늘의 약속 홈
+9. 추가시간 요청 처리
+10. 갈등 상황 스크립트
+11. Family Link 설정 가이드
+12. 주간 리뷰
 
 ## 4. 규칙 생성 로직 v1
 
@@ -170,17 +333,28 @@
 2. 온보딩 설문 화면
 3. 규칙 생성 함수 작성
 4. 계약서 화면/PDF 출력
-5. 갈등 스크립트 화면
-6. Family Link 설정 가이드 화면
-7. Supabase 연동
-8. 주간 리뷰 저장
-9. 모바일 PWA 배포
-10. 진료실 테스트용 QR 생성
+5. 대체활동 템플릿/추천 함수/완료 체크/기분 기록 구현
+6. 토큰 지급 연동
+7. 갈등 스크립트 화면
+8. Family Link 설정 가이드 화면
+9. Supabase 연동
+10. 주간 리뷰 저장
+11. 모바일 PWA 배포
+12. 진료실 테스트용 QR 생성
 
-## 8. 검증 기준
+## 8. 관련 설계 문서
+
+- `CHILD_AGENCY_CONTRACT_MODEL.md`: 자녀 목표 선택, 상호 계약서, 추가시간 요청, 규칙 수정 제안, 주간 리뷰, 자율권 회복 단계, 부모-아이 서명 플로우의 화면/데이터/문구 상세 설계
+- `ALTERNATIVE_ACTIVITY_SYSTEM.md`: 연령별 대체활동 추천 로직, 활동 완료 체크, 토큰 연동, 기분 변화 기록, 데이터 모델, MVP 개발 티켓 상세 설계
+- `PARENT_CHILD_APP_ARCHITECTURE_KO.md`: 계정, 초대코드, 가족, 자녀 프로필, 규칙, 계약서, 추가시간 요청, push, 주간리뷰, 플랫폼 제약, 개인정보·보안·동의 상세 설계
+
+## 9. 검증 기준
 
 - 부모가 5분 내 첫 계약서를 만들 수 있어야 한다.
 - Family Link 설정값이 구체적으로 출력되어야 한다.
 - 아이에게 보여줄 수 있는 문장이 포함되어야 한다.
+- 아이가 목표 선택, 추가시간 요청, 규칙 수정 제안, 주간 리뷰 중 최소 2개 이상에 직접 참여할 수 있어야 한다.
+- 부모-아이 양쪽의 이해 확인과 서명 상태가 기록되어야 한다.
 - 부모가 말싸움 상황에서 바로 읽을 문장이 있어야 한다.
 - 진단, 치료, 감시 앱으로 오해되지 않아야 한다.
+- 메시지 내용 수집, 몰래 위치추적, 우회 기능으로 오해되지 않아야 한다.
