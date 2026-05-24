@@ -1,4 +1,4 @@
-# Behavioral Activation DTx 프로젝트 초안
+# Behavioral Activation DTx 프로젝트 초안 
 
 3번째 디지털치료제 프로젝트. 주제는 **행동활성화 기반 모바일 앱**이다.
 
