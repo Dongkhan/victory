@@ -1,5 +1,24 @@
 # CHANGELOG_P0_PROTOTYPE
 
+## P1 improvement coding pass
+
+Updated file: `index.html`
+
+### Added
+
+- Added an interactive `종료 갈등 대화 코치` inside the request flow.
+  - Scenarios: `5분만 더`, `친구들이랑 하는 중`, `나만 못 하게 해`, `숙제 다 했어`, `부모가 마음대로 바꿨어`.
+  - Each scenario shows trigger, parent wording, words to avoid, and next repair action.
+- Added a computed pilot-readiness score to the home and weekly review screens.
+  - Score is based on settings checklist completion, parent response to request, review save, and self-regulation activity logs.
+- Preserved the no-surveillance/no-OS-control stance while making the product feel more like a repeat-use coaching app.
+
+### Safety notes
+
+- The conflict coach avoids shame, character judgment, secret monitoring, or bypass guidance.
+- Sleep, food, safety contact, and basic affection remain outside reward/punishment trading.
+- The feature remains a local P0 sample; it does not collect device usage, location, messages, or screen content.
+
 ## P0 mobile interactive prototype upgrade
 
 Updated file: `index.html`
