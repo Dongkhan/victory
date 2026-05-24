@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#a3d52a">
+<title>Relax Routine — PMR 개선안 5종 프로토타입</title>
+<style>
+:root{
+  --bg:#f5f1e8;--app:#FAFAF7;--surface:#FFFDF8;--soft:#F4F1EA;--text:#1B2838;--muted:#66705f;
+  --brand:#a3d52a;--brand-dark:#5E8E3E;--accent:#C58B37;--blue:#7AA7A2;--lav:#D8D0F0;--danger:#B84A3A;--line:#DDD8CA;
+  --shadow:0 18px 48px rgba(27,40,56,.14);--radius:28px;--radius2:18px;--ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#fff9ec 0,#f5f1e8 42%,#e9e1d2 100%);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);}
+.hero{max-width:1180px;margin:0 auto;padding:34px 18px 18px}.eyebrow{letter-spacing:.18em;font-size:12px;font-weight:800;color:var(--brand-dark)}h1{margin:10px 0 8px;font-size:clamp(28px,5vw,52px);line-height:1.05;letter-spacing:-.04em}.hero p{margin:0;max-width:780px;color:var(--muted);font-size:16px;line-height:1.65}.legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.chip{border:1px solid var(--line);background:rgba(255,253,248,.72);border-radius:999px;padding:8px 12px;font-size:13px;color:#46503f;font-weight:700}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,360px));justify-content:center;gap:22px;align-items:start;padding:12px 22px 44px}.concept{width:360px;max-width:88vw}.label{display:flex;align-items:center;justify-content:space-between;margin:0 8px 10px}.label b{font-size:14px}.label span{font-size:12px;color:var(--muted)}
+.phone{position:relative;width:360px;height:740px;border-radius:46px;background:#101613;padding:12px;box-shadow:0 28px 70px rgba(31,42,36,.28)}.screen{position:relative;overflow:hidden;width:100%;height:100%;border-radius:36px;background:var(--app);display:flex;flex-direction:column}.screen.dark{background:linear-gradient(180deg,#111827 0,#101820 55%,#0a0e14 100%);color:#F7F7ED}.status{height:34px;display:flex;align-items:end;justify-content:space-between;padding:0 22px 8px;font-size:12px;font-weight:800}.content{padding:8px 20px 138px;overflow:auto;scrollbar-width:none;flex:1}.content::-webkit-scrollbar{display:none}.brand{font-size:11px;letter-spacing:.18em;color:var(--brand-dark);font-weight:900}.dark .brand{color:#c7f05b}.title{font-size:28px;line-height:1.08;letter-spacing:-.04em;font-weight:900;margin:8px 0}.sub{font-size:14px;line-height:1.55;color:var(--muted)}.dark .sub{color:#b7c2b8}.card{background:var(--surface);border:1px solid rgba(221,216,202,.85);border-radius:24px;padding:16px;box-shadow:0 10px 30px rgba(27,40,56,.08);margin-top:14px}.dark .card{background:rgba(255,255,255,.075);border-color:rgba(255,255,255,.1);box-shadow:none}.row{display:flex;gap:10px;align-items:center}.icon{width:42px;height:42px;border-radius:16px;background:#eff7d2;display:grid;place-items:center;font-weight:900;color:var(--brand-dark)}.dark .icon{background:rgba(163,213,42,.18);color:#cdf56c}.grow{flex:1}.meta{font-size:12px;color:var(--muted);font-weight:700}.dark .meta{color:#aeb8aa}.cta{border:0;width:100%;min-height:54px;border-radius:999px;background:var(--brand);color:#20310c;font-weight:900;font-size:16px;margin-top:14px;box-shadow:0 12px 26px rgba(94,142,62,.24);cursor:pointer}.cta.secondary{background:#eef2df;color:#39512c;box-shadow:none}.dark .cta.secondary{background:rgba(255,255,255,.12);color:#f8ffe8}.mini{font-size:12px;color:var(--muted);line-height:1.45}.dark .mini{color:#aeb8aa}.tabs{position:absolute;left:14px;right:14px;bottom:12px;height:74px;border-radius:28px;background:rgba(255,253,248,.86);backdrop-filter:blur(18px);border:1px solid rgba(221,216,202,.75);display:grid;grid-template-columns:repeat(4,1fr);padding:8px;gap:4px}.dark .tabs{background:rgba(14,20,28,.78);border-color:rgba(255,255,255,.09)}.tab{border-radius:20px;display:grid;place-items:center;font-size:11px;color:var(--muted);font-weight:800}.tab.active{background:#eef8ce;color:#38531b}.dark .tab.active{background:rgba(163,213,42,.18);color:#d6ff78}.bodymap{height:240px;position:relative;border-radius:28px;background:radial-gradient(circle at 50% 30%,#fff 0,#f6f2e9 52%,#efe7d8 100%);margin-top:16px;overflow:hidden}.dark .bodymap{background:radial-gradient(circle at 50% 30%,#223040 0,#131b25 70%)}.figure{position:absolute;left:50%;top:18px;transform:translateX(-50%);width:96px;height:196px}.head,.torso,.arm,.leg{position:absolute;background:#dfe8c8;border:2px solid #fff;border-radius:999px;box-shadow:0 0 0 12px rgba(163,213,42,.05)}.dark .head,.dark .torso,.dark .arm,.dark .leg{background:#42545a;border-color:#5b6e70}.head{left:31px;top:0;width:34px;height:34px}.torso{left:23px;top:42px;width:50px;height:78px}.arm{top:48px;width:22px;height:92px}.arm.l{left:0;transform:rotate(12deg)}.arm.r{right:0;transform:rotate(-12deg)}.leg{top:118px;width:24px;height:78px}.leg.l{left:22px}.leg.r{right:22px}.glow{animation:pulse 2.2s var(--ease) infinite;background:#a3d52a!important;box-shadow:0 0 0 12px rgba(163,213,42,.12),0 0 40px rgba(163,213,42,.85)!important}@keyframes pulse{0%,100%{filter:saturate(.9);transform:scale(1)}50%{filter:saturate(1.2);transform:scale(1.05)}}.timer{position:absolute;right:16px;top:16px;background:rgba(255,253,248,.86);border-radius:999px;padding:8px 12px;font-weight:900}.dark .timer{background:rgba(255,255,255,.1)}.phase{position:absolute;left:16px;bottom:16px;right:16px;background:rgba(255,253,248,.9);border:1px solid rgba(221,216,202,.8);border-radius:20px;padding:12px}.dark .phase{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.1)}.slider{height:8px;background:#e6e0d0;border-radius:999px;margin:10px 0;overflow:hidden}.fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--brand-dark),var(--brand));width:62%}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.part{border:1px solid var(--line);border-radius:20px;padding:12px;background:#fffdf8;font-weight:800;font-size:13px}.part.on{background:#eff8cf;border-color:#c8e874}.night-orb{width:210px;height:210px;border-radius:999px;margin:24px auto 18px;background:radial-gradient(circle,#d9f57a 0,#7aa7a2 34%,rgba(122,167,162,.16) 68%,transparent 70%);filter:blur(.2px);animation:breathe 5s ease-in-out infinite}@keyframes breathe{0%,100%{transform:scale(.86);opacity:.78}50%{transform:scale(1.08);opacity:1}}.report{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric{border-radius:20px;background:#f6f2e8;padding:12px}.metric b{font-size:24px}.bar{height:92px;display:flex;align-items:end;gap:8px;margin-top:10px}.bar i{display:block;flex:1;background:linear-gradient(180deg,var(--brand),var(--brand-dark));border-radius:8px 8px 3px 3px}.ladder{display:grid;gap:10px;margin-top:16px}.step{display:flex;align-items:center;gap:12px;border:1px solid var(--line);background:#fffdf8;border-radius:20px;padding:12px}.step .num{width:34px;height:34px;border-radius:14px;background:#eef8ce;display:grid;place-items:center;font-weight:900}.step.done{opacity:.68}.step.now{border-color:#a3d52a;box-shadow:0 0 0 4px rgba(163,213,42,.12)}.bottom-note{position:absolute;left:20px;right:20px;bottom:94px;font-size:12px;color:var(--muted);text-align:center}.safe{font-size:12px;line-height:1.45;color:#70502d;background:#fff8e6;border:1px solid #ead7ae;border-radius:18px;padding:10px;margin-top:12px}.dark .safe{background:rgba(255,220,130,.08);border-color:rgba(255,220,130,.2);color:#ecd9a3}
+@media(max-width:900px){.board{grid-template-columns:repeat(5,360px);padding-left:14px}.hero{padding-top:24px}.phone{height:720px}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="eyebrow">DH MIND CLINIC · RELAX ROUTINE PMR LAB</div>
+  <h1>PMR 개선안 5종<br>삽입 전 별도 HTML 프로토타입</h1>
+  <p>기존 Relax Routine의 따뜻한 아이보리 배경, 라임 CTA, 둥근 카드, 짧은 루틴 중심 UX를 유지하면서 PMR을 더 예쁘고 더 하고 싶게 만드는 방향만 분리해 실험했다. 기존 v2.15 파일은 수정하지 않았다.</p>
+  <div class="legend"><span class="chip">2D 바디맵</span><span class="chip">3분/7분/12분 PMR</span><span class="chip">전후 체크</span><span class="chip">수면 모드</span><span class="chip">진료 리포트</span></div>
+</header>
+<main class="board">
+  <section class="concept">
+    <div class="label"><b>01 Body Glow PMR</b><span>기본 플레이어</span></div>
+    <div class="phone"><div class="screen"><div class="status"><span>9:41</span><span>PMR</span></div><div class="content">
+      <div class="brand">RELAX ROUTINE</div><div class="title">몸부터 조용히<br>낮추기</div><div class="sub">지금 긴장된 부위를 하나씩 켜고 끄듯이 풀어봅니다.</div>
+      <div class="bodymap"><div class="timer">04:32</div><div class="figure"><i class="head"></i><i class="torso glow"></i><i class="arm l"></i><i class="arm r"></i><i class="leg l"></i><i class="leg r"></i></div><div class="phase"><b>어깨를 살짝 올립니다</b><div class="mini">아프지 않을 만큼만 5초. 이제 천천히 놓습니다.</div></div></div>
+      <button class="cta">7분 기본 PMR 시작</button><button class="cta secondary">3분만 빠르게 하기</button><div class="safe">통증이 있는 부위는 힘주지 말고 건너뜁니다.</div>
+    </div><nav class="tabs"><div class="tab active">홈</div><div class="tab">루틴</div><div class="tab">기록</div><div class="tab">설정</div></nav></div></div>
+  </section>
+  <section class="concept">
+    <div class="label"><b>02 Tension Picker</b><span>개인화 진입</span></div>
+    <div class="phone"><div class="screen"><div class="status"><span>9:41</span><span>체크</span></div><div class="content">
+      <div class="brand">2분 설문 대신 15초 체크</div><div class="title">오늘 어디가<br>가장 긴장돼요?</div><div class="sub">Superchill식 개인화 진입을 RR 톤으로 단순화한 버전.</div>
+      <div class="card"><div class="meta">몸 긴장</div><div class="slider"><div class="fill" style="width:78%"></div></div><div class="meta">마음 각성</div><div class="slider"><div class="fill" style="width:64%"></div></div></div>
+      <div class="grid2"><div class="part on">턱 · 얼굴</div><div class="part">목</div><div class="part on">어깨</div><div class="part">가슴</div><div class="part">복부</div><div class="part">다리</div></div>
+      <div class="card row"><div class="icon">↘</div><div class="grow"><b>추천: 상체 집중 PMR</b><div class="mini">턱-어깨-손 순서 · 6분</div></div></div>
+      <button class="cta">추천 루틴 시작</button>
+    </div><nav class="tabs"><div class="tab active">홈</div><div class="tab">루틴</div><div class="tab">기록</div><div class="tab">설정</div></nav></div></div>
+  </section>
+  <section class="concept">
+    <div class="label"><b>03 Sleep PMR</b><span>수면 전 몰입</span></div>
+    <div class="phone"><div class="screen dark"><div class="status"><span>23:18</span><span>수면</span></div><div class="content">
+      <div class="brand">SLEEP PMR</div><div class="title">화면을 낮추고<br>몸을 내려놓기</div><div class="sub">끝난 뒤 조작하지 않아도 되는 수면 전 PMR. 하단 네비게이션은 유지하되 낮은 대비.</div>
+      <div class="night-orb"></div>
+      <div class="card"><div class="row"><div class="icon">🌙</div><div class="grow"><b>12분 수면 전 PMR</b><div class="meta">어깨 → 팔 → 복부 → 다리</div></div></div><div class="slider"><div class="fill" style="width:35%"></div></div><div class="mini">다음 안내 뒤 화면이 더 어두워집니다.</div></div>
+      <button class="cta">잠들 준비 시작</button><button class="cta secondary">음성만 듣기</button><div class="safe">운전 중이거나 이동 중에는 사용하지 않습니다.</div>
+    </div><nav class="tabs"><div class="tab active">홈</div><div class="tab">루틴</div><div class="tab">기록</div><div class="tab">설정</div></nav></div></div>
+  </section>
+  <section class="concept">
+    <div class="label"><b>04 Clinic Report PMR</b><span>진료 연동</span></div>
+    <div class="phone"><div class="screen"><div class="status"><span>9:41</span><span>기록</span></div><div class="content">
+      <div class="brand">7일 요약</div><div class="title">해봤는지가<br>보이게</div><div class="sub">PMR을 “좋은 콘텐츠”가 아니라 다음 진료에 연결되는 루틴으로 만든다.</div>
+      <div class="report"><div class="metric"><div class="meta">수행</div><b>5회</b><div class="mini">7일 중</div></div><div class="metric"><div class="meta">긴장 변화</div><b>−2.1</b><div class="mini">평균</div></div></div>
+      <div class="card"><b>이번 주 패턴</b><div class="bar"><i style="height:42%"></i><i style="height:70%"></i><i style="height:58%"></i><i style="height:86%"></i><i style="height:62%"></i><i style="height:20%"></i><i style="height:44%"></i></div><div class="mini">어깨 긴장 선택이 가장 많았고, 수면 전 PMR 완료율이 높았습니다.</div></div>
+      <div class="card"><b>진료용 한 문단</b><div class="mini">최근 7일 PMR 5회 수행, 평균 긴장감 7.2→5.1. 불편감 보고는 1회이며 통증 부위 건너뛰기 안내가 필요합니다.</div></div>
+      <button class="cta">진료 때 보여줄 요약 만들기</button>
+    </div><nav class="tabs"><div class="tab">홈</div><div class="tab">루틴</div><div class="tab active">기록</div><div class="tab">설정</div></nav></div></div>
+  </section>
+  <section class="concept">
+    <div class="label"><b>05 PMR Ladder</b><span>17→7→4→스캔</span></div>
+    <div class="phone"><div class="screen"><div class="status"><span>9:41</span><span>훈련</span></div><div class="content">
+      <div class="brand">PMR TRAINING PATH</div><div class="title">길게 배우고<br>짧게 쓰기</div><div class="sub">처음엔 정식 PMR, 익숙해지면 7근육군·4근육군·Body Scan으로 줄인다.</div>
+      <div class="ladder"><div class="step done"><div class="num">1</div><div><b>17근육군 정식 PMR</b><div class="mini">20분 · 교육용</div></div></div><div class="step now"><div class="num">2</div><div><b>7근육군 축약 PMR</b><div class="mini">7분 · 현재 추천</div></div></div><div class="step"><div class="num">3</div><div><b>4근육군 초단축</b><div class="mini">3분 · 긴급 안정</div></div></div><div class="step"><div class="num">4</div><div><b>Body Scan</b><div class="mini">긴장 없이 감각 관찰</div></div></div><div class="step"><div class="num">5</div><div><b>즉시 이완 cue</b><div class="mini">손 펴기 + 어깨 내리기</div></div></div></div>
+      <button class="cta">오늘 단계 계속하기</button><button class="cta secondary">처음부터 다시 배우기</button>
+    </div><nav class="tabs"><div class="tab">홈</div><div class="tab active">루틴</div><div class="tab">기록</div><div class="tab">설정</div></nav></div></div>
+  </section>
+</main>
+<script>
+document.querySelectorAll('.cta').forEach(btn=>btn.addEventListener('click',()=>{btn.textContent=btn.textContent.includes('시작')?'실행 화면으로 이동 예정':btn.textContent;btn.style.transform='scale(.985)';setTimeout(()=>btn.style.transform='',160)}));
+</script>
+</body>
+</html>
