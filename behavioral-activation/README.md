@@ -9,14 +9,26 @@
 ## 바로 보기
 
 - 프로젝트 페이지: [`behavioral-activation/index.html`](./index.html)
-- 프로토타입 v1.2: [`behavioral-activation/prototype/index.html`](./prototype/)
-- 버전 고정 파일: [`behavioral-activation/prototype/v1.2.html`](./prototype/v1.2.html)
+- 프로토타입 v2.8: [`behavioral-activation/prototype/index.html`](./prototype/)
+- 버전 고정 파일: [`behavioral-activation/prototype/v2.8.html`](./prototype/v2.8.html)
 
 ---
 
+## v2.8 일반 사용자 전환
+
+Notion 통합 문서의 핵심 루프는 유지하되, 이번 버전은 진료실 연결을 전면 기능에서 제거했다. 제품 목표는 더 일반적인 앱이므로 Today → Life Map → Action Lab → Review → Support 흐름으로 정리한다.
+
+- Clinic/외래 탭을 Support/지원 탭으로 전환
+- 외래 공유용 요약을 7일 실행 요약으로 전환
+- 브랜드 표기에서 DH Mind Clinic 제거
+- 의료진 연결 문구를 응급·위기 지원과 신뢰하는 사람 연결로 일반화
+- 생활리듬·충동관리 영역과 스마트폰 회피·갈망 관리 병목 추가
+- 치료 효과 주장 대신 행동 실행, 자기관찰, 실패 재설계를 중심으로 표현
+
+
 ## 1. 한 줄 정의
 
-**기분이 좋아지기를 기다리지 않고, 작은 행동을 통해 삶의 강화 환경·실행 능력·가치 방향성을 회복시키는 외래 확장형 행동활성화 앱.**
+**기분이 좋아지기를 기다리지 않고, 작은 행동을 통해 삶의 강화 환경·실행 능력·가치 방향성을 회복시키는 일반 사용자용 행동활성화 앱.**
 
 더 짧게 말하면:
 
@@ -49,7 +61,7 @@
 | 1차 임상 근거 | 우울증 행동활성화, CBT, 디지털 CBT, ACT, ADHD 비약물 개입 |
 | 1차 사용자 문제 | 무기력, 회피, 미루기, 실행기능 저하, 삶의 축소 |
 | 핵심 치료 원리 | 행동 모니터링, 가치 기반 활동 처방, 단계적 실행, 강화 피드백, 회피 패턴 수정 |
-| 제품 정체성 | 정신건강의학과 외래 확장형 self-management DTx |
+| 제품 정체성 | 일반 사용자용 self-guided activation 앱 |
 | 초기 규제 전략 | wellness-first, medical-track-ready |
 | 장기 확장 | ADHD, 우울, 불안, 번아웃, 만성질환 행동관리, 청소년·대학생·직장인 프로그램 |
 
@@ -99,7 +111,6 @@ ActivaCare는 이 공백을 담당한다.
 - 행동 루틴
 - 가치 기반 활동
 - 실행력 훈련
-- 외래 진료 보조
 - 자기관리 프로그램
 
 후속 단계에서 임상시험·인허가 경로를 열어둔다.
@@ -113,7 +124,7 @@ Relax Routine, CBT-I Care에서 축적한 방향을 재사용한다.
 - 카드형 기록
 - 과도한 알림 지양
 - “실제 수행된 것만 기록” 원칙
-- 외래에서 30초 안에 읽히는 요약 카드
+- 사용자가 30초 안에 돌아볼 수 있는 7일 요약 카드
 
 ---
 
@@ -898,3 +909,6 @@ ActivaCare는 우울증 행동활성화를 출발점으로 삼지만, 제품의 
 > 우울해서 못 하는 사람, ADHD라서 시작이 어려운 사람, 불안해서 피하는 사람, 완벽주의 때문에 미루는 사람, 번아웃으로 삶이 줄어든 사람 모두에게 필요한 것은 “더 강한 의지”가 아니라 “다시 행동이 가능해지는 구조”다.
 
 ActivaCare의 차별점은 이 구조를 임상 근거와 창의적 UX로 동시에 만든다는 점이다.
+
+
+<!-- legacy verified link: prototype/v1.2.html -->
