@@ -54,7 +54,7 @@
     }
   </style>
 </head>
-<body>
+<body data-app="behavioral-activation" data-version="v2.8" data-safety-state="clear">
   <div style="display:none" aria-hidden="true">current version file: v2.8.html; previous verified: v2.7.html; legacy verified links: v0.4 v0.8.html v0.9.html v1.0.html</div>
   <main class="phone" aria-label="ActivaCare 모바일 프로토타입">
     <div class="screen-wrap">
@@ -111,7 +111,7 @@
         <div class="card section consent-card"><h2>공유 전 확인</h2><p class="lead">7일 요약에는 행동 기록, 예상-실제 난이도, 안전 플래그만 포함됩니다. 자유 메모는 사용자가 입력한 내용 그대로 들어가므로 민감정보를 확인한 뒤 공유합니다.</p><div class="mini-copy"><div><b>서버 전송 없음:</b> 이 HTML 프로토타입은 서버 저장을 하지 않습니다.</div><div><b>회수 가능:</b> 복사·다운로드 후 사용자가 원하는 곳에 보관하거나 공유하는 흐름입니다.</div></div></div>
         <div class="section card banner"><h3>위험 신호 우선</h3><p class="lead">자살사고, 조증, 정신병적 증상, 급성 중독이 있으면 행동 실행보다 즉시 도움 연결을 우선합니다.</p></div>
         <div class="section card"><h2>안전 체크</h2><div class="choice-grid"><button type="button" class="choice" data-risk="0"><span><b>위험 신호 없음</b><small>일반 행동 실행을 계속합니다.</small></span><span class="check">✓</span></button><button type="button" class="choice" data-risk="1"><span><b>죽고 싶다는 생각이 스쳐 지나감</b><small>안전계획과 지지자 연결을 같이 검토합니다.</small></span><span class="check">✓</span></button><button type="button" class="choice" data-risk="2"><span><b>자주 있거나 구체적 계획이 있음</b><small>행동 실행보다 즉시 도움 연결이 우선입니다.</small></span><span class="check">✓</span></button></div></div>
-        <div class="section card notice danger" id="riskNotice"><strong>즉시 도움 연결</strong><br>급박한 위험은 119 또는 가까운 응급실, 자살예방상담전화 109, 보호자·신뢰하는 사람, 지역 위기지원기관 연결을 우선하세요. 본 앱은 응급·전문 상담을 대체하지 않습니다.</div>
+        <div class="section card notice danger" id="riskNotice"><strong>즉시 도움 연결</strong><br>급박한 위험은 119 또는 가까운 응급실, 자살예방상담전화 109, 보호자·신뢰하는 사람, 보건소 생명존중사업 또는 지역 위기지원기관 연결을 우선하세요. 본 앱은 응급·전문 상담을 대체하지 않습니다.</div>
         <button type="button" class="section cta secondary" id="exportBtn">7일 요약 복사</button><button type="button" class="section cta secondary" id="downloadBtn">다운로드</button><button type="button" class="section cta secondary" id="resetBtn">저장 초기화</button>
       </section>
     </div>
@@ -133,6 +133,7 @@
     const shrinkTemplates=[{label:'2분 버전',duration:2,suffix:'2분만 하기',difficultyDrop:1},{label:'1분 버전',duration:1,suffix:'1분만 하기',difficultyDrop:2},{label:'오늘의 30초 버전',duration:.5,suffix:'30초만 접촉하기',difficultyDrop:3}];
     const defaultState={schemaVersion:'ba-v2.8',avoidanceType:'과제회피',mode:'ADHD / 실행기능',domain:'일·학업',baseAction:'책상에 앉아 메일 답장 제목만 열기',action:'책상에 앉아 메일 답장 제목만 열기',duration:2,expectedDifficulty:6,shrinkLevel:0,onboardingDone:false,history:[],risk:0,redesign:'크기를 30초 이하로 줄임',lastRedesignReason:'',nextPrescription:'',timer:{status:'idle',remaining:120,startedAt:null,elapsedSeconds:0}};
     let state=load(); let interval=null,pre={};
+    window.__ACTIVACARE_STATE__={get snapshot(){return {...state,history:[...(state.history||[])]}},get risk(){return Number(state.risk||0)},isCrisisBlocked(){return Number(state.risk)>=2}};
     const validTabs=['today','life','lab','review','clinic']; let currentTab=(location.hash||'#today').slice(1); if(!validTabs.includes(currentTab))currentTab='today'; let routeStack=[currentTab]; let dirtyInteraction=false; let pendingRoute=null;
     function load(){try{const legacySource=legacyStoreKeys.map(k=>localStorage.getItem(k)).find(Boolean);const source=localStorage.getItem(storeKey)||legacySource||'{}';const raw=JSON.parse(source);return {...defaultState,...raw,schemaVersion:'ba-v2.8',timer:{...defaultState.timer,...(raw.timer||{})}}}catch(e){return {...defaultState,timer:{...defaultState.timer}}}}
     function save(){localStorage.setItem(storeKey,JSON.stringify(state)); renderAll();}
@@ -140,7 +141,7 @@
     function esc(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
     function hasCrisisBlock(){return Number(state.risk)>=2}
     function hasCautionRisk(){return Number(state.risk)>=1}
-    function safetyPriorityText(){return hasCrisisBlock()?'즉시 도움 연결이 우선입니다. 119/응급실, 109, 보호자·신뢰하는 사람, 지역 위기지원기관을 먼저 확인하세요.':hasCautionRisk()?'오늘 행동은 30초 이하·혼자 위험하지 않은 행동만 권합니다. 지지자 연결과 안전계획을 같이 확인하세요.':'일반 행동 실행을 계속합니다.'}
+    function safetyPriorityText(){return hasCrisisBlock()?'즉시 도움 연결이 우선입니다. 119/응급실, 109, 보호자·신뢰하는 사람, 보건소 생명존중사업 또는 지역 위기지원기관을 먼저 확인하세요.':hasCautionRisk()?'오늘 행동은 30초 이하·혼자 위험하지 않은 행동만 권합니다. 지지자 연결과 안전계획을 같이 확인하세요.':'일반 행동 실행을 계속합니다.'}
     function prescribeByMode(action){const type=state.avoidanceType||'과제회피';const map={사회회피:'상대에게 보내지 않아도 되는 초안 1줄부터',과제회피:'파일 열기 또는 제목 보기 30초부터',감각과부하:'조용한 장소에서 몸 신호 확인 후 30초 접촉',실패예상:'완성 기준을 없애고 접촉 기록만 남김',무쾌감:'재미보다 활동 접촉 1회만 기록'};return map[type]||action}
     function activate(tab,opts={}){if(!validTabs.includes(tab))tab='today';if(!requestLeave(tab,opts))return;const from=currentTab;$$('.screen').forEach(s=>{const on=s.id===tab;s.classList.toggle('active',on);s.setAttribute('aria-hidden',on?'false':'true');s.toggleAttribute('inert',!on)});$$('.nav-item').forEach(b=>{const on=b.dataset.tab===tab;b.classList.toggle('active',on);on?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current')});currentTab=tab;if(opts.push!==false&&from!==tab){routeStack.push(tab);history.pushState({tab,routeStack:[...routeStack]},'',location.pathname+location.search+'#'+tab)}}
     function openModal(id){const el=$('#'+id); el.classList.add('show'); el.setAttribute('data-open','true');} function closeModal(id){const el=$('#'+id); el.classList.remove('show'); el.removeAttribute('data-open')}
@@ -198,17 +199,17 @@
   document.body.dataset.storageSchema=SCHEMA;
   try{localStorage.setItem('behavioral-activation:schema-version',SCHEMA);}catch(_){ }
   function enforceButtonTypes(){document.querySelectorAll('button:not([type])').forEach(b=>b.type='button');}
-  function crisisBlocked(){return Number(window.state?.risk??0)>=2;}
-  function syncScreen(){const active=document.querySelector('.screen.active');document.body.dataset.screen=active?.id||location.hash.replace('#','')||'today';document.body.dataset.crisisBlocked=crisisBlocked()?'true':'false';}
+  function crisisBlocked(){return window.__ACTIVACARE_STATE__?.isCrisisBlocked?.()===true;}
+  function syncScreen(){const active=document.querySelector('.screen.active');document.body.dataset.screen=active?.id||location.hash.replace('#','')||'today';document.body.dataset.safetyState=crisisBlocked()?'crisis-locked':(Number(window.__ACTIVACARE_STATE__?.risk||0)>=1?'caution':'clear');document.body.dataset.crisisBlocked=crisisBlocked()?'true':'false';}
   const oldActivate=window.activate;
   if(typeof oldActivate==='function')window.activate=function(tab,opts={}){if(crisisBlocked()&&['today','life','support'].includes(tab)){tab='clinic';setTimeout(()=>window.showToast?.('위기 플래그가 있으면 행동 실행보다 즉시 도움 연결이 우선입니다.'),0);}return oldActivate.call(this,tab,opts);};
   const oldBuild=window.buildClinicSummaryText;
   window.buildClinicSummaryText=function(){
-    const s=window.state||{}; const h=Array.isArray(s.history)?s.history:[]; const done=h.filter(x=>x.completed).length; const stopped=h.length-done;
+    const s=window.__ACTIVACARE_STATE__?.snapshot||{}; const h=Array.isArray(s.history)?s.history:[]; const done=h.filter(x=>x.completed).length; const stopped=h.length-done;
     const fails=h.filter(x=>!x.completed).map(x=>x.redesign||x.lastRedesignReason).filter(Boolean);
     const common=fails.length?fails.sort((a,b)=>fails.filter(v=>v===b).length-fails.filter(v=>v===a).length)[0]:'충분한 반복 실패 조건 없음';
     const action=(s.action||s.baseAction||'오늘의 가장 작은 회복 행동 1개').replace(/\s*\(.+?\)$/,'');
-    const risk=crisisBlocked()?'위기 flag: 행동 실행 중지, 119/응급실/109/보호자 연결 우선':Number(s.risk)>=1?'주의 flag: 30초 이하·지지자 연결 병행':'위험 flag 없음';
+    const risk=crisisBlocked()?'위기 flag: 행동 실행 중지, 119/응급실/109/보호자/보건소 생명존중사업 연결 우선':Number(s.risk)>=1?'주의 flag: 30초 이하·지지자 연결 병행':'위험 flag 없음';
     return ['ActivaCare 진료 공유 리포트','1. 7일 실행 횟수: '+h.length+'회','2. 완료/중단 횟수: '+done+'회 / '+stopped+'회','3. 반복 실패 조건: '+common,'4. 가장 작은 유효 행동: '+action+' 30초 접촉','5. 위험/주의 flag: '+risk,'6. 다음 주 제안: 성공률보다 회피 상황에서 다시 접촉한 횟수를 추적'].join('\\n');
   };
   document.addEventListener('click',e=>{if(crisisBlocked()&&e.target.closest('#preCheckBtn,#shrinkBtn,#failBtn,#saveAction,#applyRecommendBtn,.life-card')){e.preventDefault();e.stopPropagation();window.activate?.('clinic');window.showToast?.('행동 실행 잠금: 안전 연결이 우선입니다.');}},true);
