@@ -76,3 +76,12 @@ Updated file: `index.html`
 - File existence and line/size checks.
 - Static scan planned for required flow labels and prohibited product-language terms.
 - Browser smoke check planned for console errors, primary onboarding click path, bottom tab navigation, localStorage state update, and bottom-scroll overlap.
+
+## 2026-05-25 P2 실행 대시보드 개선
+
+- `index-p1.html`로 이전 P1 프로토타입을 보존하고 `index.html`을 최신 실행형 프로토타입으로 갱신.
+- 홈을 설명형 화면에서 오늘 실행 대시보드로 개편.
+- 홈에서 즉시 사용할 수 있는 종료 갈등 대화 코치와 사용 기록 버튼 추가.
+- 대체활동 카드를 8개로 확장하고 3분/5분/10분 전환 행동을 보강.
+- 주간 리뷰에 부모 5문항, 자녀 5문항의 4주 파일럿 피드백 체크 추가.
+- 계약서 Markdown 내보내기에 규칙 3개, 공식 보호 도구 설정 항목, 추가시간 기준, 갈등 대응 문구, 리뷰 질문, 파일럿 현황을 포함.
