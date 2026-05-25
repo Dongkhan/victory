@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { CallAlert, MacroTemplate, TodayPatient, TransferFileCard } from './domain/types';
+import { createLocalCallRepository, createSupabaseCallRepository } from './data/callRepository';
+import { subscribeToCallAlertChanges } from './data/callRealtime';
 import { createLocalPatientRepository, createSupabasePatientRepository } from './data/patientRepository';
 import { subscribeToPatientChanges } from './data/patientRealtime';
 import { CallAlertStack } from './features/alerts/CallAlertStack';
@@ -32,6 +34,10 @@ export default function App() {
   const patientRepository = useMemo(
     () => (supabase ? createSupabasePatientRepository(supabase) : createLocalPatientRepository(initialStoredPatients)),
     [initialStoredPatients]
+  );
+  const callRepository = useMemo(
+    () => (supabase ? createSupabaseCallRepository(supabase) : createLocalCallRepository(readLocalStorageState('dh-talk-v2:alerts', []))),
+    []
   );
   const {
     patients,
@@ -67,6 +73,18 @@ export default function App() {
     });
   }, [refresh]);
 
+  useEffect(() => {
+    if (!supabase) return undefined;
+    const loadAlerts = async () => {
+      const remoteAlerts = await callRepository.listOpenAlerts();
+      setAlerts(pruneCallAlertsForRetention(remoteAlerts));
+    };
+    void loadAlerts();
+    return subscribeToCallAlertChanges(supabase, () => {
+      void loadAlerts();
+    });
+  }, [callRepository, setAlerts]);
+
   const selectedPatient = useMemo(
     () => patients.find((patient) => patient.id === selectedPatientId),
     [patients, selectedPatientId]
@@ -80,16 +98,14 @@ export default function App() {
   async function sendMessage(body: string) {
     if (!selectedPatient) return;
     const now = new Date().toISOString();
-    const alert: CallAlert = {
-      id: `a-${Date.now()}`,
-      body,
-      patientName: selectedPatient.name,
-      sender: '원장실',
-      createdAt: now,
-      status: 'unread'
-    };
+    const alert: CallAlert = await callRepository.sendCall({ body, patient: selectedPatient, senderLabel: '원장실' });
     setAlerts((current) => pruneCallAlertsForRetention([...current, alert], new Date(now)));
     await updatePatient(selectedPatient.id, { lastCalledAt: now, status: 'in_consult' });
+  }
+
+  async function closeAlert(id: string) {
+    await callRepository.closeAlert(id);
+    setAlerts((current) => current.filter((alert) => alert.id !== id));
   }
 
   async function resetTodayPatients() {
@@ -160,7 +176,7 @@ export default function App() {
         alerts={alerts}
         soundEnabled={soundEnabled}
         onSoundEnabledChange={setSoundEnabled}
-        onClose={(id) => setAlerts((current) => current.filter((alert) => alert.id !== id))}
+        onClose={(id) => void closeAlert(id)}
       />
     </main>
   );

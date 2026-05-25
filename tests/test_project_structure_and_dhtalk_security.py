@@ -5,7 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_project_folders_are_visible_from_root_index():
     index = (ROOT / "index.html").read_text(encoding="utf-8")
-    for folder in ["relax-routine/", "cbti-care/", "behavioral-activation/", "dh-talk/"]:
+    for folder in ["relax-routine/", "cbti-care/", "behavioral-activation/", "DH-TALK_V2/app/"]:
         assert folder in index
 
 

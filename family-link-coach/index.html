@@ -133,7 +133,7 @@ function quickActivity(){return activities[(state.selfLog.length+state.activityI
 function load(){try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'); return {...defaultState,...saved, feedback:{...defaultState.feedback,...(saved.feedback||{})}, daily:{...defaultState.daily,...(saved.daily||{})}}}catch(e){return {...defaultState}}}
 function save(msg){state.events=[{t:new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}),msg},...(state.events||[])].slice(0,8);localStorage.setItem(STORAGE_KEY,JSON.stringify(state));updateSideLog();}
 function resetLocal(){localStorage.removeItem(STORAGE_KEY);state={...defaultState,events:[{t:new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}),msg:'로컬 샘플 상태 초기화'}]};render('start');}
-function go(screen){state.screen=screen; if(['home','contract','request','activity','review'].includes(screen)){state.tab=screen; state.onboarded=true;} save('화면 이동: '+screen); render(screen);}
+function go(screen){state.screen=screen; document.body.setAttribute('data-screen',screen); if(['home','contract','request','activity','review'].includes(screen)){state.tab=screen; state.onboarded=true;} save('화면 이동: '+screen); render(screen);}
 function toast(msg){const old=document.querySelector('.toast'); if(old) old.remove(); const t=document.createElement('div');t.className='toast';t.textContent=msg;document.getElementById('screen').appendChild(t);setTimeout(()=>t.remove(),1700)}
 function el(html){return html.trim()}
 function render(screen=state.screen){
@@ -145,7 +145,7 @@ function render(screen=state.screen){
 function localNotice(){return `<section class="notice local">P0 샘플: 입력값과 진행 상태는 이 브라우저의 localStorage에만 저장됩니다. 서버 전송, 계정 연동, 기기 사용량 자동 수집은 포함하지 않습니다.</section>`}
 function start(){return el(`
  <section class="card hero"><div class="label">P0 모바일 웹</div><div class="screen-title">스마트폰을 더 세게 막기 전에, 가족 약속부터 정리하세요</div><p class="subtitle">부모와 자녀가 디지털 사용 규칙을 함께 정하고, Family Link나 Screen Time 같은 공식 보호 도구를 가족 약속에 맞게 운영하도록 돕습니다.</p><div class="grid2" style="margin-top:14px"><div class="chip center">설명</div><div class="chip center">회복</div><div class="chip center">가족 합의</div><div class="chip center">주간 리뷰</div></div></section>
- <section class="notice safety">이 서비스는 의학적 평가·치료 도구가 아니며, 자해·자살 언급, 폭력, 학대, 심한 절망감, 혼란, 안전 문제가 있으면 앱 규칙 조정보다 보호자·전문가·응급기관 도움이 우선입니다.</section>
+ <section class="notice safety">이 서비스는 의학적 평가·치료 도구가 아니며, 자해·자살 언급, 폭력, 학대, 심한 절망감, 혼란, 안전 문제가 있으면 앱 규칙 조정을 중단하고 보호자·전문가·응급기관 도움이 우선입니다.</section>
  ${localNotice()}<button class="btn full" data-go="guardian">시작하기</button><button class="btn ghost full" data-go="contractBuild">계약서 예시 먼저 보기</button>`)}
 function guardian(){const keys=['guardian','purpose','contact','safety']; return el(`
  <section class="card"><div class="section-title">보호자 확인</div><p class="copy">자녀의 디지털 사용 규칙을 가족이 함께 정리하기 위한 도구입니다. 아래 항목을 확인해야 다음으로 갈 수 있습니다.</p></section>
@@ -276,6 +276,7 @@ function makeMarkdown(){const pack=suggestedRulePack(); const c=selectedConflict
 function openScriptSheet(){const m=document.createElement('div');m.className='modal';m.innerHTML=`<div class="sheet"><div class="section-title">부모 말문</div><div class="script">“지금 바로 끝내기 힘든 건 알아. 그래서 마무리 시간을 둔 거야. 이번에는 계약대로 종료하고, 일요일 리뷰 때 시간이 부족했는지 같이 조정하자.”</div><button class="btn full close">닫기</button></div>`;document.getElementById('screen').appendChild(m);m.querySelector('.close').onclick=()=>m.remove()}
 function updateSideLog(){const el=document.getElementById('sideLog'); if(!el)return; el.textContent=(state.events&&state.events.length)?state.events.map(e=>`${e.t}  ${e.msg}`).join('\n'):'아직 저장된 이벤트가 없습니다.'}
 window.__p0={state,go,resetLocal,storageKey:STORAGE_KEY};
+document.body.setAttribute('data-screen',state.screen||'start');
 render(state.screen||'start');
 </script>
 </body>

@@ -827,12 +827,19 @@ document.addEventListener('DOMContentLoaded', async function() {
   function open(){ensureStyle();buildOverlay();step=0;phase='tension';phaseLeft=5;running=false;render();$('rr-pmr-v3').classList.add('open');document.documentElement.dataset.route='pmr';}
   function close(){if(interval)clearInterval(interval);interval=null;running=false;const el=$('rr-pmr-v3');if(el)el.classList.remove('open');document.documentElement.dataset.route='home'; if(location.hash==='#pmr')history.replaceState(null,'',location.pathname+location.search+'#home');}
   function isPmrText(t){return /PMR|점진적\s*근(?:육)?이완|근육이완|근이완/i.test((t||'').replace(/\s+/g,' '));}
+  function isPmrLauncher(b){
+    if(!b||b.closest('#rr-pmr-v3'))return false;
+    if(b.closest('[data-knowledge], [data-background], .knowledge, .background, .learn, .education'))return false;
+    const t=(b.innerText||b.textContent||'').replace(/\s+/g,' ').trim();
+    const aria=(b.getAttribute('aria-label')||'').replace(/\s+/g,' ').trim();
+    const combined=`${t} ${aria}`;
+    if(/배경지식|지식|설명|원리|이론|Jacobson|16개 근육군|근거|읽기|learn|education/i.test(combined))return false;
+    return /(▶|시작|열기|실행|routine|session)/i.test(combined)&&/PMR|점진적\s*근(?:육)?이완|근육이완|근이완/i.test(combined);
+  }
   function convertPmrButtons(){
     const buttons=[...document.querySelectorAll('button,a,[role="button"]')];
     buttons.forEach(b=>{
-      if(b.closest('#rr-pmr-v3'))return;
-      const t=(b.innerText||b.textContent||'').replace(/\s+/g,' ').trim();
-      if(!isPmrText(t))return;
+      if(!isPmrLauncher(b))return;
       if(b.dataset.rrPmrV3!=='open'){
         b.classList.add('rr-pmr-launch-v3','relax-routine-card-v25');
         b.dataset.relaxV25='done';
@@ -849,18 +856,13 @@ document.addEventListener('DOMContentLoaded', async function() {
   function interceptPmrEvent(e){
     const b=e.target.closest&&e.target.closest('button,a,[role="button"],.rr-pmr-launch-v3');
     if(!b||b.closest('#rr-pmr-v3'))return;
-    const t=(b.innerText||b.textContent||'').replace(/\s+/g,' ').trim();
-    if(b.dataset?.rrPmrV3==='open'||isPmrText(t)){
+    if(b.dataset?.rrPmrV3==='open'){
       e.preventDefault();e.stopPropagation();open();
     }
   }
   function watchOldPmrScreens(){
-    const root=document.getElementById('root');
-    if(!root)return;
-    const bodyText=(root.innerText||'').replace(/\s+/g,' ');
-    const looksOld=/점진적 근이완 \(PMR\)|16개 근육군|Jacobson 1938|pmr_title|근이완\(PMR\)/.test(bodyText);
-    const overlayOpen=document.getElementById('rr-pmr-v3')?.classList.contains('open');
-    if(looksOld&&!overlayOpen)open();
+    // 배경지식/교육 화면의 PMR 텍스트는 지식 설명으로 남겨야 한다.
+    // v3.0 실행 모듈 자동 전환은 명시적 PMR 실행 카드에서만 발생한다.
   }
   function bind(){
     ensureStyle();buildOverlay();convertPmrButtons();

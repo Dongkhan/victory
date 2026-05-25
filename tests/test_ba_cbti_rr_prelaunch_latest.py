@@ -217,7 +217,8 @@ def test_rr_v25_clarifies_first_screen_and_latest_index():
     assert "추천 전 짧게 체험하기" in html
     assert "급한 긴장 낮추기" in html
     assert "relax-routine-card-v25" in html
-    assert "prototype/v2.5.html" in index and "latest" in index
+    assert "prototype/v3.0.html" in index and "latest" in index
+    assert "prototype/v2.5.html" in index
     assert 'prototype/v2.4.html">Relax Routine v2.4</a><br>' in index
-    assert "최신 실행 파일은 v2.5" in index
-    assert "최신 v2.5" in root_index
+    assert "최신 실행 파일은 v3.0" in index
+    assert "최신 v3.0" in root_index
