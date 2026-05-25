@@ -9,7 +9,7 @@ def read(rel):
 
 def test_root_index_exposes_actual_latest_products():
     index = read("index.html")
-    assert "최신 v3.0" in index
+    assert "최신 v3.1" in index
     assert "최신 v2.8" in index
     assert "v2.272" in index
     assert "DH-TALK_V2/app/" in index
@@ -17,7 +17,7 @@ def test_root_index_exposes_actual_latest_products():
 
 
 def test_rr_pmr_v3_does_not_hijack_background_knowledge_text():
-    html = read("relax-routine/prototype/v3.0.html")
+    html = read("relax-routine/prototype/v3.1.html")
     assert "function isPmrLauncher" in html
     assert "배경지식/교육 화면의 PMR 텍스트는 지식 설명으로 남겨야 한다" in html
     assert "Jacobson|16개 근육군|근거|읽기" in html

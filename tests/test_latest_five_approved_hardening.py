@@ -18,7 +18,7 @@ def typed_button_count(html: str) -> int:
 
 def test_all_static_buttons_have_explicit_type_and_state_hooks():
     files = [
-        "relax-routine/prototype/v3.0.html",
+        "relax-routine/prototype/v3.1.html",
         "behavioral-activation/prototype/v2.8.html",
         "cbti-care/prototype/v2.272.html",
         "family-link-coach/index.html",
@@ -33,11 +33,14 @@ def test_all_static_buttons_have_explicit_type_and_state_hooks():
 
 
 def test_rr_uses_explicit_pmr_launcher_not_text_hijack():
-    html = read("relax-routine/prototype/v3.0.html")
+    html = read("relax-routine/prototype/v3.1.html")
     assert "data-action='start-pmr'" in html or "dataset.action='start-pmr'" in html
     assert "b.dataset?.action==='start-pmr'||b.dataset?.rrModule==='pmr-v3'" in html
     assert "텍스트 감지가 아니라 명시적 실행 selector" in html
     assert "Jacobson" in html and "16개 근육군" in html
+    assert "rr-v31-pmr-balloon-visual-restore" in html
+    assert "rrPmrBalloonGrow" in html and "rrPmrBalloonShrink" in html
+    assert "document.body.dataset.pmrBalloon='restored'" in html
 
 
 def test_ba_crisis_route_guard_and_structured_clinic_report():

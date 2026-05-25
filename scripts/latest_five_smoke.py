@@ -10,7 +10,7 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGETS = {
-    "rr": "relax-routine/prototype/v3.0.html",
+    "rr": "relax-routine/prototype/v3.1.html",
     "ba": "behavioral-activation/prototype/v2.8.html",
     "cbti": "cbti-care/prototype/v2.272.html",
     "dfc": "family-link-coach/index.html",
@@ -18,7 +18,7 @@ TARGETS = {
 }
 
 REQUIRED = {
-    "rr": ["dataset.app='relax-routine'", "start-pmr", "pmr-v3"],
+    "rr": ["dataset.app='relax-routine'", "start-pmr", "pmr-v3", "rr-v31-pmr-balloon-visual-restore", "rrPmrBalloonGrow", "rrPmrBalloonShrink"],
     "ba": ["dataset.app='behavioral-activation'", "crisisBlocked", "진료 공유 리포트"],
     "cbti": ["dataset.app='cbti-care'", "srtSafe", "SRT 안전 게이트"],
     "dfc": ["dataset.app='digital-family-coach'", "hasCrisisLock", "data-privacy-scope"],
