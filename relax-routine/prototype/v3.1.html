@@ -43,7 +43,7 @@
     </div>
   </noscript>
 </head>
-<body>
+<body data-app="relax-routine" data-version="3.1" data-safety-state="advisory">
   <div id="__bundler_thumbnail">
     <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
       <rect width="1200" height="800" fill="#f5f1e8"></rect>
@@ -915,7 +915,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     `;
     document.head.appendChild(st);
   }
-  function sync(){document.body.dataset.version='v3.1';document.body.dataset.pmrBalloon='restored';document.title='Relax Routine v3.1 — DH Mind Clinic';window.__RELAX_ROADMAP_VERSION__='v3.1';}
+  function sync(){document.body.dataset.app='relax-routine';document.body.dataset.version='v3.1';document.body.dataset.safetyState='advisory';document.body.dataset.pmrBalloon='restored';document.title='Relax Routine v3.1 — DH Mind Clinic';window.__RELAX_ROADMAP_VERSION__='v3.1';}
   install();sync();
   ['DOMContentLoaded','load','hashchange'].forEach(ev=>addEventListener(ev,()=>{install();sync();}));
   [80,240,700,1500,3200].forEach(d=>setTimeout(()=>{install();sync();},d));

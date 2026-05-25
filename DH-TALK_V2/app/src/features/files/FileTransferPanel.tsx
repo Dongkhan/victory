@@ -26,8 +26,9 @@ export function FileTransferPanel({ files, onAddFile }: FileTransferPanelProps) 
     <section className="panel file-panel">
       <div className="panel-header">
         <div>
-          <p className="eyebrow">임시 전달</p>
-          <h2>파일 전송</h2>
+          <p className="eyebrow">이 PC 임시 첨부</p>
+          <h2>로컬 파일 미리보기</h2>
+          <p className="muted">선택한 파일은 이 브라우저에서만 object URL로 열립니다. 다른 PC로 자동 전송되지 않습니다.</p>
         </div>
         <label className="upload-button">
           파일 선택
@@ -35,12 +36,12 @@ export function FileTransferPanel({ files, onAddFile }: FileTransferPanelProps) 
         </label>
       </div>
       <div className="file-list">
-        {files.length === 0 && <p className="muted">아직 전송된 파일이 없습니다.</p>}
+        {files.length === 0 && <p className="muted">아직 임시 첨부된 파일이 없습니다.</p>}
         {files.map((file) => (
           <article className="file-card" key={file.id}>
             <strong>{file.filename}</strong>
             <span>{formatBytes(file.sizeBytes)}</span>
-            <span>7일 후 만료</span>
+            <span>브라우저를 닫거나 새로고침하면 사라질 수 있습니다.</span>
             {file.downloadUrl ? (
               <a className="download-button" href={file.downloadUrl} download={file.filename}>
                 {getDownloadLabel(file)}

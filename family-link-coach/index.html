@@ -69,7 +69,7 @@
     </aside>
   </div>
 <script>
-const STORAGE_KEY='familyLinkCoachP0LocalSample';
+const STORAGE_KEY='familyLinkCoachP2LocalSample';
 const defaultState={
   screen:'start', tab:'home', onboarded:false, step:0, child:'민준', grade:'초5', ageGroup:'초등 고학년',
   concerns:['종료 전환이 어려움','취침 전 사용이 많음','게임 마무리가 어려움'],
@@ -86,7 +86,7 @@ const defaultState={
 let state=load();
 const heads={
  crisis:['위기 신호 우선','앱 규칙 조정을 중단하고 보호자·전문가·응급기관 도움을 먼저 연결합니다.'],
- start:['스마트폰 규칙을 가족 약속으로 바꾸기','공식 보호 도구를 가족 약속에 맞게 운영하도록 돕는 P0 모바일 웹 프로토타입입니다.'],
+ start:['스마트폰 규칙을 가족 약속으로 바꾸기','공식 보호 도구를 가족 약속에 맞게 운영하도록 돕는 P2 실행 대시보드입니다.'],
  guardian:['보호자 확인','서비스 범위, 자녀 설명, 위기 상황 우선 원칙을 먼저 확인합니다.'],
  explain:['아이에게 설명하기','벌칙표가 아니라 가족이 함께 조정하는 약속 도구라는 점을 먼저 설명합니다.'],
  onboarding:['첫 계약서 재료 모으기','실명 없이 별명과 생활 패턴만으로 이번 주 약속 초안을 만듭니다.'],
@@ -148,14 +148,14 @@ function render(screen=state.screen){
 
 function crisisChecklist(){const labels={selfHarm:'자해·자살 언급',violence:'폭력 위협',abuse:'학대 피해',psychosis:'현실과 맞지 않는 말·행동',sleepCollapse:'며칠 이상 지속되는 수면 붕괴'};return `<section class="card stack" id="crisisChecklist"><div class="section-title">위기 신호 먼저 확인</div>${Object.entries(labels).map(([k,v])=>`<div class="chip ${state.crisis?.[k]?'active danger':''}" data-crisis="${k}">✓ ${v}</div>`).join('')}</section>`}
 function crisis(){const labels={selfHarm:'자해·자살 언급',violence:'폭력 위협',abuse:'학대 피해',psychosis:'현실과 맞지 않는 말·행동',sleepCollapse:'며칠 이상 지속되는 수면 붕괴'};return el(`
- <section class="notice safety" data-crisis-lock="true">위기 신호가 있으면 추가시간 요청, 계약서 수정, 부모 응답, 대체활동 처방을 모두 중단합니다. 보호자·전문가·응급기관 도움이 우선입니다.</section>
+ <section class="notice safety" data-crisis-lock="true">위기 신호가 있으면 추가시간 요청, 계약서 수정, 부모 응답, 대체활동 처방을 모두 중단합니다. 보호자·전문가·응급기관 도움이 우선입니다. 지역 보건소 생명존중사업 연결도 함께 고려합니다.</section>
  <section class="card stack">${Object.entries(labels).map(([k,v])=>`<div class="chip ${state.crisis?.[k]?'active danger':''}" data-crisis="${k}">✓ ${v}</div>`).join('')}</section>
- <section class="card"><div class="section-title">즉시 할 일</div><div class="list"><div class="item"><span class="dot"></span><p>안전한 어른이 아이 곁에 있습니다.</p></div><div class="item"><span class="dot"></span><p>자해·자살·폭력·학대·혼란이 있으면 119/응급실 또는 지역 위기지원기관에 연결합니다.</p></div><div class="item"><span class="dot"></span><p>스마트폰 규칙 협상은 안정 후로 미룹니다.</p></div></div></section>
+ <section class="card"><div class="section-title">즉시 할 일</div><div class="list"><div class="item"><span class="dot"></span><p>안전한 어른이 아이 곁에 있습니다.</p></div><div class="item"><span class="dot"></span><p>자해·자살·폭력·학대·혼란이 있으면 119/응급실, 109, 보건소 생명존중사업 또는 지역 위기지원기관에 연결합니다.</p></div><div class="item"><span class="dot"></span><p>스마트폰 규칙 협상은 안정 후로 미룹니다.</p></div></div></section>
  <button type="button" class="btn ghost full" data-action="clear-crisis">위기 신호 없음으로 되돌리기</button>`)}
 
-function localNotice(){return `<section class="notice local">P0 샘플: 입력값과 진행 상태는 이 브라우저의 localStorage에만 저장됩니다. 서버 전송, 계정 연동, 기기 사용량 자동 수집은 포함하지 않습니다.</section>`}
+function localNotice(){return `<section class="notice local">P2 로컬 샘플: 입력값과 진행 상태는 이 브라우저의 localStorage에만 저장됩니다. 서버 전송, 계정 연동, 기기 사용량 자동 수집은 포함하지 않습니다.</section>`}
 function start(){return el(`
- <section class="card hero"><div class="label">P0 모바일 웹</div><div class="screen-title">스마트폰을 더 세게 막기 전에, 가족 약속부터 정리하세요</div><p class="subtitle">부모와 자녀가 디지털 사용 규칙을 함께 정하고, Family Link나 Screen Time 같은 공식 보호 도구를 가족 약속에 맞게 운영하도록 돕습니다.</p><div class="grid2" style="margin-top:14px"><div class="chip center">설명</div><div class="chip center">회복</div><div class="chip center">가족 합의</div><div class="chip center">주간 리뷰</div></div></section>
+ <section class="card hero"><div class="label">P2 실행 대시보드</div><div class="screen-title">스마트폰을 더 세게 막기 전에, 가족 약속부터 정리하세요</div><p class="subtitle">부모와 자녀가 디지털 사용 규칙을 함께 정하고, Family Link나 Screen Time 같은 공식 보호 도구를 가족 약속에 맞게 운영하도록 돕습니다.</p><div class="grid2" style="margin-top:14px"><div class="chip center">설명</div><div class="chip center">회복</div><div class="chip center">가족 합의</div><div class="chip center">주간 리뷰</div></div><p class="subtitle" style="margin-top:12px"><b>오늘 만들 결과물</b>: 1주 규칙 계약서, 추가시간 요청 템플릿, 갈등 대화 스크립트</p></section>
  <section class="notice safety">이 서비스는 의학적 평가·치료 도구가 아니며, 자해·자살 언급, 폭력, 학대, 심한 절망감, 혼란, 안전 문제가 있으면 앱 규칙 조정을 중단하고 보호자·전문가·응급기관 도움이 우선입니다.</section>
  ${crisisChecklist()}
  ${localNotice()}<button type="button" class="btn full" data-go="guardian">시작하기</button><button type="button" class="btn ghost full" data-go="contractBuild">계약서 예시 먼저 보기</button>`)}
@@ -170,7 +170,7 @@ function explain(){return el(`
  <section class="card stack">${checkChip('child1','이 도구의 목적을 아이가 들었습니다.')}${checkChip('child2','부모에게 보이는 정보와 보이지 않는 정보를 설명했습니다.')}${checkChip('child3','아이가 불편하면 주간 리뷰에서 조정할 수 있음을 설명했습니다.')}</section>
  <button type="button" class="btn full" id="explainNext" ${['child1','child2','child3'].every(k=>state.checks[k])?'':'disabled'}>아이와 함께 확인했어요</button><button type="button" class="btn ghost full" data-go="onboarding">나중에 아이와 확인하고 부모 초안 만들기</button>`)}
 function onboarding(){return el(`
- <section class="card"><div class="section-title">1/3 가족 상황</div><label class="label">아이 별명</label><input class="field" id="childName" value="${state.child}"/><div class="grid2" style="margin-top:10px">${['초등 저학년','초등 고학년','중학생','고등학생'].map(g=>`<div class="chip ${state.ageGroup===g?'active':''}" data-age="${g}">${g}</div>`).join('')}</div><p class="mini">실명과 생년월일 전체는 P0 샘플에서 필요하지 않습니다.</p></section>
+ <section class="card"><div class="section-title">1/3 가족 상황</div><label class="label">아이 별명</label><input class="field" id="childName" value="${state.child}"/><div class="grid2" style="margin-top:10px">${['초등 저학년','초등 고학년','중학생','고등학생'].map(g=>`<div class="chip ${state.ageGroup===g?'active':''}" data-age="${g}">${g}</div>`).join('')}</div><p class="mini">실명과 생년월일 전체는 P2 로컬 샘플에서 필요하지 않습니다.</p></section>
  <section class="card"><div class="section-title">2/3 이번 주에 반복된 상황</div><div class="grid2">${['종료 전환이 어려움','취침 전 사용이 많음','게임 마무리가 어려움','짧은 영상에 오래 머묾','숙제 시작 지연','약속과 다른 사용'].map(c=>`<div class="chip ${state.concerns.includes(c)?'active':''}" data-concern="${c}">${c}</div>`).join('')}</div></section>
  <section class="card"><div class="section-title">3/3 부모 우선 목표</div><div class="grid2">${['수면 보호','숙제 시작','갈등 감소','게임 마무리','숏폼 줄이기','가족 대화 회복'].map(g=>`<div class="chip ${state.parentGoals.includes(g)?'active':''}" data-parent-goal="${g}">${g}</div>`).join('')}</div></section>
  ${localNotice()}<button type="button" class="btn full" id="saveOnboarding">생활 패턴 정리 보기</button>`)}
@@ -212,7 +212,7 @@ function setup(){const items=[['limit','일일 한도','평일과 주말 한도�
  <section class="card"><div class="section-title">공식 보호 도구 설정 체크리스트</div><p class="copy">이 가이드는 공식 보호 도구의 설정을 대신 실행하지 않습니다. 부모가 공식 앱에서 직접 확인해야 할 항목을 가족 약속에 맞게 정리합니다.</p></section>
  <section class="card stack">${items.map(i=>`<div class="chip ${state.checklist[i[0]]?'done':''}" data-setup="${i[0]}">✓ ${i[1]}<small>${i[2]}</small></div>`).join('')}</section>
  <section class="card"><div class="section-title">가족 약속 → 공식 보호 도구 설정 번역</div>${settingTranslatorCards()}</section>
- <section class="notice">공식 도움말에서 확인하세요: Google Family Link 도움말, Apple Screen Time 도움말. 청소년이 악용할 수 있는 기술적 요령은 P0에 넣지 않습니다.</section>
+ <section class="notice">공식 도움말에서 확인하세요: Google Family Link 도움말, Apple Screen Time 도움말. 청소년이 악용할 수 있는 기술적 요령은 본 실행 대시보드에 넣지 않습니다.</section>
  <button type="button" class="btn full" id="saveSetup">체크리스트 저장하고 홈으로</button><button type="button" class="btn ghost full" data-go="contractBuild">계약서로 돌아가기</button>`)}
 function settingTranslatorCards(){
  const rows=[
@@ -231,7 +231,7 @@ function home(){const done=Object.values(state.checklist).filter(Boolean).length
  <section class="card"><div class="section-title">자녀에게 보이는 정보</div><p class="mini">계약서 확인 여부, 요청 횟수, 대체활동 시작/일부완료/완료 요약, 자기조절 기록 요약. 비공개 메모 원문은 홈에 표시하지 않습니다.</p></section>
  ${localNotice()}`)}
 function request(){return el(`
- <section class="card"><div class="section-title">자녀 요청 작성</div><p class="copy">요청하는 것은 나쁜 행동이 아닙니다. 이유와 필요한 시간, 마무리 방법을 말하면 가족 규칙에 따라 답을 받을 수 있습니다.</p><label class="label">왜 더 필요해?</label><select class="field" id="reqReason">${['게임 저장/마무리','친구와 약속된 연락','학습/과제 마무리','가족에게 설명하고 싶은 일'].map(x=>`<option ${state.request.reason===x?'selected':''}>${x}</option>`).join('')}</select><label class="label">몇 분이 필요해?</label><div class="grid3">${[5,10,15].map(n=>`<div class="chip center ${state.request.minutes===n?'active':''}" data-min="${n}">${n}분</div>`).join('')}</div><label class="label">끝나면 무엇을 할 거야?</label><select class="field" id="reqFinish">${['충전 장소에 두기','종료 기록 남기기','대체활동 1개 하기','숙제/샤워/수면 루틴으로 이동'].map(x=>`<option ${state.request.finish===x?'selected':''}>${x}</option>`).join('')}</select><button type="button" class="btn full" id="sendRequest">요청 보내기</button></section>
+ <section class="card"><div class="section-title">자녀 요청 작성</div><p class="copy">요청하는 것은 나쁜 행동이 아닙니다. 이유와 필요한 시간, 마무리 방법을 말하면 가족 규칙에 따라 답을 받을 수 있습니다.</p><label class="label">왜 더 필요해?</label><select class="field" id="reqReason">${['게임 저장/마무리','친구와 약속된 연락','학습/과제 마무리','가족에게 설명하고 싶은 일'].map(x=>`<option ${state.request.reason===x?'selected':''}>${x}</option>`).join('')}</select><label class="label">몇 분이 필요해?</label><div class="grid3">${[5,10,15].map(n=>`<div class="chip center ${state.request.minutes===n?'active':''}" data-min="${n}">${n}분</div>`).join('')}</div><label class="label">끝나면 무엇을 할 거야?</label><select class="field" id="reqFinish">${['충전 장소에 두기','종료 기록 남기기','대체활동 1개 하기','숙제/샤워/수면 루틴으로 이동'].map(x=>`<option ${state.request.finish===x?'selected':''}>${x}</option>`).join('')}</select><button type="button" class="btn full" id="sendRequest" data-action="request-extra-time">요청 보내기</button></section>
  <section class="card"><div class="section-title">부모 응답</div><div class="grid3"><button type="button" class="btn" data-response="승인">승인</button><button type="button" class="btn warn" data-response="오늘은 어렵다">오늘은 어렵다</button><button type="button" class="btn secondary" data-response="조건부 승인">조건부 승인</button></div><div class="script" style="margin-top:12px">${state.response||'응답을 선택하면 아이가 읽을 수 있는 문장이 생성됩니다.'}</div><button type="button" class="btn full" data-go="activity">응답 후 활동 고르기</button><button type="button" class="btn ghost full" data-go="review">주간 리뷰로 보내기</button></section>
  ${conflictCoachCard()}
  <section class="notice">안전 연락은 추가시간 요청 대상이 아닙니다. 위험하거나 무서운 일이 있으면 바로 보호자에게 말하세요.</section>`)}
@@ -255,37 +255,39 @@ function review(){const score=pilotScore(); return el(`
  <section class="card"><div class="section-title">5. 4주 파일럿 피드백</div><p class="mini">부모와 자녀가 각각 5문항을 빠르게 체크합니다. 현재 ${feedbackDone()}/10개 응답.</p>${feedbackBlock('parent','부모',parentQuestions())}${feedbackBlock('child','자녀',childQuestions())}</section>
  <section class="notice safety">자해·자살 언급, 폭력, 학대, 심한 절망감, 혼란, 기본 생활 유지 어려움이 있으면 주간 규칙 조정보다 즉시 보호자·전문가·응급 도움을 우선하세요.</section>`)}
 function bind(){
- document.querySelectorAll('.chip,.tab').forEach(x=>{x.setAttribute('role','button');x.setAttribute('tabindex','0');x.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();x.click();}}});
- document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
- const markCoach=document.getElementById('markCoachUsed'); if(markCoach) markCoach.onclick=()=>{state.daily.coachOpened=true;save('홈 갈등 코치 문구 사용');toast('오늘 갈등 코치 사용을 기록했습니다')};
- document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>go(t.dataset.tab));
- document.querySelectorAll('[data-check]').forEach(c=>c.onclick=()=>{state.checks[c.dataset.check]=!state.checks[c.dataset.check];save('확인 항목 변경');render(state.screen)});
- const gn=document.getElementById('guardianNext'); if(gn) gn.onclick=()=>go('explain'); const en=document.getElementById('explainNext'); if(en) en.onclick=()=>go('onboarding');
- document.querySelectorAll('[data-age]').forEach(c=>c.onclick=()=>{state.ageGroup=c.dataset.age;save('연령대 선택');render('onboarding')});
- document.querySelectorAll('[data-concern]').forEach(c=>c.onclick=()=>toggleArr(state.concerns,c.dataset.concern,'onboarding'));
- document.querySelectorAll('[data-parent-goal]').forEach(c=>c.onclick=()=>toggleArr(state.parentGoals,c.dataset.parentGoal,'onboarding',2));
- document.querySelectorAll('[data-child-goal]').forEach(c=>c.onclick=()=>toggleArr(state.childGoals,c.dataset.childGoal,'childGoal',2));
- const saveOn=document.getElementById('saveOnboarding'); if(saveOn) saveOn.onclick=()=>{const n=document.getElementById('childName').value.trim(); if(n) state.child=n; save('온보딩 저장'); go('pattern')};
- const rerule=document.getElementById('rerule'); if(rerule) rerule.onclick=()=>{state.ruleVariant=(state.ruleVariant+1)%2;save('규칙 초안 변경');render('rules')};
- const saveContract=document.getElementById('saveContract'); if(saveContract) saveContract.onclick=()=>{save('계약서 저장');go('setup')};
- document.querySelectorAll('[data-setup]').forEach(c=>c.onclick=()=>{state.checklist[c.dataset.setup]=!state.checklist[c.dataset.setup];save('설정 체크 변경');render('setup')});
- const saveSetup=document.getElementById('saveSetup'); if(saveSetup) saveSetup.onclick=()=>{save('설정 체크리스트 저장');go('home')};
- const exportMd=document.getElementById('exportMd'); if(exportMd) exportMd.onclick=()=>{navigator.clipboard?.writeText(makeMarkdown());toast('계약서 Markdown 문구를 복사했습니다')};
- document.querySelectorAll('[data-min]').forEach(c=>c.onclick=()=>{state.request.minutes=Number(c.dataset.min);save('요청 시간 변경');render('request')});
- const rr=document.getElementById('reqReason'); if(rr) rr.onchange=()=>{state.request.reason=rr.value;save('요청 이유 변경')}; const rf=document.getElementById('reqFinish'); if(rf) rf.onchange=()=>{state.request.finish=rf.value;save('마무리 행동 변경')};
- const sendReq=document.getElementById('sendRequest'); if(sendReq) sendReq.onclick=()=>{state.request.status='대기 중';save('추가시간 요청 전송');toast('요청이 로컬 샘플 상태에 저장되었습니다')};
- document.querySelectorAll('[data-response]').forEach(b=>b.onclick=()=>{state.response=responseText(b.dataset.response);state.request.status=b.dataset.response;save('부모 응답: '+b.dataset.response);render('request')});
- document.querySelectorAll('[data-conflict]').forEach(c=>c.onclick=()=>{state.conflictScenario=c.dataset.conflict;save('갈등 상황 선택: '+c.dataset.conflict);render('request')});
- document.querySelectorAll('[data-act]').forEach(c=>c.onclick=()=>{state.activityIndex=Number(c.dataset.act);save('활동 선택');render('activity')});
- document.querySelectorAll('[data-activity-status]').forEach(b=>b.onclick=()=>{const a=activities[state.activityIndex%activities.length];state.selfLog.push({name:a.name,status:b.dataset.activityStatus,at:new Date().toISOString()});save('활동 기록: '+a.name+' '+b.dataset.activityStatus);render('activity')});
- document.querySelectorAll('[data-weekly-child]').forEach(c=>c.onclick=()=>{state.weekly.child=c.dataset.weeklyChild;save('자녀 리뷰 선택');render('review')});
- document.querySelectorAll('[data-adjust]').forEach(c=>c.onclick=()=>{state.weekly.adjust=c.dataset.adjust;save('다음 주 조정 선택');render('review')});
- document.querySelectorAll('[data-feedback-kind]').forEach(c=>c.onclick=()=>{const k=c.dataset.feedbackKind; const i=Number(c.dataset.feedbackIndex); state.feedback[k][i]=c.dataset.feedbackValue;save('파일럿 피드백 저장: '+k+' '+(i+1));render('review')});
- const saveReview=document.getElementById('saveReview'); if(saveReview) saveReview.onclick=()=>{state.weekly.saved=true;save('주간 리뷰 저장');toast('다음 주 약속 초안이 로컬 상태에 저장되었습니다')};
+ const on=(el,ev,fn)=>{if(!el)return;const key='bound'+ev;if(el.dataset&&el.dataset[key])return;if(el.dataset)el.dataset[key]='1';el.addEventListener(ev,fn,{once:false});};
+ const all=(sel,fn)=>document.querySelectorAll(sel).forEach(fn);
+ all('.chip,.tab',x=>{x.setAttribute('role','button');x.setAttribute('tabindex','0');on(x,'keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();x.click();}})});
+ all('[data-go]',b=>on(b,'click',()=>go(b.dataset.go)));
+ const markCoach=document.getElementById('markCoachUsed'); on(markCoach,'click',()=>{state.daily.coachOpened=true;save('홈 갈등 코치 문구 사용');toast('오늘 갈등 코치 사용을 기록했습니다')});
+ all('.tab',t=>on(t,'click',()=>go(t.dataset.tab)));
+ all('[data-check]',c=>on(c,'click',()=>{state.checks[c.dataset.check]=!state.checks[c.dataset.check];save('확인 항목 변경');render(state.screen)}));
+ const gn=document.getElementById('guardianNext'); on(gn,'click',()=>go('explain')); const en=document.getElementById('explainNext'); on(en,'click',()=>go('onboarding'));
+ all('[data-age]',c=>on(c,'click',()=>{state.ageGroup=c.dataset.age;save('연령대 선택');render('onboarding')}));
+ all('[data-concern]',c=>on(c,'click',()=>toggleArr(state.concerns,c.dataset.concern,'onboarding')));
+ all('[data-parent-goal]',c=>on(c,'click',()=>toggleArr(state.parentGoals,c.dataset.parentGoal,'onboarding',2)));
+ all('[data-child-goal]',c=>on(c,'click',()=>toggleArr(state.childGoals,c.dataset.childGoal,'childGoal',2)));
+ const saveOn=document.getElementById('saveOnboarding'); on(saveOn,'click',()=>{const n=document.getElementById('childName').value.trim(); if(n) state.child=n; save('온보딩 저장'); go('pattern')});
+ const rerule=document.getElementById('rerule'); on(rerule,'click',()=>{state.ruleVariant=(state.ruleVariant+1)%2;save('규칙 초안 변경');render('rules')});
+ const saveContract=document.getElementById('saveContract'); on(saveContract,'click',()=>{save('계약서 저장');go('setup')});
+ all('[data-setup]',c=>on(c,'click',()=>{state.checklist[c.dataset.setup]=!state.checklist[c.dataset.setup];save('설정 체크 변경');render('setup')}));
+ const saveSetup=document.getElementById('saveSetup'); on(saveSetup,'click',()=>{save('설정 체크리스트 저장');go('home')});
+ const exportMd=document.getElementById('exportMd'); on(exportMd,'click',()=>{navigator.clipboard?.writeText(makeMarkdown());toast('계약서 Markdown 문구를 복사했습니다')});
+ all('[data-min]',c=>on(c,'click',()=>{state.request.minutes=Number(c.dataset.min);save('요청 시간 변경');render('request')}));
+ const rr=document.getElementById('reqReason'); on(rr,'change',()=>{state.request.reason=rr.value;save('요청 이유 변경')}); const rf=document.getElementById('reqFinish'); on(rf,'change',()=>{state.request.finish=rf.value;save('마무리 행동 변경')});
+ const sendReq=document.getElementById('sendRequest'); on(sendReq,'click',()=>{state.request.status='대기 중';save('추가시간 요청 전송');toast('요청이 로컬 샘플 상태에 저장되었습니다')});
+ all('[data-response]',b=>on(b,'click',()=>{state.response=responseText(b.dataset.response);state.request.status=b.dataset.response;save('부모 응답: '+b.dataset.response);render('request')}));
+ all('[data-conflict]',c=>on(c,'click',()=>{state.conflictScenario=c.dataset.conflict;save('갈등 상황 선택: '+c.dataset.conflict);render('request')}));
+ all('[data-act]',c=>on(c,'click',()=>{state.activityIndex=Number(c.dataset.act);save('활동 선택');render('activity')}));
+ all('[data-activity-status]',b=>on(b,'click',()=>{const a=activities[state.activityIndex%activities.length];state.selfLog.push({name:a.name,status:b.dataset.activityStatus,at:new Date().toISOString()});save('활동 기록: '+a.name+' '+b.dataset.activityStatus);render('activity')}));
+ all('[data-weekly-child]',c=>on(c,'click',()=>{state.weekly.child=c.dataset.weeklyChild;save('자녀 리뷰 선택');render('review')}));
+ all('[data-adjust]',c=>on(c,'click',()=>{state.weekly.adjust=c.dataset.adjust;save('다음 주 조정 선택');render('review')}));
+ all('[data-feedback-kind]',c=>on(c,'click',()=>{const k=c.dataset.feedbackKind; const i=Number(c.dataset.feedbackIndex); state.feedback[k][i]=c.dataset.feedbackValue;save('파일럿 피드백 저장: '+k+' '+(i+1));render('review')}));
+ const saveReview=document.getElementById('saveReview'); on(saveReview,'click',()=>{state.weekly.saved=true;save('주간 리뷰 저장');toast('다음 주 약속 초안이 로컬 상태에 저장되었습니다')});
 }
 function toggleArr(arr,val,screen,max){const i=arr.indexOf(val); if(i>=0) arr.splice(i,1); else {if(max&&arr.length>=max) arr.shift(); arr.push(val)} save('선택 변경'); render(screen)}
 function makeMarkdown(){const pack=suggestedRulePack(); const c=selectedConflict(); return `# 우리집 디지털 약속\n\n## 1. 기본 정보\n- 자녀: ${state.child} ${state.grade}\n- 부모 목표: ${state.parentGoals.join(', ')}\n- 자녀 목표: ${state.childGoals.join(', ')}\n- 주간 리뷰: ${state.reviewDay}\n\n## 2. 이번 주 규칙 3개\n${pack.map((r,i)=>`${i+1}. ${r[0]}: ${r[1]}\n   - 이유: ${r[2]}\n   - 회복: ${r[3]}`).join('\n')}\n\n## 3. 공식 보호 도구에서 확인할 항목\n- 취침시간: ${state.bedtime}, 충전 장소: ${state.chargePlace}\n- 항상 허용 연락: ${state.allowedApps.join(', ')}\n- 앱별 제한, 구매 승인, 설정 후 가족 설명 완료 여부\n\n## 4. 추가시간 요청 기준\n- 이유: ${state.request.reason}\n- 기본 요청 시간: ${state.request.minutes}분\n- 마무리 행동: ${state.request.finish}\n\n## 5. 종료 갈등 대응 문구\n- 상황: ${state.conflictScenario}\n- 부모 말문: ${c.say}\n- 피할 말: ${c.avoid}\n- 다음 행동: ${c.next}\n\n## 6. 주간 리뷰 질문\n- 아이가 느낀 어려움 하나\n- 이번 주 잘된 행동 하나\n- 다음 주에 바꿀 규칙 하나: ${state.weekly.adjust}\n\n## 7. 파일럿 피드백 현황\n- 응답 수: ${feedbackDone()}/10\n- 이번 주 실행 상태: ${pilotScore()}%\n`}
-function openScriptSheet(){const m=document.createElement('div');m.className='modal';m.innerHTML=`<div class="sheet"><div class="section-title">부모 말문</div><div class="script">“지금 바로 끝내기 힘든 건 알아. 그래서 마무리 시간을 둔 거야. 이번에는 계약대로 종료하고, 일요일 리뷰 때 시간이 부족했는지 같이 조정하자.”</div><button type="button" class="btn full close">닫기</button></div>`;document.getElementById('screen').appendChild(m);m.querySelector('.close').onclick=()=>m.remove()}
+function openScriptSheet(){const m=document.createElement('div');m.className='modal';m.innerHTML=`<div class="sheet"><div class="section-title">부모 말문</div><div class="script">“지금 바로 끝내기 힘든 건 알아. 그래서 마무리 시간을 둔 거야. 이번에는 계약대로 종료하고, 일요일 리뷰 때 시간이 부족했는지 같이 조정하자.”</div><button type="button" class="btn full close">닫기</button></div>`;document.getElementById('screen').appendChild(m);m.querySelector('.close').addEventListener('click',()=>m.remove())}
 function updateSideLog(){const el=document.getElementById('sideLog'); if(!el)return; el.textContent=(state.events&&state.events.length)?state.events.map(e=>`${e.t}  ${e.msg}`).join('\n'):'아직 저장된 이벤트가 없습니다.'}
 
 function applyApprovedHardening(){
@@ -300,7 +302,7 @@ document.addEventListener('click',function(e){
  if(hasCrisisLock()&&e.target.closest('[data-response],#sendRequest,#saveContract,#saveSetup,#exportMd,[data-min],[data-activity-status]')){e.preventDefault();e.stopPropagation();toast('위기 신호가 있으면 앱 규칙 조정이 아니라 즉시 도움 연결이 우선입니다.');render('crisis');}
 },true);
 
-window.__p0={state,go,resetLocal,storageKey:STORAGE_KEY,hasCrisisLock};
+window.__dfcP2={state,go,resetLocal,storageKey:STORAGE_KEY,hasCrisisLock};
 document.body.setAttribute('data-screen',state.screen||'start');
 render(state.screen||'start');applyApprovedHardening();
 </script>
