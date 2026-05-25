@@ -28,6 +28,10 @@ export interface CallAlert {
   sender: string;
   createdAt: string;
   status: 'unread' | 'closed';
+  acknowledgedAt?: string;
+  acknowledgedBy?: string;
+  acknowledgedDevice?: string;
+  syncState?: 'remote' | 'local-fallback' | 'failed';
 }
 
 export interface TransferFileCard {

@@ -24,8 +24,9 @@ describe('callRepository', () => {
   });
 
   it('writes Supabase messages and call_alerts then acknowledges remotely', async () => {
-    const updateEq = vi.fn().mockResolvedValue({ error: null });
-    const update = vi.fn(() => ({ eq: updateEq }));
+    const updateStatusEq = vi.fn().mockResolvedValue({ error: null });
+    const updateIdEq = vi.fn(() => ({ eq: updateStatusEq }));
+    const update = vi.fn(() => ({ eq: updateIdEq }));
     const alertSingle = vi.fn().mockResolvedValue({ data: { id: 'alert-1', status: 'unread', created_at: '2026-05-25T00:00:01.000Z' }, error: null });
     const alertSelect = vi.fn(() => ({ single: alertSingle }));
     const alertInsert = vi.fn(() => ({ select: alertSelect }));
@@ -48,6 +49,7 @@ describe('callRepository', () => {
     expect(messageInsert).toHaveBeenCalledWith(expect.objectContaining({ patient_id: 'p-1', type: 'call' }));
     expect(alertInsert).toHaveBeenCalledWith(expect.objectContaining({ message_id: 'msg-1', recipient_group: 'staff', status: 'unread' }));
     expect(update).toHaveBeenCalledWith(expect.objectContaining({ status: 'closed' }));
-    expect(updateEq).toHaveBeenCalledWith('id', 'alert-1');
+    expect(updateIdEq).toHaveBeenCalledWith('id', 'alert-1');
+    expect(updateStatusEq).toHaveBeenCalledWith('status', 'unread');
   });
 });

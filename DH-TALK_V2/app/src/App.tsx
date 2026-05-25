@@ -56,6 +56,8 @@ export default function App() {
   const [alerts, setAlerts] = useLocalStorageState<CallAlert[]>('dh-talk-v2:alerts', []);
   const [files, setFiles] = useState<TransferFileCard[]>([]);
   const [soundEnabled, setSoundEnabled] = useLocalStorageState<boolean>('dh-talk-v2:sound-enabled', false);
+  const [syncError, setSyncError] = useState<string | null>(null);
+  const [lastFailedMessage, setLastFailedMessage] = useState<string | null>(null);
   const syncMode = supabase ? '실시간 연동 중' : '이 PC에만 저장됨 · 다른 PC와 연동 안 됨';
 
   useEffect(() => {
@@ -76,8 +78,13 @@ export default function App() {
   useEffect(() => {
     if (!supabase) return undefined;
     const loadAlerts = async () => {
-      const remoteAlerts = await callRepository.listOpenAlerts();
-      setAlerts(pruneCallAlertsForRetention(remoteAlerts));
+      try {
+        const remoteAlerts = await callRepository.listOpenAlerts();
+        setAlerts(pruneCallAlertsForRetention(remoteAlerts));
+        setSyncError(null);
+      } catch (error) {
+        setSyncError(`실시간 호출 목록 동기화 실패: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
+      }
     };
     void loadAlerts();
     return subscribeToCallAlertChanges(supabase, () => {
@@ -98,14 +105,42 @@ export default function App() {
   async function sendMessage(body: string) {
     if (!selectedPatient) return;
     const now = new Date().toISOString();
-    const alert: CallAlert = await callRepository.sendCall({ body, patient: selectedPatient, senderLabel: '원장실' });
-    setAlerts((current) => pruneCallAlertsForRetention([...current, alert], new Date(now)));
-    await updatePatient(selectedPatient.id, { lastCalledAt: now, status: 'in_consult' });
+    try {
+      const alert: CallAlert = await callRepository.sendCall({ body, patient: selectedPatient, senderLabel: '원장실' });
+      setAlerts((current) => pruneCallAlertsForRetention([...current, alert], new Date(now)));
+      await updatePatient(selectedPatient.id, { lastCalledAt: now, status: 'in_consult' });
+      setSyncError(null);
+      setLastFailedMessage(null);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '알 수 없는 오류';
+      setSyncError(`실시간 호출 전송 실패: ${message}`);
+      setLastFailedMessage(body);
+      const fallbackAlert: CallAlert = {
+        id: `failed-alert-${Date.now()}`,
+        body,
+        patientName: selectedPatient.name,
+        sender: '원장실',
+        createdAt: now,
+        status: 'unread',
+        syncState: 'failed'
+      };
+      setAlerts((current) => pruneCallAlertsForRetention([...current, fallbackAlert], new Date(now)));
+    }
+  }
+
+  async function retryLastFailedMessage() {
+    if (!lastFailedMessage) return;
+    await sendMessage(lastFailedMessage);
   }
 
   async function closeAlert(id: string) {
-    await callRepository.closeAlert(id);
-    setAlerts((current) => current.filter((alert) => alert.id !== id));
+    try {
+      await callRepository.closeAlert(id);
+      setAlerts((current) => current.filter((alert) => alert.id !== id));
+      setSyncError(null);
+    } catch (error) {
+      setSyncError(`호출 확인 처리 실패: ${error instanceof Error ? error.message : '이미 다른 자리에서 확인되었거나 네트워크 오류입니다.'}`);
+    }
   }
 
   async function resetTodayPatients() {
@@ -122,6 +157,12 @@ export default function App() {
           <h1>DH_TALK-V2</h1>
         </div>
         <div className="sync-pill">{syncMode}</div>
+        {syncError ? (
+          <div className="sync-error" role="alert" data-sync-error="true">
+            <strong>{syncError}</strong>
+            {lastFailedMessage ? <button type="button" onClick={() => void retryLastFailedMessage()}>마지막 호출 재시도</button> : null}
+          </div>
+        ) : null}
       </header>
 
       <section className="import-panel">

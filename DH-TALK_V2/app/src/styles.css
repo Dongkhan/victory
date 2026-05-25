@@ -20,10 +20,12 @@ input, textarea, select { border: 1px solid #cbd5e1; border-radius: 12px; paddin
 textarea { resize: vertical; min-height: 92px; }
 
 .app-shell { padding: 28px; }
-.app-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+.app-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
 .app-header h1 { margin: 4px 0 0; font-size: 30px; }
 .eyebrow { margin: 0; color: #64748b; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
 .sync-pill, .count-badge { background: #dbeafe; color: #1d4ed8; padding: 9px 12px; border-radius: 999px; font-weight: 800; }
+.sync-error { flex-basis: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; border-radius: 16px; padding: 12px 14px; }
+.sync-error button { border: 0; border-radius: 999px; background: #991b1b; color: white; padding: 8px 12px; font-weight: 800; cursor: pointer; }
 
 .import-panel { display: grid; grid-template-columns: 1fr auto auto; align-items: end; gap: 12px; background: white; border: 1px solid #dbe3ee; border-radius: 20px; padding: 16px; margin-bottom: 18px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05); }
 .import-panel textarea { width: 100%; min-height: 72px; margin-top: 8px; }

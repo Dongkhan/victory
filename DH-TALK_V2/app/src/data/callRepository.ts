@@ -31,7 +31,8 @@ export function createLocalCallRepository(initial: CallAlert[] = []): CallReposi
         patientName: input.patient.name,
         sender: input.senderLabel,
         createdAt: now,
-        status: 'unread'
+        status: 'unread',
+        syncState: 'local-fallback'
       };
       alerts = [...alerts, alert];
       return alert;
@@ -79,13 +80,14 @@ export function createSupabaseCallRepository(client: SupabaseClient): CallReposi
         patientName: message.patient_name_snapshot,
         sender: input.senderLabel,
         createdAt: alert.created_at ?? message.created_at,
-        status: alert.status === 'closed' ? 'closed' : 'unread'
+        status: alert.status === 'closed' ? 'closed' : 'unread',
+        syncState: 'remote'
       };
     },
     async listOpenAlerts() {
       const { data, error } = await client
         .from('call_alerts')
-        .select('id, status, created_at, messages(body, patient_name_snapshot)')
+        .select('id, status, created_at, acknowledged_at, acknowledged_by, acknowledged_device, messages(body, patient_name_snapshot)')
         .neq('status', 'closed')
         .order('created_at', { ascending: false })
         .limit(20);
@@ -98,14 +100,21 @@ export function createSupabaseCallRepository(client: SupabaseClient): CallReposi
         patientName: row.messages?.patient_name_snapshot ?? '',
         sender: '원장실',
         createdAt: row.created_at,
-        status: row.status === 'closed' ? 'closed' : 'unread'
+        status: row.status === 'closed' ? 'closed' : 'unread',
+        acknowledgedAt: row.acknowledged_at ?? undefined,
+        acknowledgedBy: row.acknowledged_by ?? undefined,
+        acknowledgedDevice: row.acknowledged_device ?? undefined,
+        syncState: 'remote'
       }));
     },
     async closeAlert(id) {
+      const acknowledgedAt = new Date().toISOString();
+      const acknowledgedDevice = typeof navigator !== 'undefined' ? navigator.userAgent.slice(0, 120) : 'server';
       const { error } = await client
         .from('call_alerts')
-        .update({ status: 'closed', acknowledged_at: new Date().toISOString() })
-        .eq('id', id);
+        .update({ status: 'closed', acknowledged_at: acknowledgedAt, acknowledged_device: acknowledgedDevice })
+        .eq('id', id)
+        .eq('status', 'unread');
       if (error) throw error;
     }
   };
