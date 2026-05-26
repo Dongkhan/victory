@@ -9,6 +9,7 @@ export interface TodayPatient {
   sortOrder: number;
   operationalNote?: string;
   lastCalledAt?: string;
+  syncState?: 'synced' | 'pending' | 'failed';
 }
 
 export interface MacroTemplate {

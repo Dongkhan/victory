@@ -24,7 +24,9 @@ describe('callRepository', () => {
   });
 
   it('writes Supabase messages and call_alerts then acknowledges remotely', async () => {
-    const updateStatusEq = vi.fn().mockResolvedValue({ error: null });
+    const maybeSingle = vi.fn().mockResolvedValue({ data: { id: 'alert-1' }, error: null });
+    const updateSelect = vi.fn(() => ({ maybeSingle }));
+    const updateStatusEq = vi.fn(() => ({ select: updateSelect }));
     const updateIdEq = vi.fn(() => ({ eq: updateStatusEq }));
     const update = vi.fn(() => ({ eq: updateIdEq }));
     const alertSingle = vi.fn().mockResolvedValue({ data: { id: 'alert-1', status: 'unread', created_at: '2026-05-25T00:00:01.000Z' }, error: null });
@@ -51,5 +53,7 @@ describe('callRepository', () => {
     expect(update).toHaveBeenCalledWith(expect.objectContaining({ status: 'closed' }));
     expect(updateIdEq).toHaveBeenCalledWith('id', 'alert-1');
     expect(updateStatusEq).toHaveBeenCalledWith('status', 'unread');
+    expect(updateSelect).toHaveBeenCalledWith('id');
+    expect(maybeSingle).toHaveBeenCalled();
   });
 });
