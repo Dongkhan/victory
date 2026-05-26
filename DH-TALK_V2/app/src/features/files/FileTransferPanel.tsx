@@ -6,9 +6,10 @@ import { validateFile } from './validateFile';
 interface FileTransferPanelProps {
   files: TransferFileCard[];
   onAddFile: (file: TransferFileCard) => void;
+  onRemoveFile: (id: string) => void;
 }
 
-export function FileTransferPanel({ files, onAddFile }: FileTransferPanelProps) {
+export function FileTransferPanel({ files, onAddFile, onRemoveFile }: FileTransferPanelProps) {
   function handleFile(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -32,7 +33,7 @@ export function FileTransferPanel({ files, onAddFile }: FileTransferPanelProps) 
         </div>
         <label className="upload-button">
           파일 선택
-          <input type="file" onChange={handleFile} />
+          <input type="file" aria-label="이 PC 로컬 미리보기 파일 선택" onChange={handleFile} />
         </label>
       </div>
       <div className="file-list">
@@ -49,6 +50,7 @@ export function FileTransferPanel({ files, onAddFile }: FileTransferPanelProps) 
             ) : (
               <button type="button" disabled>{getDownloadLabel(file)}</button>
             )}
+            <button type="button" className="danger" onClick={() => onRemoveFile(file.id)}>임시 첨부 삭제</button>
           </article>
         ))}
       </div>

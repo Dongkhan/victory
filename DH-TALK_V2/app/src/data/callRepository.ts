@@ -14,6 +14,13 @@ export interface CallRepository {
   closeAlert(id: string): Promise<void>;
 }
 
+export class AlertAlreadyAcknowledgedError extends Error {
+  constructor(id: string) {
+    super(`호출 알림 ${id}은 이미 다른 자리에서 확인되었거나 존재하지 않습니다.`);
+    this.name = 'AlertAlreadyAcknowledgedError';
+  }
+}
+
 interface LocalCallRow extends CallAlert {
   messageId?: string;
 }
@@ -110,12 +117,15 @@ export function createSupabaseCallRepository(client: SupabaseClient): CallReposi
     async closeAlert(id) {
       const acknowledgedAt = new Date().toISOString();
       const acknowledgedDevice = typeof navigator !== 'undefined' ? navigator.userAgent.slice(0, 120) : 'server';
-      const { error } = await client
+      const { data, error } = await client
         .from('call_alerts')
         .update({ status: 'closed', acknowledged_at: acknowledgedAt, acknowledged_device: acknowledgedDevice })
         .eq('id', id)
-        .eq('status', 'unread');
-      if (error) throw error;
+        .eq('status', 'unread')
+        .select('id')
+        .maybeSingle();
+      if (error && error.code !== 'PGRST116') throw error;
+      if (!data) throw new AlertAlreadyAcknowledgedError(id);
     }
   };
 }

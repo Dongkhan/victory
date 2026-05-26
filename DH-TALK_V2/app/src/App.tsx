@@ -31,9 +31,10 @@ const initialMacros: MacroTemplate[] = [
 
 export default function App() {
   const [initialStoredPatients] = useState(() => readLocalStorageState('dh-talk-v2:patients', initialPatients));
+  const localPatientRepository = useMemo(() => createLocalPatientRepository(initialStoredPatients), [initialStoredPatients]);
   const patientRepository = useMemo(
-    () => (supabase ? createSupabasePatientRepository(supabase) : createLocalPatientRepository(initialStoredPatients)),
-    [initialStoredPatients]
+    () => (supabase ? createSupabasePatientRepository(supabase) : localPatientRepository),
+    [localPatientRepository]
   );
   const callRepository = useMemo(
     () => (supabase ? createSupabaseCallRepository(supabase) : createLocalCallRepository(readLocalStorageState('dh-talk-v2:alerts', []))),
@@ -47,8 +48,11 @@ export default function App() {
     deletePatient,
     movePatient,
     resetPatients,
-    refresh
-  } = usePatientBoard({ date: today, repository: patientRepository, fallbackPatients: initialStoredPatients });
+    refresh,
+    loading: patientLoading,
+    error: patientLoadError,
+    mutationError: patientMutationError
+  } = usePatientBoard({ date: today, repository: patientRepository, fallbackRepository: localPatientRepository, fallbackPatients: initialStoredPatients });
   const [selectedPatientId, setSelectedPatientId] = useState(initialStoredPatients[0]?.id);
   const [macros, setMacros] = useLocalStorageState<MacroTemplate[]>('dh-talk-v2:macros', initialMacros);
   const [reservationPaste, setReservationPaste] = useState('09:30 홍길동\n10:00 김영희');
@@ -138,6 +142,7 @@ export default function App() {
       await callRepository.closeAlert(id);
       setAlerts((current) => current.filter((alert) => alert.id !== id));
       setSyncError(null);
+      void callRepository.listOpenAlerts().then((remoteAlerts) => setAlerts(pruneCallAlertsForRetention(remoteAlerts))).catch(() => undefined);
     } catch (error) {
       setSyncError(`호출 확인 처리 실패: ${error instanceof Error ? error.message : '이미 다른 자리에서 확인되었거나 네트워크 오류입니다.'}`);
     }
@@ -149,6 +154,22 @@ export default function App() {
     await resetPatients([]);
   }
 
+  function handleRemoveFile(fileId: string) {
+    setFiles((current) => {
+      const target = current.find((file) => file.id === fileId);
+      if (target?.downloadUrl?.startsWith('blob:')) URL.revokeObjectURL(target.downloadUrl);
+      return current.filter((file) => file.id !== fileId);
+    });
+  }
+
+  useEffect(() => {
+    return () => {
+      files.forEach((file) => {
+        if (file.downloadUrl?.startsWith('blob:')) URL.revokeObjectURL(file.downloadUrl);
+      });
+    };
+  }, [files]);
+
   return (
     <main className="app-shell">
       <header className="app-header">
@@ -157,6 +178,7 @@ export default function App() {
           <h1>DH_TALK-V2</h1>
         </div>
         <div className="sync-pill">{syncMode}</div>
+        <div className="sync-note">공통 매크로는 Supabase 공유 전까지 이 PC에만 저장됩니다.</div>
         {syncError ? (
           <div className="sync-error" role="alert" data-sync-error="true">
             <strong>{syncError}</strong>
@@ -178,6 +200,9 @@ export default function App() {
         <PatientBoard
           patients={patients}
           selectedPatientId={selectedPatientId}
+          loading={patientLoading}
+          error={patientLoadError}
+          mutationError={patientMutationError}
           onSelect={(patient) => setSelectedPatientId(patient.id)}
           onAdd={(name, appointmentTime) => void addPatient(name, appointmentTime)}
           onUpdate={(id, patch) => void updatePatient(id, patch)}
@@ -209,7 +234,11 @@ export default function App() {
             onUpdateMacro={(id, patch) => setMacros((current) => current.map((macro) => (macro.id === id ? { ...macro, ...patch } : macro)))}
             onDeleteMacro={(id) => setMacros((current) => current.filter((macro) => macro.id !== id))}
           />
-          <FileTransferPanel files={files} onAddFile={(file) => setFiles((current) => [file, ...current])} />
+          <FileTransferPanel
+            files={files}
+            onAddFile={(file) => setFiles((current) => [file, ...current])}
+            onRemoveFile={handleRemoveFile}
+          />
         </div>
       </div>
 

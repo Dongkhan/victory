@@ -25,15 +25,15 @@
     #__splash_logo { transform-origin: 50% 50%; animation: heartPulse 1.4s ease-in-out 0s 2, heartCalmPulse 2.4s ease-in-out 2.8s infinite; }
     @keyframes heartPulse {
       0%   { transform: scale(1); }
-    @keyframes heartCalmPulse {
-      0%, 100% { transform: scale(1); }
-      50%      { transform: scale(1.025); }
-    }
       14%  { transform: scale(1.08); }
       28%  { transform: scale(1); }
       42%  { transform: scale(1.06); }
       70%  { transform: scale(1); }
       100% { transform: scale(1); }
+    }
+    @keyframes heartCalmPulse {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.025); }
     }
   </style>
   <noscript>
@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 <script id="relax-routine-progress-bridge">
 (function(){
-  const STORAGE_KEY='relax-routine-v22-mobile-state';
+  const STORAGE_KEY='relax-routine-v31-mobile-state';
   const routineMap=['복식호흡','PMR','바디스캔','자율훈련','오늘 시작'];
   function read(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}catch(_){return {}}}
   function write(next){localStorage.setItem(STORAGE_KEY,JSON.stringify({...read(),...next,updatedAt:new Date().toISOString()}));}
@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 <script id="relax-focused-home-v22">
 (function(){
-  const STORAGE_KEY='relax-routine-v22-mobile-state';
+  const STORAGE_KEY='relax-routine-v31-mobile-state';
   let focusedPanelSuppressed=false;
   function read(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}catch(_){return {}}}
   function write(next){localStorage.setItem(STORAGE_KEY,JSON.stringify({...read(),...next,updatedAt:new Date().toISOString()}));}
@@ -528,7 +528,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 })();
 </script>
 
-<script>document.title='Relax Routine v2.4 — DH Mind Clinic';window.__RELAX_ROUTINE_READY__=true;try{const oldKey='relax-routine-v15-mobile-state',newKey='relax-routine-v22-mobile-state';if(!localStorage.getItem(newKey)&&localStorage.getItem(oldKey)){const v=JSON.parse(localStorage.getItem(oldKey));v.version='v2.2';v.schemaVersion='relax-v2.2';localStorage.setItem(newKey,JSON.stringify(v));}}catch(e){}</script>
+<script>document.title='Relax Routine v2.4 — DH Mind Clinic';window.__RELAX_ROUTINE_READY__=true;try{const oldKey='relax-routine-v15-mobile-state',newKey='relax-routine-v31-mobile-state';if(!localStorage.getItem(newKey)&&localStorage.getItem(oldKey)){const v=JSON.parse(localStorage.getItem(oldKey));v.version='v2.2';v.schemaVersion='relax-v2.2';localStorage.setItem(newKey,JSON.stringify(v));}}catch(e){}</script>
 
 <script id="relax-home-copy-layout-hotfix-v24">
 (function(){
@@ -688,7 +688,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule,{once:true});else schedule();
 })();
 </script>
-<script id="relax-version-v25">(function(){function setV25Title(){document.title='Relax Routine v2.5 — DH Mind Clinic';}setV25Title();[100,600,1400,3000].forEach(d=>setTimeout(setV25Title,d));try{const oldKey='relax-routine-v24-mobile-state',newKey='relax-routine-v25-mobile-state';if(!localStorage.getItem(newKey)&&localStorage.getItem(oldKey)){const v=JSON.parse(localStorage.getItem(oldKey));v.version='v2.5';v.schemaVersion='relax-v2.5';localStorage.setItem(newKey,JSON.stringify(v));}}catch(e){}window.__RELAX_ROUTINE_READY__=true;})();</script>
+<script id="relax-version-v25">(function(){function setV25Title(){document.title='Relax Routine v2.5 — DH Mind Clinic';}setV25Title();[100,600,1400,3000].forEach(d=>setTimeout(setV25Title,d));try{const oldKey='relax-routine-v31-mobile-state',newKey='relax-routine-v31-mobile-state';if(!localStorage.getItem(newKey)&&localStorage.getItem(oldKey)){const v=JSON.parse(localStorage.getItem(oldKey));v.version='v2.5';v.schemaVersion='relax-v2.5';localStorage.setItem(newKey,JSON.stringify(v));}}catch(e){}window.__RELAX_ROUTINE_READY__=true;})();</script>
 
 <script id="relax-version-v2-6">
 (function(){document.title='Relax Routine v2.6 — DH Mind Clinic';window.__RELAX_ROADMAP_VERSION__='v2.6';})();
@@ -714,7 +714,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   function routeName(){return (location.hash||'#home').slice(1)||'home'}
   function pushRoute(name){const cur=routeName(); if(cur!==name){state.stack.push(name); location.hash=name;}}
   function back(){if(state.stack.length>1){state.stack.pop(); location.hash=state.stack[state.stack.length-1]; return true;} history.back(); return false;}
-  window.RelaxRouteStack={push, pushRoute, back, stack:state.stack};
+  window.RelaxRouteStack={push: pushRoute, pushRoute, back, stack:state.stack};
   document.addEventListener('click',function(e){const a=e.target.closest&&e.target.closest('[data-route],a[href^="#"]'); if(!a)return; const r=(a.dataset&&a.dataset.route)||((a.getAttribute('href')||'').slice(1)); if(r&&r!==routeName()) state.stack.push(r);},true);
 })();
 </script>
