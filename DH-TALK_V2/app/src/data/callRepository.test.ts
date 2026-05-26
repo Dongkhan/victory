@@ -50,7 +50,7 @@ describe('callRepository', () => {
     expect(from).toHaveBeenCalledWith('call_alerts');
     expect(messageInsert).toHaveBeenCalledWith(expect.objectContaining({ patient_id: 'p-1', type: 'call' }));
     expect(alertInsert).toHaveBeenCalledWith(expect.objectContaining({ message_id: 'msg-1', recipient_group: 'staff', status: 'unread' }));
-    expect(update).toHaveBeenCalledWith(expect.objectContaining({ status: 'closed' }));
+    expect(update).toHaveBeenCalledWith(expect.objectContaining({ status: 'closed', acknowledged_by: '원장실' }));
     expect(updateIdEq).toHaveBeenCalledWith('id', 'alert-1');
     expect(updateStatusEq).toHaveBeenCalledWith('status', 'unread');
     expect(updateSelect).toHaveBeenCalledWith('id');

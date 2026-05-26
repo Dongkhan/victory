@@ -10,7 +10,7 @@ def read(rel: str) -> str:
 
 def test_root_index_deep_links_latest_executables():
     index = read("index.html")
-    assert 'href="relax-routine/prototype/v3.1.html"' in index
+    assert 'href="relax-routine/prototype/v3.2.html"' in index
     assert 'href="behavioral-activation/prototype/v2.8.html"' in index
     assert 'href="cbti-care/prototype/v2.272.html"' in index
     assert 'href="DH-TALK_V2/app/"' in index

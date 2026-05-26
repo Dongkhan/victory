@@ -9,7 +9,7 @@ def read(rel):
 
 def test_root_index_exposes_actual_latest_products():
     index = read("index.html")
-    assert "최신 v3.1" in index
+    assert "최신 v3.2" in index
     assert "최신 v2.8" in index
     assert "v2.272" in index
     assert "DH-TALK_V2/app/" in index

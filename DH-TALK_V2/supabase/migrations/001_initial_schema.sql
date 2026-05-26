@@ -63,6 +63,8 @@ create table public.call_alerts (
   status public.call_alert_status not null default 'unread',
   created_at timestamptz not null default now(),
   acknowledged_at timestamptz,
+  acknowledged_by text check (acknowledged_by is null or char_length(acknowledged_by) <= 80),
+  acknowledged_device text check (acknowledged_device is null or char_length(acknowledged_device) <= 160),
   check (recipient_user_id is not null or recipient_group is not null)
 );
 

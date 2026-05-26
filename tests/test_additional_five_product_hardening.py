@@ -84,3 +84,39 @@ def test_dht2_static_readiness_markers_for_additional_hardening():
     assert "setTimeout" in board
     assert "aria-label={`${patient.name} 위로 이동`}" in board
     assert "aria-label={`${patient.name} 아래로 이동`}" in board
+
+
+def test_round2_static_release_guards_for_ba_dfc_dht2_rr():
+    ba = read("behavioral-activation/prototype/v2.8.html")
+    assert "function crisisActionsHtml()" in ba
+    assert "crisisActionsHtml()" in ba.split("function applyCrisisLock()", 1)[1].split("function startTimer()", 1)[0]
+
+    dfc = read("family-link-coach/index.html")
+    assert "const initialScreen=hasCrisisLock()?'crisis':(state.screen||'start')" in dfc
+    assert "위기 신호 해제 확인" in dfc
+
+    migration = read("DH-TALK_V2/supabase/migrations/001_initial_schema.sql")
+    assert "acknowledged_by text" in migration
+    assert "acknowledged_device text" in migration
+
+    rr_index = read("relax-routine/index.html")
+    rr = read("relax-routine/prototype/v3.2.html")
+    assert "prototype/v3.2.html" in rr_index
+    assert "Relax Routine v3.2" in rr_index
+    assert 'data-version="3.2"' in rr
+    assert "rr-completion-polish-v32" in rr
+    assert "오늘 한 번만 끝내기" in rr
+    assert "긴장을 5초 유지하면 원이 커지고, 10초 이완하면 원이 줄어듭니다" in rr
+    assert "relax-routine-v32-mobile-state" in rr
+
+
+def test_round2_dht2_pending_replay_local_dismiss_and_polling_markers():
+    app = read("DH-TALK_V2/app/src/App.tsx")
+    assert "alert?.syncState && alert.syncState !== 'remote'" in app
+    assert "setInterval(loadAlerts" in app
+    assert "realtimeStatus" in app
+
+    board = read("DH-TALK_V2/app/src/features/patients/usePatientBoard.ts")
+    assert "replayPendingLocalChanges" in board
+    assert "patient.syncState === 'pending'" in board
+    assert "동기화 대기 항목" in board

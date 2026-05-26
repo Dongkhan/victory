@@ -299,14 +299,15 @@ function applyApprovedHardening(){
 document.addEventListener('click',function(e){
  const action=e.target.closest('[data-action]')?.dataset.action;
  if(action==='open-script-sheet'){e.preventDefault();openScriptSheet();return;}
- if(action==='clear-crisis'){e.preventDefault();state.crisis={...defaultState.crisis};save('위기 신호 해제');render('start');return;}
+ if(action==='clear-crisis'){e.preventDefault();if(!window.confirm('위기 신호 해제 확인: 현재 자해·자살·폭력·학대·혼란 위험이 없습니까?'))return;state.crisis={...defaultState.crisis};save('위기 신호 해제');render('start');return;}
  const crisis=e.target.closest('[data-crisis]'); if(crisis){state.crisis={...defaultState.crisis,...state.crisis,[crisis.dataset.crisis]:!state.crisis?.[crisis.dataset.crisis]};save('위기 신호 확인 변경');render(hasCrisisLock()?'crisis':state.screen);return;}
  if(hasCrisisLock()&&e.target.closest('[data-response],#sendRequest,#saveContract,#saveSetup,#exportMd,[data-min],[data-activity-status]')){e.preventDefault();e.stopPropagation();toast('위기 신호가 있으면 앱 규칙 조정이 아니라 즉시 도움 연결이 우선입니다.');render('crisis');}
 },true);
 
 window.__dfcP2={get state(){return state},go,resetLocal,storageKey:STORAGE_KEY,hasCrisisLock,canSaveContract};
-document.body.setAttribute('data-screen',state.screen||'start');
-render(state.screen||'start');applyApprovedHardening();
+const initialScreen=hasCrisisLock()?'crisis':(state.screen||'start');
+document.body.setAttribute('data-screen',initialScreen);
+render(initialScreen);applyApprovedHardening();
 </script>
 </body>
 </html>

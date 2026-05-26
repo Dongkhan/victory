@@ -62,7 +62,8 @@ export default function App() {
   const [soundEnabled, setSoundEnabled] = useLocalStorageState<boolean>('dh-talk-v2:sound-enabled', false);
   const [syncError, setSyncError] = useState<string | null>(null);
   const [lastFailedMessage, setLastFailedMessage] = useState<string | null>(null);
-  const syncMode = supabase ? '실시간 연동 중' : '이 PC에만 저장됨 · 다른 PC와 연동 안 됨';
+  const [realtimeStatus, setRealtimeStatus] = useState<'live' | 'polling' | 'local'>(supabase ? 'live' : 'local');
+  const syncMode = supabase ? (realtimeStatus === 'polling' ? '실시간 재연결 대기 · 30초 polling 중' : '실시간 연동 중') : '이 PC에만 저장됨 · 다른 PC와 연동 안 됨';
 
   useEffect(() => {
     writeLocalStorageState('dh-talk-v2:patients', patients);
@@ -91,9 +92,16 @@ export default function App() {
       }
     };
     void loadAlerts();
-    return subscribeToCallAlertChanges(supabase, () => {
+    const pollingId = window.setInterval(loadAlerts, 30000);
+    const unsubscribe = subscribeToCallAlertChanges(supabase, () => {
+      setRealtimeStatus('live');
       void loadAlerts();
     });
+    window.setTimeout(() => setRealtimeStatus((current) => (current === 'live' ? 'polling' : current)), 45000);
+    return () => {
+      window.clearInterval(pollingId);
+      unsubscribe();
+    };
   }, [callRepository, setAlerts]);
 
   const selectedPatient = useMemo(
@@ -138,6 +146,12 @@ export default function App() {
   }
 
   async function closeAlert(id: string) {
+    const alert = alerts.find((item) => item.id === id);
+    if (alert?.syncState && alert.syncState !== 'remote') {
+      setAlerts((current) => current.filter((item) => item.id !== id));
+      setSyncError(null);
+      return;
+    }
     try {
       await callRepository.closeAlert(id);
       setAlerts((current) => current.filter((alert) => alert.id !== id));
