@@ -48,12 +48,38 @@ export function usePatientBoard({ date, repository, fallbackRepository, fallback
     [upsertWithFailover]
   );
 
+
+  const replayPendingLocalChanges = useCallback(async () => {
+    if (!fallbackRepository) return [] as TodayPatient[];
+    const local = await fallbackRepository.listByDate(date);
+    const pending = local.filter((patient) => patient.syncState === 'pending');
+    if (!pending.length) return [] as TodayPatient[];
+    const replayed: TodayPatient[] = [];
+    for (const patient of pending) {
+      try {
+        const saved = await repository.upsert({ ...patient, syncState: undefined });
+        const synced = { ...saved, syncState: 'synced' as const };
+        await fallbackRepository.upsert(synced);
+        replayed.push(synced);
+      } catch {
+        replayed.push(patient);
+      }
+    }
+    if (replayed.some((patient) => patient.syncState === 'pending')) {
+      setMutationError('동기화 대기 항목이 있어 로컬 임시 저장을 유지합니다. 네트워크 복구 후 다시 시도합니다.');
+    } else {
+      setMutationError(null);
+    }
+    return replayed;
+  }, [date, fallbackRepository, repository]);
+
   const refresh = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const next = await repository.listByDate(date);
-      setPatients(next.length > 0 ? next : fallbackPatientsRef.current);
+      const [next, replayed] = await Promise.all([repository.listByDate(date), replayPendingLocalChanges()]);
+      const merged = mergePatients(next, replayed);
+      setPatients(merged.length > 0 ? merged : fallbackPatientsRef.current);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : '환자 목록을 불러오지 못했습니다.');
       const local = fallbackRepository ? await fallbackRepository.listByDate(date) : fallbackPatientsRef.current;
@@ -61,7 +87,7 @@ export function usePatientBoard({ date, repository, fallbackRepository, fallback
     } finally {
       setLoading(false);
     }
-  }, [date, fallbackRepository, repository]);
+  }, [date, fallbackRepository, replayPendingLocalChanges, repository]);
 
   useEffect(() => {
     void refresh();
@@ -143,11 +169,22 @@ export function usePatientBoard({ date, repository, fallbackRepository, fallback
 }
 
 function createPatientId() {
-  return `p-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (char) =>
+    (Number(char) ^ (Math.random() * 16) >> (Number(char) / 4)).toString(16)
+  );
 }
 
 function normalizeOrder(patients: TodayPatient[]) {
   return [...patients]
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .map((patient, index) => ({ ...patient, sortOrder: index + 1 }));
+}
+
+function mergePatients(remotePatients: TodayPatient[], localPatients: TodayPatient[]) {
+  const byId = new Map<string, TodayPatient>();
+  [...remotePatients, ...localPatients].forEach((patient) => byId.set(patient.id, patient));
+  return [...byId.values()].sort((a, b) => a.sortOrder - b.sortOrder);
 }

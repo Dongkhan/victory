@@ -119,7 +119,7 @@ export function createSupabaseCallRepository(client: SupabaseClient): CallReposi
       const acknowledgedDevice = typeof navigator !== 'undefined' ? navigator.userAgent.slice(0, 120) : 'server';
       const { data, error } = await client
         .from('call_alerts')
-        .update({ status: 'closed', acknowledged_at: acknowledgedAt, acknowledged_device: acknowledgedDevice })
+        .update({ status: 'closed', acknowledged_at: acknowledgedAt, acknowledged_by: '원장실', acknowledged_device: acknowledgedDevice })
         .eq('id', id)
         .eq('status', 'unread')
         .select('id')
