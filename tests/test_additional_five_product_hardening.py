@@ -100,14 +100,15 @@ def test_round2_static_release_guards_for_ba_dfc_dht2_rr():
     assert "acknowledged_device text" in migration
 
     rr_index = read("relax-routine/index.html")
-    rr = read("relax-routine/prototype/v3.2.html")
-    assert "prototype/v3.2.html" in rr_index
-    assert "Relax Routine v3.2" in rr_index
-    assert 'data-version="3.2"' in rr
-    assert "rr-completion-polish-v32" in rr
+    rr = read("relax-routine/prototype/v3.3.html")
+    assert "prototype/v3.3.html" in rr_index
+    assert "Relax Routine v3.3" in rr_index
+    assert 'data-version="3.3"' in rr or "document.body.dataset.version='3.3'" in rr
+    assert "rr-completion-polish-v33" in rr
     assert "오늘 한 번만 끝내기" in rr
-    assert "긴장을 5초 유지하면 원이 커지고, 10초 이완하면 원이 줄어듭니다" in rr
-    assert "relax-routine-v32-mobile-state" in rr
+    assert "커질 때 5초간 힘을 주고, 작아질 때 10초간 힘을 놓습니다" not in rr
+    assert "rr-v33-ui-declutter" in rr
+    assert "relax-routine-v33-mobile-state" in rr
 
 
 def test_round2_dht2_pending_replay_local_dismiss_and_polling_markers():
