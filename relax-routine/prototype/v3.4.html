@@ -982,6 +982,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 <script id="rr-v34-product-flow">
 (()=>{
   const STORAGE_KEY='relax-routine-v34-mobile-state';
+  // A suppression deadline is valid only inside the current page instance after a routine click.
+  // If it survives reload, the app can remove the v3.4 home immediately after the loading screen.
+  try{sessionStorage.removeItem('rr-v34-suppress-home-until');}catch(_){ }
+  window.__rrV34SuppressHomeUntil=0;
   const routines=[
     {key:'breath',label:'복식호흡',meta:'숨이 가쁘고 긴장이 급할 때',emoji:'🌬️',aliases:['복식호흡','호흡','Diaphragmatic','Breathing','Breathe']},
     {key:'pmr',label:'점진적 근육이완',meta:'어깨·턱·손에 힘이 들어갈 때',emoji:'🫳',aliases:['점진적 근육이완','PMR','근육이완','Progressive muscle']},
@@ -1013,11 +1017,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     try{sessionStorage.setItem('rr-v34-suppress-home-until',String(until));}catch(_){ }
   }
   function homeSuppressed(){
+    // Initial boot must always be allowed to reach the v3.4 first screen.
+    // The short session suppression is only for in-page routine transitions, not for a loading screen/reload trap.
+    if(document.getElementById('boot-loader')||document.getElementById('__bundler_loading')) return false;
     const st=read();
     if(st.view==='legacy') return true;
     const until=Math.max(Number(window.__rrV34SuppressHomeUntil||0),Number(sessionStorage.getItem('rr-v34-suppress-home-until')||0));
     if(until>Date.now()) return true;
-    if(st.view==='session' && st.lastStarted && Date.now()-Date.parse(st.lastStarted)<15000) return true;
     return false;
   }
   function findTarget(routine){
@@ -1085,10 +1091,22 @@ document.addEventListener('DOMContentLoaded', async function() {
     card.classList.add('rr-v34-session-finish');card.classList.remove('rr-v34-finish-card');card.id='rr-v34-session-finish-card';card.style.display='';
     const host=document.querySelector('#rr-pmr-v3 .rr-pmr-content')||document.getElementById('relax-v34-home')||document.body;host.appendChild(card);
   }
-  function boot(){installStyles();installHome();simplifyPmr();document.title='Relax Routine v3.4 — DH Mind Clinic';window.__RELAX_ROADMAP_VERSION__='v3.4';document.body.dataset.version='3.4';document.body.dataset.rrV34ProductFlow='ready';}
+  function clearBootLoader(){
+    // Defensive first-screen watchdog: if React's own boot fade misses, never leave the user on the loading screen.
+    ['boot-loader','__bundler_loading','__bundler_thumbnail'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(!el)return;
+      el.classList?.add?.('fade-out');
+      setTimeout(()=>el.remove(),220);
+    });
+    if(window.__bootSafetyTimer){clearTimeout(window.__bootSafetyTimer);window.__bootSafetyTimer=null;}
+  }
+  function boot(){installStyles();installHome();simplifyPmr();clearBootLoader();document.title='Relax Routine v3.4 — DH Mind Clinic';window.__RELAX_ROADMAP_VERSION__='v3.4';document.body.dataset.version='3.4';document.body.dataset.rrV34ProductFlow='ready';}
+  window.__rrV34ForceHome=function(){installStyles();installHome();clearBootLoader();document.body.dataset.rrV34FirstScreenWatchdog='passed';return !!document.getElementById('relax-v34-home');};
   ['DOMContentLoaded','load','hashchange'].forEach(ev=>addEventListener(ev,()=>setTimeout(boot,60)));
   document.addEventListener('click',()=>setTimeout(()=>{simplifyPmr();moveFinishCard();},120),true);
   [50,300,900,1800,3200].forEach(t=>setTimeout(boot,t));
+  [900,1600,2600,4200].forEach(t=>setTimeout(()=>{if(document.getElementById('boot-loader')||document.getElementById('__bundler_loading')) window.__rrV34ForceHome();},t));
   let rrV34BootTicks=0;
   const rrV34BootTimer=setInterval(()=>{boot(); if(++rrV34BootTicks>=16) clearInterval(rrV34BootTimer);},800);
 })();

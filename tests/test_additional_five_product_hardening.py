@@ -113,6 +113,12 @@ def test_round2_static_release_guards_for_ba_dfc_dht2_rr():
     assert "home-select-execute-complete" in rr
     assert "suppressHome()" in rr
     assert "homeSuppressed()" in rr
+    assert "Initial boot must always be allowed to reach the v3.4 first screen" in rr
+    assert "A suppression deadline is valid only inside the current page instance after a routine click" in rr
+    assert "sessionStorage.removeItem('rr-v34-suppress-home-until')" in rr
+    assert "function clearBootLoader()" in rr
+    assert "window.__rrV34ForceHome" in rr
+    assert "rrV34FirstScreenWatchdog" in rr
     assert "view:'session'" in rr
     assert "window.openRelaxPmrV3" in rr
     assert "window.openRelaxPmrV3({autoStart:true})" in rr
