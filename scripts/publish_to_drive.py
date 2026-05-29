@@ -207,6 +207,18 @@ def find_existing_file(svc, name: str, parent_id: str) -> str | None:
     return files[0]["id"] if files else None
 
 
+def ensure_anyone_reader(svc, file_id: str) -> None:
+    """Make published review artifacts openable from Slack/phone without Google sign-in."""
+    meta = svc.files().get(fileId=file_id, fields="permissions(id,type,role)").execute()
+    if any(p.get("type") == "anyone" and p.get("role") in {"reader", "writer"} for p in meta.get("permissions", [])):
+        return
+    svc.permissions().create(
+        fileId=file_id,
+        body={"type": "anyone", "role": "reader"},
+        fields="id",
+    ).execute()
+
+
 def upload_file(svc, local_path: Path, parent_id: str, drive_name: str, description: str = "") -> dict:
     mime, _ = mimetypes.guess_type(str(local_path))
     mime = mime or "application/octet-stream"
@@ -214,18 +226,21 @@ def upload_file(svc, local_path: Path, parent_id: str, drive_name: str, descript
     body = {"name": drive_name, "description": description}
     existing_id = find_existing_file(svc, drive_name, parent_id)
     if existing_id:
-        return svc.files().update(
+        item = svc.files().update(
             fileId=existing_id,
             body=body,
             media_body=media,
             fields="id,name,mimeType,webViewLink,webContentLink,modifiedTime",
         ).execute()
-    body["parents"] = [parent_id]
-    return svc.files().create(
-        body=body,
-        media_body=media,
-        fields="id,name,mimeType,webViewLink,webContentLink,modifiedTime",
-    ).execute()
+    else:
+        body["parents"] = [parent_id]
+        item = svc.files().create(
+            body=body,
+            media_body=media,
+            fields="id,name,mimeType,webViewLink,webContentLink,modifiedTime",
+        ).execute()
+    ensure_anyone_reader(svc, item["id"])
+    return item
 
 
 def git_info() -> dict:
