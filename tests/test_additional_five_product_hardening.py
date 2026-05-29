@@ -118,6 +118,10 @@ def test_round2_static_release_guards_for_ba_dfc_dht2_rr():
     assert "window.openRelaxPmrV3({autoStart:true})" in rr
     assert "open({autoStart:true})" in rr
     assert "rr-pmr-running" in rr
+    assert "opacity:.34!important" in rr
+    assert "opacity:.9!important" in rr
+    assert "position:absolute!important;right:16px!important;top:116px!important" in rr
+    assert "bottom:14px!important" in rr
     assert "concise&&/(점진적\\s*근(?:육)?이완|근육이완|PMR)/i.test(t)" in rr
     assert "시간 바꾸기" in rr
     assert "안전 장소 심상" not in rr
