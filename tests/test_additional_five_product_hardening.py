@@ -111,6 +111,11 @@ def test_round2_static_release_guards_for_ba_dfc_dht2_rr():
     assert "relax-routine-v34-mobile-state" in rr
     assert "relax-v34-home" in rr
     assert "home-select-execute-complete" in rr
+    assert "suppressHome()" in rr
+    assert "homeSuppressed()" in rr
+    assert "view:'session'" in rr
+    assert "window.openRelaxPmrV3" in rr
+    assert "concise&&/(점진적\\s*근(?:육)?이완|근육이완|PMR)/i.test(t)" in rr
     assert "시간 바꾸기" in rr
     assert "안전 장소 심상" not in rr
 

@@ -885,7 +885,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   try{localStorage.setItem('relax-routine:schema-version',SCHEMA);}catch(_){ }
   function enforceButtonTypes(){document.querySelectorAll('button:not([type])').forEach(b=>b.type='button');}
   function syncScreen(){document.body.dataset.screen=document.documentElement.dataset.route||location.hash.replace('#','')||'home';document.body.dataset.modal=document.querySelector('#rr-pmr-v3.open')?'pmr-v3':'';}
-  function markExplicitPmrLaunchers(){document.querySelectorAll('button,a,[role="button"]').forEach(el=>{const t=(el.textContent||'').replace(/\s+/g,' ');if(/^\s*(▶\s*)?PMR/.test(t)||/점진적 근육이완 3\.[01] 실행/.test(el.getAttribute('aria-label')||'')){el.dataset.action='start-pmr';el.dataset.rrModule='pmr-v3';}})}
+  function markExplicitPmrLaunchers(){document.querySelectorAll('button,a,[role="button"]').forEach(el=>{const t=(el.textContent||'').replace(/\s+/g,' ').trim();const aria=el.getAttribute('aria-label')||'';const concise=t.length<90&&!/근거|Jacobson|16개|읽기|배경|교육|설명|가이드/.test(t);if(/^\s*(▶\s*)?PMR/.test(t)||/점진적 근육이완 3\.[01] 실행/.test(aria)||(concise&&/(점진적\s*근(?:육)?이완|근육이완|PMR)/i.test(t))){el.dataset.action='start-pmr';el.dataset.rrModule='pmr-v3';}})}
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){const modal=document.querySelector('#rr-pmr-v3.open');const close=modal?.querySelector('[aria-label*="닫"],button'); if(modal&&close) close.click();}});
   const mo=new MutationObserver(()=>{enforceButtonTypes();markExplicitPmrLaunchers();syncScreen();});
   if(document.body)mo.observe(document.body,{subtree:true,childList:true});
@@ -1005,20 +1005,34 @@ document.addEventListener('DOMContentLoaded', async function() {
     const low=routines.slice().sort((a,b)=>(counts[a.key]||0)-(counts[b.key]||0))[0]||routines[0];
     return state.lastRecommendedKey ? (routines.find(r=>r.key===state.lastRecommendedKey)||low) : low;
   }
+  function suppressHome(ms=12000){
+    const until=Date.now()+ms;
+    window.__rrV34SuppressHomeUntil=until;
+    try{sessionStorage.setItem('rr-v34-suppress-home-until',String(until));}catch(_){ }
+  }
+  function homeSuppressed(){
+    const st=read();
+    if(st.view==='legacy') return true;
+    const until=Math.max(Number(window.__rrV34SuppressHomeUntil||0),Number(sessionStorage.getItem('rr-v34-suppress-home-until')||0));
+    if(until>Date.now()) return true;
+    if(st.view==='session' && st.lastStarted && Date.now()-Date.parse(st.lastStarted)<15000) return true;
+    return false;
+  }
   function findTarget(routine){
     const shell=document.getElementById('relax-v34-home');
     return [...document.querySelectorAll('button,a')].find(el=>el!==shell && !shell?.contains(el) && routine.aliases.some(word=>(el.textContent||'').includes(word)));
   }
   function openRoutine(key){
     const routine=routines.find(r=>r.key===key)||recommended();
-    write({lastStarted:new Date().toISOString(),recommendedRoutine:routine.label,lastRecommendedKey:routine.key,activeSession:true,productFlow:'home-select-execute-complete'});
+    suppressHome();
+    write({lastStarted:new Date().toISOString(),recommendedRoutine:routine.label,lastRecommendedKey:routine.key,activeSession:true,view:'session',productFlow:'home-select-execute-complete'});
     document.getElementById('relax-v34-home')?.remove();
     document.body.classList.remove('rr-v34-shell-open');
     if(routine.key==='pmr'){
       location.hash='pmr';
       setTimeout(()=>{
-        const target=findTarget(routine);
-        target?.click?.();
+        if(typeof window.openRelaxPmrV3==='function') window.openRelaxPmrV3();
+        else findTarget(routine)?.click?.();
         simplifyPmr();
       },80);
       return;
@@ -1040,6 +1054,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const pmr=document.getElementById('rr-pmr-v3');
     const pmrOpen=pmr && getComputedStyle(pmr).display!=='none' && pmr.getBoundingClientRect().height>0;
     if(location.hash==='#pmr'||pmrOpen){document.getElementById('relax-v34-home')?.remove();document.body.classList.remove('rr-v34-shell-open');return;}
+    if(homeSuppressed()){document.getElementById('relax-v34-home')?.remove();document.body.classList.remove('rr-v34-shell-open');return;}
     if(onboardingVisible()&&!hasOnboarding())return;
     if(document.getElementById('relax-v34-home'))return;
     const rec=recommended();
