@@ -115,9 +115,13 @@ def test_round2_static_release_guards_for_ba_dfc_dht2_rr():
     assert "homeSuppressed()" in rr
     assert "view:'session'" in rr
     assert "window.openRelaxPmrV3" in rr
+    assert "window.openRelaxPmrV3({autoStart:true})" in rr
+    assert "open({autoStart:true})" in rr
+    assert "rr-pmr-running" in rr
     assert "concise&&/(점진적\\s*근(?:육)?이완|근육이완|PMR)/i.test(t)" in rr
     assert "시간 바꾸기" in rr
     assert "안전 장소 심상" not in rr
+
 
 
 def test_round2_dht2_pending_replay_local_dismiss_and_polling_markers():
