@@ -3,8 +3,8 @@
 > 규칙: 작업 시작 시 이 파일을 먼저 읽고, 완료 시 갱신할 것. 큰 작업은 쪼개서 단계별 커밋.
 
 ## 현재 베이스
-- 최신 파일: `relax-routine/prototype/v3.10.5.html` (17,863행)
-- 다음 작업 산출물: v3.10.6.html (버전 올려 생성)
+- 최신 파일: `relax-routine/prototype/v3.10.6.html` (~17,500행, 0.98MB)
+- 다음 작업 산출물: v3.10.7.html (버전 올려 생성)
 
 ## 작업 큐 (우선순위 순)
 
@@ -34,6 +34,11 @@
 - [ ] (17) 버전/스토리지 키 혼재 정리
 
 ## 완료 기록
+- 2026-06-02 | v3.10.6 | 파일 크기 1.08MB → 0.98MB 감소 (103KB 절약)
+  - PNG 로고 base64 중복 제거: boot-loader img에 id="rrLogoB64" 추가, React img를 DOM 참조로 교체 (~59KB)
+  - JS 블록 주석(/* */) 제거 (~8KB)
+  - JS 인라인 주석(//) 제거 (~2KB)
+  - JS 들여쓰기 2칸→1칸 축소 (~30KB)
 - 2026-06-02 | v3.10.5 | (1) CrisisModal 핫라인 버튼을 `<a href="tel:...">` 로 교체
   - CRISIS_ROUTES에 `tel` 필드 추가 (109, 1577-0199, 129)
   - `React.createElement("button", ...)` → `React.createElement("a", {href: \`tel:${r.tel}\`, ...})` 로 변경
