@@ -2,7 +2,7 @@
 
 macOS의 Hammerspoon([PaperWM.spoon](https://github.com/mogenson/PaperWM.spoon))처럼,
 창들을 화면 위에 **가로로 한 줄(strip)** 로 늘어놓고 **좌우로 스크롤**하면서
-창 사이를 오가는 윈도우 관리 방식을 Windows에서 흉내 낸 AutoHotkey v2 스크립트입니다.
+창 사이를 오가는 윈도우 관리 방식을 Windows에서 구현한 AutoHotkey v2 스크립트입니다.
 
 ```
         ┌──── 화면(뷰포트) ────┐
@@ -14,23 +14,36 @@ macOS의 Hammerspoon([PaperWM.spoon](https://github.com/mogenson/PaperWM.spoon))
 - 화면은 그 띠를 들여다보는 창(뷰포트)입니다.
 - 포커스를 옮기거나 스크롤하면 띠가 움직이며 다음/이전 창이 드러납니다.
 
+## 주요 기능
+
+- **모니터별 독립 strip** — 멀티 모니터에서 각 화면이 자기 띠를 가집니다.
+- **자동 창 추적** — 새 창이 뜨거나 닫히거나 최소화되면 띠가 자동으로 갱신됩니다.
+  (`SetWinEventHook` 기반. `Win+Alt+T`로 끄고 켤 수 있음)
+- **부드러운 애니메이션 스크롤** — `DeferWindowPos`로 모든 창을 한 번에 옮겨
+  깜빡임 없이 미끄러지듯 스크롤됩니다.
+- **위치 HUD** — 화면 하단에 `▮▯▯▯` 미니맵과 `현재/전체 · 창 제목`을 잠깐 띄워
+  지금 띠의 어디쯤 있는지 보여줍니다.
+- **투명 테두리 보정 + Per-Monitor DPI 인식** — 창 간격이 시각적으로 딱 맞고,
+  배율이 다른 모니터에서도 좌표가 어긋나지 않습니다.
+
 ## 설치
 
 1. **AutoHotkey v2** 설치 — https://www.autohotkey.com (v2.0 이상, v1 아님)
 2. `ScrollWM.ahk` 더블클릭 → 트레이에 상주합니다.
-3. (선택) 부팅 시 자동 실행: `Win+R` → `shell:startup` → 이 폴더에
+3. (선택) 부팅 시 자동 실행: `Win+R` → `shell:startup` → 이 폴더의
    `ScrollWM.ahk` 바로가기를 넣습니다.
 
 ## 사용법
 
-먼저 정리하고 싶은 모니터에서 아무 창이나 활성화한 뒤 **`Win+Alt+R`** 을 누르면
-그 모니터의 일반 창들이 모두 띠로 타일링됩니다.
+자동 추적이 켜져 있어 새 창은 알아서 띠에 합류합니다. 이미 떠 있는 창들을 한 번에
+정리하려면 그 모니터에서 아무 창이나 활성화한 뒤 **`Win+Alt+R`** 을 누르세요.
 
 | 단축키 | 동작 |
 |---|---|
 | `Win+Alt+R` | 현재 모니터의 창을 전부 타일링 |
 | `Win+Alt+A` | 활성 창을 띠에 추가 |
 | `Win+Alt+D` | 활성 창을 띠에서 제외(위치는 그대로) |
+| `Win+Alt+T` | 자동 추적 켜기/끄기 |
 | `Win+Alt+←` / `→` | 이전 / 다음 창으로 포커스 (띠가 따라 스크롤) |
 | `Win+Alt+Home` / `End` | 맨 왼쪽 / 맨 오른쪽 창으로 |
 | `Win+Alt+Shift+←` / `→` | 현재 창을 왼쪽 / 오른쪽으로 이동 |
@@ -47,33 +60,34 @@ macOS의 Hammerspoon([PaperWM.spoon](https://github.com/mogenson/PaperWM.spoon))
 
 ```ahk
 class Config {
-    static Gap        := 8        ; 창 사이 간격(px)
-    static OuterGap   := 8        ; 화면 가장자리 여백(px)
-    static MinWidth   := 240      ; 창 최소 너비(px)
-    static ScrollStep := 120      ; 마우스 휠 한 칸당 스크롤(px)
-    static ResizeStep := 60       ; 너비 조절 단위(px)
+    static Gap         := 8       ; 창 사이 간격(px)
+    static OuterGap    := 8       ; 화면 가장자리 여백(px)
+    static MinWidth    := 240     ; 창 최소 너비(px)
+    static ScrollStep  := 160     ; 마우스 휠 한 칸당 스크롤(px)
+    static ResizeStep  := 60      ; 너비 조절 단위(px)
     static Widths        := [1/3, 1/2, 2/3, 1.0]  ; 너비 순환 프리셋
     static DefaultWidth  := 2     ; 새 창 기본 = Widths[2] = 1/2
+    static AutoManage  := true    ; 시작 시 새 창 자동 추적
+    static Animate     := true    ; 스크롤 애니메이션
+    static AnimEase    := 0.35    ; 애니메이션 감쇠(0~1, 클수록 빠름)
+    static Hud         := true    ; 위치 HUD 표시
 }
 ```
 
-모디파이어(기본 `Win+Alt`)를 바꾸려면 파일의 `단축키` 섹션에서 각 줄 앞의
-`#!`(= `Win+Alt`) 부분을 원하는 조합으로 바꾸면 됩니다.
+모디파이어(기본 `Win+Alt`)를 바꾸려면 `단축키` 섹션에서 각 줄 앞의
+`#!`(= `Win+Alt`)를 원하는 조합으로 바꾸면 됩니다.
 (`#` = Win, `!` = Alt, `^` = Ctrl, `+` = Shift)
 
 ## 동작 메모 / 한계
 
-- **단일 모니터 띠**: 한 번에 한 모니터의 창들만 한 줄로 관리합니다.
-  다른 모니터에서 `Win+Alt+R` 을 누르면 그 모니터 기준으로 다시 잡힙니다.
-- **수동 추적**: PaperWM처럼 새 창을 자동 감지하지는 않습니다. 새 창은
-  `Win+Alt+A` 로 추가하거나 `Win+Alt+R` 로 다시 타일링하세요.
-  (셸 후크로 자동 추가하는 기능은 추후 확장 가능합니다.)
-- **세로 스택은 미지원**: 한 열에 창 하나(전체 높이)만 둡니다. PaperWM의
-  열 안 세로 스택은 v1 범위에서 제외했습니다.
-- **투명 테두리 보정**: Windows 창의 보이지 않는 리사이즈 테두리를 DWM API로
-  계산해 간격이 시각적으로 맞도록 보정합니다.
-- 일부 앱(관리자 권한 창)은 같은 권한으로 실행하지 않으면 제어가 안 될 수
-  있습니다. 그럴 땐 AutoHotkey를 관리자 권한으로 실행하세요.
+- **자동 추적 대상**: 제목 표시줄이 있는 일반 최상위 창만 추적합니다.
+  도구 창·다이얼로그(소유 창 있음)·숨겨진 UWP 창은 자동 제외됩니다.
+  의도와 다르게 잡히거나 빠지면 `Win+Alt+A` / `Win+Alt+D`로 직접 조정하세요.
+- **세로 스택 미지원**: 한 열에 창 하나(전체 높이)만 둡니다. PaperWM의 열 안
+  세로 스택은 아직 구현하지 않았습니다.
+- **관리자 권한 창**: 일반 권한으로 실행하면 관리자 권한 창은 제어가 안 될 수
+  있습니다. 필요하면 AutoHotkey를 관리자 권한으로 실행하세요.
+- 전체화면(테두리 없는) 게임/영상은 제목 표시줄이 없어 자동으로 제외됩니다.
 
 ## 제거
 
