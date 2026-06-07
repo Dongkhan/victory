@@ -87,7 +87,7 @@ TrayTip("Win+Alt+R 로 타일링 시작 · Win+Alt+/ 로 도움말", "ScrollWM �
 
 #!Enter::  Busy(() => CycleWidth())                  ; 너비 프리셋 순환
 #!=::      Busy(() => GrowShrink(Config.ResizeStep)) ; 너비 늘이기
-#!-::      Busy(() => GrowShrink(-Config.ResizeStep)); 너비 줄이기
+#!-::      Busy(() => GrowShrink(-Config.ResizeStep)) ; 너비 줄이기
 #!c::      Busy(() => CenterFocused())  ; 화면 가운데로
 #!f::      Busy(() => ToggleFull())     ; 뷰포트 전체 너비 토글
 
