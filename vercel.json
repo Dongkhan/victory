@@ -3,6 +3,21 @@
     {
       "source": "/relax-routine",
       "destination": "/relax-routine/prototype/v3.10.6.html"
+    },
+    {
+      "source": "/chess",
+      "destination": "/kids-chess/prototype/v0.2.html",
+      "permanent": false
+    },
+    {
+      "source": "/kids-chess",
+      "destination": "/kids-chess/prototype/v0.2.html",
+      "permanent": false
+    },
+    {
+      "source": "/kids-chess/prototype/v0.1.html",
+      "destination": "/kids-chess/prototype/v0.2.html",
+      "permanent": false
     }
   ]
 }

@@ -697,7 +697,7 @@ SCREENS.home=function(){
        <button class="tile t-sticker" data-go="sticker"><span class="emoji">🎖️</span><div><div class="t">내 스티커북</div><div class="s">${DATA.stickers.length}개 모았어요</div></div></button>
      </div>
      <button class="btn ghost block" id="parentBtn" style="margin-top:14px">👨‍👩‍👧 부모님 메뉴</button>
-     <p class="muted center" style="margin-top:14px">광고 없음 · 채팅 없음 · 결제 유도 없음<br>아이가 혼자 해도 안전해요 💚</p>
+     <p class="muted center" style="margin-top:14px">광고 없음 · 채팅 없음 · 결제 유도 없음<br>아이가 혼자 해도 안전해요 💚<br><b style="opacity:.7">체스프렌즈 v0.2</b></p>
    </div>`;
   $('#goMission').onclick=()=>openPuzzle(mission.id);
   root.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
