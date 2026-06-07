@@ -337,9 +337,9 @@ ApplyPositions(s) {
         if WinExist("ahk_id " col.hwnd) {
             sx := s.WL + Pad + cx - scroll
             sy := s.WT + Pad
-            GetFrameOffsets(col.hwnd, &ol, &ot, &or, &ob)
+            GetFrameOffsets(col.hwnd, &ol, &ot, &orr, &ob)
             x := sx - ol, y := sy - ot
-            w := col.w + ol + or, h := viewH + ot + ob
+            w := col.w + ol + orr, h := viewH + ot + ob
             ; SWP_NOZORDER(0x4) | SWP_NOACTIVATE(0x10) = 0x14
             if hdwp {
                 hdwp := DllCall("DeferWindowPos", "ptr", hdwp, "ptr", col.hwnd
@@ -605,8 +605,8 @@ MonitorOf(hwnd) {
 }
 
 ; 창을 (X,Y,W,H) "보이는 프레임" 기준으로 옮기기 위한 투명 테두리 두께
-GetFrameOffsets(hwnd, &ol, &ot, &or, &ob) {
-    ol := ot := or := ob := 0
+GetFrameOffsets(hwnd, &ol, &ot, &orr, &ob) {
+    ol := ot := orr := ob := 0
     rect := Buffer(16, 0)
     if !DllCall("GetWindowRect", "ptr", hwnd, "ptr", rect)
         return
@@ -618,7 +618,7 @@ GetFrameOffsets(hwnd, &ol, &ot, &or, &ob) {
         return
     fl := NumGet(fb, 0, "int"), ft := NumGet(fb, 4, "int")
     fr := NumGet(fb, 8, "int"), fbm := NumGet(fb, 12, "int")
-    ol := fl - wl, ot := ft - wt, or := wr - fr, ob := wb - fbm
+    ol := fl - wl, ot := ft - wt, orr := wr - fr, ob := wb - fbm
 }
 
 ; 타일링 대상이 되는 "보통의" 최상위 창인지 판단
