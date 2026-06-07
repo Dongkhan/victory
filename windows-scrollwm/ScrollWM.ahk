@@ -159,7 +159,7 @@ GrowShrink(delta) {
         return
     SyncFocus(s)
     col := s.cols[s.focus]
-    col.w := Clamp(col.w + delta, Config.MinWidth, ViewW(s))
+    col.w := Clamp(col.w + delta, Config.MinWidth, ViewWidth(s))
     col.widx := 0                       ; 사용자 지정 너비
     RelayoutStrip(s)
 }
@@ -170,7 +170,7 @@ ToggleFull() {
         return
     SyncFocus(s)
     col := s.cols[s.focus]
-    full := ViewW(s)
+    full := ViewWidth(s)
     col.w := (col.w >= full - 2) ? RatioWidth(s, 1/2) : full
     col.widx := 0
     CenterFocused()
@@ -182,7 +182,7 @@ CenterFocused() {
         return
     SyncFocus(s)
     fL := ColLeft(s, s.focus)
-    s.target := fL + s.cols[s.focus].w / 2 - ViewW(s) / 2
+    s.target := fL + s.cols[s.focus].w / 2 - ViewWidth(s) / 2
     RelayoutStrip(s, false)             ; 스크롤 자동조정 끄고 가운데 유지
     ShowHud(s)
 }
@@ -271,7 +271,7 @@ RelayoutStrip(s, adjustScroll := true, animate := true) {
         return
     }
     RefreshWorkArea(s)
-    viewW := ViewW(s)
+    viewW := ViewWidth(s)
 
     ; 열들의 strip 좌표와 전체 너비
     cx := 0
@@ -498,12 +498,12 @@ Clamp(v, lo, hi) {
     return (v < lo) ? lo : (v > hi) ? hi : v
 }
 
-ViewW(s) {
+ViewWidth(s) {
     return (s.WR - s.WL) - 2 * Config.OuterGap
 }
 
 RatioWidth(s, ratio) {
-    return Round(ViewW(s) * ratio)
+    return Round(ViewWidth(s) * ratio)
 }
 
 ColLeft(s, idx) {
