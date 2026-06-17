@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   }
   document.addEventListener('click',function(e){
     const btn=e.target && e.target.closest && e.target.closest('button,a');
-    if(!btn || btn.closest('#rr-loop-breath')) return;
+    if(!btn || btn.closest('#rr-loop-breath,#rr-pmr-v3,#rr-bscan,#rr-auto')) return;
     const text=(btn.innerText||btn.textContent||'').replace(/\s+/g,' ').trim();
     if(/완료|홈으로 돌아가기|홈 ›|다시/.test(text)) return;
     const label=normalize(text);
