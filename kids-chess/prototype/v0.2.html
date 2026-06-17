@@ -790,8 +790,6 @@ function animateMove(boardDiv,from,to,flip){
 }
 
 /* ===== 7. 화면들 ===== */
-const SCREENS={};
-
 /* ---- 홈 ---- */
 SCREENS.home=function(){
   const ds=Object.keys(DATA.puzzleSolved).length;
@@ -1360,6 +1358,9 @@ function trackTime(){
 function dailyCheck(){ const d=new Date().toISOString().slice(0,10); if(DATA.lastDay!==d){ DATA.lastDay=d; save(); } award('daily'); }
 
 /* ===== 13. 부트 ===== */
+// SCREENS 객체를 먼저 초기화 (renderTabs, SCREENS.home 호출 전)
+const SCREENS={}; // 여기서 초기화
+
 renderTabs(); SCREENS.home(); trackTime(); dailyCheck();
 </script>
 </body>
