@@ -563,50 +563,6 @@ function award(id){
   return true;
 }
 function checkMilestones(){
-
-// 점수 시스템
-let score = 0;
-let combo = 0;
-
-function createStarBurst(x, y) {
-  const burst = document.createElement('div');
-  burst.className = 'star-burst';
-  burst.innerHTML = '<span style="font-size:60px;animation:sparkle 1s ease-out forwards;position:absolute;top:' + y + 'px;left:' + x + 'px">⭐</span>';
-  burst.style.cssText = '
-    position:fixed;pointer-events:none;z-index:100;
-    animation:fade .5s ease-out forwards;
-  ';
-  document.body.appendChild(burst);
-  setTimeout(() => burst.remove(), 500);
-}
-
-function showScoreCard(points) {
-  const messages = ['', '🍎', '⭐', '✨', '💫', '👑', '🏆', '🚀'];
-  const message = messages[Math.min(Math.ceil(points / 10), messages.length - 1)] || '🎉';
-  
-  // 점수 카드 생성
-  const cardEl = document.createElement('div');
-  cardEl.className = 'score-card';
-  cardEl.innerHTML = '+' + points + '<span style="display:block;font-size:36px;margin-top:8px">' + message + '</span>';
-  cardEl.style.animation = 'pop 0.6s cubic-bezier(0.68,-0.55,0.265,1.55) forwards';
-  document.body.appendChild(cardEl);
-  
-  // 애니메이션 후 제거
-  setTimeout(() => {
-    document.body.removeChild(cardEl);
-    score = 0;
-    combo = 0;
-  }, 1500);
-}
-
-function updateScore(points, x, y) {
-  score += points;
-  combo++;
-  showScoreCard(score);
-  if (x !== undefined && y !== undefined) {
-    createStarBurst(x, y);
-  }
-}
   if(Object.keys(DATA.lessons).length>=1) award('first_lesson');
   if(['pawn','rook','bishop','knight','queen','king'].every(k=>DATA.lessons[k])) award('piece_master');
   if(DATA.lessons['castle']) award('castler');
@@ -730,7 +686,7 @@ SCREENS.home=function(){
      <div class="mission" id="missionCard">
        <span class="star">⭐</span>
        <span class="badge">오늘의 미션</span>
-       <h2>${mission.title}</h2>
+       <h2>${titleOf(mission)}</h2>
        <p>가장 좋은 한 수를 찾아볼까요? 천천히 생각해도 괜찮아요.</p>
        <button class="btn sun" id="goMission">미션 풀기 →</button>
      </div>
@@ -1042,7 +998,7 @@ function startGame(level,human){
   human=human||'w';
   const st=startState();
   GM={ state:st, level, human, vs2p:level===0, flip:(human==='b'), sel:null, targets:[], history:[],
-        moves:[], posCounts:{}, anim:null, last:null, thinking:false, hintStage:0, ended:false, lv, score:0, combo:0, msg:       msg: level===0?'친구랑 번갈아 둬요! 흰색부터 시작! ⚪':(human==='b'?lv.nm+'(흰색)이 먼저 둬요. 너는 검은색 ⚫':lv.nm+'와(과) 대국! 너는 흰색 ⚪') };
+        moves:[], posCounts:{}, anim:null, last:null, thinking:false, hintStage:0, ended:false, lv, score:0, combo:0, msg: level===0?'친구랑 번갈아 둬요! 흰색부터 시작! ⚪':(human==='b'?lv.nm+'(흰색)이 먼저 둬요. 너는 검은색 ⚫':lv.nm+'와(과) 대국! 너는 흰색 ⚪') };
   GM.posCounts[posKey(st)]=1;
   DATA.gamesPlayed++; save();
   current='play'; renderTabs(); drawGame();
