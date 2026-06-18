@@ -18,6 +18,16 @@
       "source": "/kids-chess/prototype/v0.1.html",
       "destination": "/kids-chess/prototype/v0.2.html",
       "permanent": false
+    },
+    {
+      "source": "/window",
+      "destination": "/the-window/prototype/v0.1.html",
+      "permanent": false
+    },
+    {
+      "source": "/the-window",
+      "destination": "/the-window/prototype/v0.1.html",
+      "permanent": false
     }
   ]
 }
