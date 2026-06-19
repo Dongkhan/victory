@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>기억의 연구실 v0.2 - Doom 스타일 3D 방탈출</title>
+  <style>
+    :root{color-scheme:dark;--ink:#eaf6ff;--muted:#9fb3c8;--accent:#38bdf8;--ok:#34d399;--warn:#fbbf24;--bad:#fb7185;--panel:rgba(5,10,20,.78);--line:rgba(174,222,255,.26)}
+    *{box-sizing:border-box} html,body{margin:0;height:100%;overflow:hidden;background:#020712;color:var(--ink);font-family:ui-rounded,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none;user-select:none}
+    #game{position:fixed;inset:0;width:100vw;height:100vh;display:block;background:#020712;image-rendering:auto}
+    .hud{position:fixed;z-index:5;left:0;right:0;top:0;display:flex;gap:10px;justify-content:space-between;align-items:flex-start;padding:max(12px,env(safe-area-inset-top)) 12px 0;pointer-events:none}
+    .panel{pointer-events:auto;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(14px);box-shadow:0 14px 40px rgba(0,0,0,.38);border-radius:18px;padding:10px 12px}.title{font-weight:900;letter-spacing:-.02em}.sub{display:block;color:var(--muted);font-size:12px;margin-top:2px}.inv{min-width:min(46vw,360px)}.items{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.item{font-size:12px;border:1px solid rgba(56,189,248,.38);background:rgba(56,189,248,.13);border-radius:999px;padding:5px 8px}
+    .crosshair{position:fixed;z-index:4;left:50%;top:50%;width:26px;height:26px;transform:translate(-50%,-50%);pointer-events:none}.crosshair:before,.crosshair:after{content:"";position:absolute;background:rgba(234,246,255,.72);box-shadow:0 0 8px rgba(56,189,248,.8)}.crosshair:before{left:12px;top:0;width:2px;height:26px}.crosshair:after{left:0;top:12px;width:26px;height:2px}
+    .bottom{position:fixed;z-index:5;left:0;right:0;bottom:0;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:end;padding:0 12px max(12px,env(safe-area-inset-bottom));pointer-events:none}.hint{pointer-events:auto;border:1px solid var(--line);border-radius:18px;background:var(--panel);backdrop-filter:blur(14px);padding:10px 12px;color:#cbd5e1;line-height:1.35;font-size:13px}.controls{pointer-events:auto;display:grid;grid-template-columns:54px 54px 54px;grid-template-rows:54px 54px;gap:8px;grid-template-areas:". up ." "left down right"}.look{pointer-events:auto;display:flex;gap:8px}.btn,button{border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.06));color:var(--ink);box-shadow:0 10px 24px rgba(0,0,0,.25),inset 0 1px rgba(255,255,255,.18);font:inherit;cursor:pointer}.btn{min-width:54px;min-height:54px;font-size:22px}.btn:active,button:active{transform:translateY(1px)}#up{grid-area:up}#down{grid-area:down}#left{grid-area:left}#right{grid-area:right}.look button,.reset{min-height:48px;padding:10px 13px}.primary{background:linear-gradient(180deg,rgba(56,189,248,.38),rgba(14,116,144,.52))}.success{background:linear-gradient(180deg,rgba(52,211,153,.38),rgba(21,128,61,.5))}.danger{background:linear-gradient(180deg,rgba(251,113,133,.36),rgba(159,18,57,.46))}
+    .toast{position:fixed;z-index:20;left:50%;top:86px;max-width:min(92vw,620px);transform:translateX(-50%) translateY(-18px);opacity:0;transition:.18s;padding:12px 14px;border:1px solid var(--line);background:rgba(15,23,42,.94);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.45);pointer-events:none}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .modal-backdrop{position:fixed;inset:0;z-index:30;display:none;place-items:center;background:rgba(0,0,0,.58);backdrop-filter:blur(8px);padding:18px}.modal-backdrop.show{display:grid}.modal{width:min(560px,100%);border:1px solid var(--line);border-radius:26px;background:linear-gradient(180deg,rgba(15,23,42,.97),rgba(3,7,18,.97));box-shadow:0 28px 90px rgba(0,0,0,.58);padding:20px}.modal h2{margin:0 0 10px}.modal p{color:#cbd5e1;line-height:1.6}.modal-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px}.modal-actions button{padding:11px 14px;min-height:44px}.code{width:100%;padding:14px;border-radius:16px;border:1px solid rgba(56,189,248,.35);background:rgba(15,23,42,.86);color:var(--ink);font-size:28px;letter-spacing:.28em;text-align:center}.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.pad button{min-height:52px;font-size:18px}
+    .ending{position:fixed;inset:0;z-index:40;display:none;place-items:center;text-align:center;background:radial-gradient(circle,rgba(56,189,248,.36),rgba(2,6,23,.97) 62%);padding:24px}.ending.show{display:grid}.ending-card{max-width:700px;border:1px solid var(--line);border-radius:32px;padding:28px;background:rgba(15,23,42,.86);box-shadow:0 26px 90px rgba(0,0,0,.6)}.ending h1{font-size:clamp(36px,8vw,82px);margin:0 0 8px}.ending p{color:#cbd5e1;line-height:1.7}
+    @media(max-width:760px){.hud{flex-direction:column}.inv{min-width:0}.bottom{grid-template-columns:1fr;}.hint{order:-1}.look{justify-content:space-between}.look button,.reset{flex:1}.controls{justify-self:center}.sub{font-size:11px}}
+  </style>
+</head>
+<body>
+  <canvas id="game" aria-label="Doom 스타일 3D 방탈출 화면"></canvas>
+  <div class="crosshair" aria-hidden="true"></div>
+  <header class="hud">
+    <div class="panel"><span class="title">기억의 연구실 v0.2</span><span class="sub">Doom 스타일 레이캐스팅 3D · WASD/화살표 또는 버튼 이동</span></div>
+    <div class="panel inv"><b>가방</b><div class="items" id="items"></div></div>
+  </header>
+  <footer class="bottom">
+    <button class="reset danger" id="reset">처음부터</button>
+    <div class="hint" id="hint">진짜 3D처럼 방 안을 걸어 다니며 중앙 조준점으로 물건을 보고 “조사”하세요.</div>
+    <div class="look"><button id="turnL">↶ 회전</button><button class="primary" id="use">조사 / 사용</button><button id="turnR">↷ 회전</button></div>
+    <div class="controls" aria-label="이동 버튼"><button class="btn" id="up">▲</button><button class="btn" id="left">◀</button><button class="btn" id="down">▼</button><button class="btn" id="right">▶</button></div>
+  </footer>
+  <div class="toast" id="toast"></div>
+  <div class="modal-backdrop" id="backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><section class="modal"><h2 id="modalTitle"></h2><div id="modalBody"></div><div class="modal-actions" id="modalActions"></div></section></div>
+  <div class="ending" id="ending"><div class="ending-card"><h1>탈출 성공</h1><p>Doom/Wolfenstein 방식의 레이캐스팅으로 만든 2.5D 방탈출 프로토타입입니다. 다음 단계에서는 텍스처, 적/경비 로봇, 사운드, 더 큰 미로를 붙일 수 있습니다.</p><button class="primary" id="again">다시 플레이</button></div></div>
+<script>
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+const W = 16, H = 16;
+const MAP = [
+  '1111111111111111',
+  '1000000000000001',
+  '1020000100000301',
+  '1000000100000001',
+  '1000111100000001',
+  '1000100000011001',
+  '1000100000014001',
+  '1000000000011001',
+  '1000000111000001',
+  '1000000100000001',
+  '1000000100000001',
+  '1000500000000001',
+  '1000000000000001',
+  '1000000000600001',
+  '1000000000000001',
+  '1111111111111111'
+].map(row => row.split('').map(Number));
+const objectDefs = {
+  clock:{x:2.5,y:2.5,icon:'◷',name:'멈춘 시계',color:'#f8fafc'},
+  painting:{x:13.35,y:2.5,icon:'▧',name:'비뚤어진 그림',color:'#fbbf24'},
+  safe:{x:12.5,y:6.5,icon:'▣',name:'금고',color:'#94a3b8'},
+  desk:{x:2.4,y:11.4,icon:'▤',name:'책상',color:'#a16207'},
+  vent:{x:11.5,y:13.5,icon:'≋',name:'환풍구',color:'#cbd5e1'},
+  keypad:{x:14.35,y:8.5,icon:'▦',name:'키패드',color:'#38bdf8'},
+  lamp:{x:4.5,y:13.2,icon:'☀',name:'스탠드',color:'#f59e0b'},
+  door:{x:14.55,y:8.5,icon:'▯',name:'출구 문',color:'#34d399'}
+};
+const STORAGE = 'escape3d.raycast.v02';
+const initial = {px:3.5,py:13.5,pa:-Math.PI/2,items:[],clockSeen:false,paintingMoved:false,safeOpen:false,deskOpen:false,ventOpen:false,lampOn:false,doorOpen:false,ending:false,code:''};
+let state = load();
+let keys = {}, depths = [], last = performance.now(), toastTimer;
+const itemsEl = document.getElementById('items'), hintEl = document.getElementById('hint'), toastEl = document.getElementById('toast'), backdrop = document.getElementById('backdrop'), modalTitle = document.getElementById('modalTitle'), modalBody = document.getElementById('modalBody'), modalActions = document.getElementById('modalActions'), endingEl = document.getElementById('ending');
+const itemNames = {keycard:'🪪 키카드', screwdriver:'🪛 드라이버', fuse:'⚡ 퓨즈', memo:'📝 메모'};
+function load(){try{return {...initial,...JSON.parse(localStorage.getItem(STORAGE))}}catch(e){return {...initial}}}
+function save(){localStorage.setItem(STORAGE, JSON.stringify(state))}
+function resize(){const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.floor(innerWidth*dpr);canvas.height=Math.floor(innerHeight*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}
+addEventListener('resize', resize); resize();
+function has(item){return state.items.includes(item)}
+function addItem(item){if(!has(item)){state.items.push(item);toast(itemNames[item]+' 획득');save();renderHud()}}
+function renderHud(){itemsEl.innerHTML = state.items.length ? state.items.map(i=>`<span class="item">${itemNames[i]}</span>`).join('') : '<span class="item">비어 있음</span>'; endingEl.classList.toggle('show', state.ending)}
+function setHint(t){hintEl.textContent=t}
+function toast(t){toastEl.textContent=t;toastEl.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastEl.classList.remove('show'),1700)}
+function wallAt(x,y){if(x<0||y<0||x>=W||y>=H)return 1;return MAP[Math.floor(y)][Math.floor(x)]}
+function solid(x,y){const v=wallAt(x,y);return v===1 || (v===6 && !state.doorOpen)}
+function move(amount){const nx=state.px+Math.cos(state.pa)*amount, ny=state.py+Math.sin(state.pa)*amount;if(!solid(nx,state.py))state.px=nx;if(!solid(state.px,ny))state.py=ny;save()}
+function strafe(amount){const nx=state.px+Math.cos(state.pa+Math.PI/2)*amount, ny=state.py+Math.sin(state.pa+Math.PI/2)*amount;if(!solid(nx,state.py))state.px=nx;if(!solid(state.px,ny))state.py=ny;save()}
+function turn(amount){state.pa+=amount;save()}
+function shade(hex, k){const n=parseInt(hex.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return `rgb(${Math.max(0,Math.min(255,r*k))},${Math.max(0,Math.min(255,g*k))},${Math.max(0,Math.min(255,b*k))})`}
+function wallColor(id, side, dist){const base={1:'#334155',2:'#7c2d12',3:'#475569',4:'#1e3a8a',5:'#78350f',6:state.doorOpen?'#14532d':'#064e3b'}[id]||'#334155';const k=Math.max(.22,1/(1+dist*.14))*(side?.78:1);return shade(base,k)}
+function castRay(angle){let sin=Math.sin(angle), cos=Math.cos(angle);for(let d=.02;d<18;d+=.025){const x=state.px+cos*d,y=state.py+sin*d,id=wallAt(x,y);if(id>0){const fx=x-Math.floor(x), fy=y-Math.floor(y);const side=(fx<.035||fx>.965);return {d,id,side,x,y}}}return {d:18,id:0,side:false}}
+function draw3D(){const sw=innerWidth, sh=innerHeight;ctx.clearRect(0,0,sw,sh);const grad=ctx.createLinearGradient(0,0,0,sh/2);grad.addColorStop(0,'#07111f');grad.addColorStop(1,state.lampOn?'#17314a':'#0b1424');ctx.fillStyle=grad;ctx.fillRect(0,0,sw,sh/2);const floor=ctx.createLinearGradient(0,sh/2,0,sh);floor.addColorStop(0,state.lampOn?'#172033':'#101827');floor.addColorStop(1,'#020617');ctx.fillStyle=floor;ctx.fillRect(0,sh/2,sw,sh/2);const fov=Math.PI/3;depths=[];for(let x=0;x<sw;x+=2){const a=state.pa-fov/2+fov*x/sw;const hit=castRay(a);const dist=hit.d*Math.cos(a-state.pa);depths[Math.floor(x/2)]=dist;const h=Math.min(sh*1.4, sh/(dist*.72));const y=(sh-h)/2;ctx.fillStyle=wallColor(hit.id,hit.side,dist);ctx.fillRect(x,y,2,h);if(hit.id===6&&!state.doorOpen){ctx.fillStyle='rgba(52,211,153,.2)';ctx.fillRect(x,y+h*.15,2,h*.7)}}drawSprites(sw,sh,fov);drawMiniMap()}
+function drawSprites(sw,sh,fov){const sprites=Object.entries(objectDefs).filter(([id])=>id!=='door'||!state.doorOpen).map(([id,o])=>{const dx=o.x-state.px,dy=o.y-state.py;let ang=Math.atan2(dy,dx)-state.pa;while(ang<-Math.PI)ang+=Math.PI*2;while(ang>Math.PI)ang-=Math.PI*2;return{id,o,dist:Math.hypot(dx,dy),ang}}).filter(s=>Math.abs(s.ang)<fov*.62&&s.dist>.25).sort((a,b)=>b.dist-a.dist);for(const s of sprites){const sx=(.5+s.ang/fov)*sw;const size=Math.min(160,sh/(s.dist*.9));const depth=depths[Math.max(0,Math.min(depths.length-1,Math.floor(sx/2)))]||99;if(s.dist>depth+.2)continue;const y=sh/2-size*.65;ctx.globalAlpha=Math.max(.25,1-s.dist/12);ctx.fillStyle='rgba(2,6,23,.58)';ctx.beginPath();ctx.ellipse(sx,y+size*.92,size*.36,size*.11,0,0,Math.PI*2);ctx.fill();ctx.fillStyle=s.o.color;ctx.shadowColor=s.o.color;ctx.shadowBlur=18;ctx.font=`${Math.floor(size*.62)}px system-ui`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(s.o.icon,sx,y+size*.45);ctx.shadowBlur=0;ctx.fillStyle='#eaf6ff';ctx.font=`${Math.max(12,Math.floor(size*.13))}px system-ui`;ctx.fillText(s.o.name,sx,y+size*.88);ctx.globalAlpha=1}}
+function drawMiniMap(){const s=8,p=10;ctx.globalAlpha=.72;ctx.fillStyle='rgba(2,6,23,.62)';ctx.fillRect(p,p,W*s,H*s);for(let y=0;y<H;y++)for(let x=0;x<W;x++){if(MAP[y][x]){ctx.fillStyle=MAP[y][x]===6?'#14532d':'#334155';ctx.fillRect(p+x*s,p+y*s,s-1,s-1)}}ctx.fillStyle='#38bdf8';ctx.beginPath();ctx.arc(p+state.px*s,p+state.py*s,3,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#38bdf8';ctx.beginPath();ctx.moveTo(p+state.px*s,p+state.py*s);ctx.lineTo(p+(state.px+Math.cos(state.pa)*.8)*s,p+(state.py+Math.sin(state.pa)*.8)*s);ctx.stroke();ctx.globalAlpha=1}
+function nearestObject(){let best=null;for(const [id,o] of Object.entries(objectDefs)){const dx=o.x-state.px,dy=o.y-state.py,dist=Math.hypot(dx,dy);if(dist>2.05)continue;let ang=Math.atan2(dy,dx)-state.pa;while(ang<-Math.PI)ang+=Math.PI*2;while(ang>Math.PI)ang-=Math.PI*2;if(Math.abs(ang)<.34 && (!best||dist<best.dist))best={id,o,dist}}return best}
+function use(){const target=nearestObject();if(!target){toast('조금 더 가까이 가서 조준하세요');return}handlers[target.id]()}
+function showModal(title, body, actions){modalTitle.textContent=title;modalBody.innerHTML=body;modalActions.innerHTML='';actions.forEach(a=>{const b=document.createElement('button');b.textContent=a.label;b.className=a.className||'';b.onclick=a.onClick;modalActions.appendChild(b)});backdrop.classList.add('show')}
+function closeModal(){backdrop.classList.remove('show')}
+function openSafe(code){if(code==='0315'){state.safeOpen=true;addItem('screwdriver');setHint('금고에서 드라이버를 얻었습니다. 환풍구를 열 수 있습니다.');save();closeModal()}else toast('금고가 열리지 않습니다')}
+function submitDoor(){if(state.code==='0315'||state.code==='3154'){state.doorOpen=true;setHint('출구 문 잠금이 풀렸습니다. 문 앞으로 가서 조사하세요.');toast('문 잠금 해제');save();closeModal()}else toast('코드가 맞지 않습니다')}
+function updateCode(){const el=document.getElementById('doorCode');if(el)el.value=state.code.padEnd(4,'·')}
+const handlers={
+  clock(){state.clockSeen=true;addItem('memo');setHint('시계 단서: 03:15');showModal('멈춘 시계','<p>바늘이 <b>03:15</b>에서 멈춰 있습니다. 네 자리 숫자로는 <b>0315</b>입니다.</p>',[{label:'닫기',onClick:closeModal}]);save()},
+  painting(){if(!state.paintingMoved){state.paintingMoved=true;addItem('keycard');setHint('그림 뒤에서 키카드를 얻었습니다.');showModal('비뚤어진 그림','<p>그림 뒤에서 키카드를 꺼냈습니다. 이제 키패드가 반응할 수 있습니다.</p>',[{label:'닫기',onClick:closeModal}]);save()}else showModal('그림 뒤','<p>이미 키카드를 챙겼습니다. 뒤쪽에는 “빛을 켜라”라는 문구가 있습니다.</p>',[{label:'닫기',onClick:closeModal}])},
+  safe(){if(state.safeOpen){showModal('열린 금고','<p>금고는 비어 있습니다. 드라이버는 이미 챙겼습니다.</p>',[{label:'닫기',onClick:closeModal}]);return}showModal('금고','<p>네 자리 숫자 금고입니다. 시계 단서가 떠오릅니다.</p><input class="code" id="safeCode" inputmode="numeric" maxlength="4" placeholder="----">',[{label:'0315 입력',className:'primary',onClick:()=>openSafe('0315')},{label:'직접 확인',onClick:()=>openSafe(document.getElementById('safeCode').value)},{label:'닫기',onClick:closeModal}])},
+  desk(){state.deskOpen=true;addItem('memo');setHint('책상 노트: 빨강→파랑→초록→노랑.');showModal('책상 노트','<p>노트에 <b>빨강 → 파랑 → 초록 → 노랑</b>이라고 적혀 있습니다. 마지막 장치의 보조 단서입니다.</p>',[{label:'닫기',onClick:closeModal}]);save()},
+  vent(){if(!has('screwdriver')){showModal('환풍구','<p>나사가 단단합니다. 드라이버가 필요합니다.</p>',[{label:'닫기',onClick:closeModal}]);return}if(!state.ventOpen){state.ventOpen=true;addItem('fuse');setHint('환풍구에서 퓨즈를 얻었습니다. 스탠드 전원을 복구하세요.');showModal('환풍구','<p>드라이버로 나사를 풀고 퓨즈를 꺼냈습니다.</p>',[{label:'닫기',onClick:closeModal}]);save()}else showModal('열린 환풍구','<p>안쪽은 비어 있습니다.</p>',[{label:'닫기',onClick:closeModal}])},
+  lamp(){if(!has('fuse')){showModal('스탠드','<p>전원이 들어오지 않습니다. 퓨즈가 필요합니다.</p>',[{label:'닫기',onClick:closeModal}]);return}state.lampOn=true;setHint('전원이 복구되어 키패드가 활성화되었습니다.');toast('스탠드 전원 복구');save();showModal('켜진 스탠드','<p>방이 밝아지고 출구 키패드가 켜졌습니다.</p>',[{label:'닫기',onClick:closeModal}])},
+  keypad(){if(!has('keycard')){showModal('키패드','<p>CARD REQUIRED. 키카드가 필요합니다.</p>',[{label:'닫기',onClick:closeModal}]);return}if(!state.lampOn){showModal('키패드','<p>키카드는 인식됐지만 전원이 부족합니다.</p>',[{label:'닫기',onClick:closeModal}]);return}state.code='';showModal('출구 키패드','<p>시계 숫자를 입력하세요.</p><input class="code" id="doorCode" readonly value=""><div class="pad" id="pad"></div>',[{label:'지우기',onClick:()=>{state.code='';updateCode()}},{label:'확인',className:'success',onClick:submitDoor},{label:'닫기',onClick:closeModal}]);const pad=document.getElementById('pad');['1','2','3','4','5','6','7','8','9','0'].forEach(n=>{const b=document.createElement('button');b.textContent=n;b.onclick=()=>{if(state.code.length<4)state.code+=n;updateCode()};pad.appendChild(b)});updateCode()},
+  door(){if(!state.doorOpen){setHint('문은 아직 잠겨 있습니다. 키패드를 해결하세요.');showModal('잠긴 문','<p>키카드, 전원, 코드 입력이 모두 필요합니다.</p>',[{label:'닫기',onClick:closeModal}]);return}state.ending=true;save();renderHud()}
+};
+function reset(){state={...initial};localStorage.removeItem(STORAGE);closeModal();renderHud();setHint('진짜 3D처럼 방 안을 걸어 다니며 중앙 조준점으로 물건을 보고 “조사”하세요.');toast('처음부터 시작')}
+function frame(t){const dt=Math.min(.05,(t-last)/1000);last=t;if(!backdrop.classList.contains('show')&&!state.ending){const sp=dt*2.35, rs=dt*2.2;if(keys.w||keys.ArrowUp)move(sp);if(keys.s||keys.ArrowDown)move(-sp);if(keys.a)strafe(-sp);if(keys.d)strafe(sp);if(keys.ArrowLeft)turn(-rs);if(keys.ArrowRight)turn(rs)}draw3D();requestAnimationFrame(frame)}
+document.addEventListener('keydown',e=>{keys[e.key]=true;if(e.key==='e'||e.key===' ')use();if(e.key==='Escape')closeModal()});document.addEventListener('keyup',e=>keys[e.key]=false);
+function hold(id,on,off=()=>{}){const el=document.getElementById(id);const start=e=>{e.preventDefault();on(true)};const end=e=>{e.preventDefault();off();on(false)};el.addEventListener('pointerdown',start);el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);el.addEventListener('pointerleave',end)}
+hold('up',v=>keys.w=v);hold('down',v=>keys.s=v);hold('left',v=>keys.a=v);hold('right',v=>keys.d=v);hold('turnL',v=>keys.ArrowLeft=v);hold('turnR',v=>keys.ArrowRight=v);
+document.getElementById('use').onclick=use;document.getElementById('reset').onclick=reset;document.getElementById('again').onclick=reset;backdrop.addEventListener('click',e=>{if(e.target===backdrop)closeModal()});
+let dragging=false,lastX=0;canvas.addEventListener('pointerdown',e=>{dragging=true;lastX=e.clientX;canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(dragging){turn((e.clientX-lastX)*0.006);lastX=e.clientX}});canvas.addEventListener('pointerup',()=>dragging=false);canvas.addEventListener('dblclick',use);
+renderHud();requestAnimationFrame(frame);
+</script>
+</body>
+</html>

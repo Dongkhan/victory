@@ -31,12 +31,12 @@
     },
     {
       "source": "/escape-3d",
-      "destination": "/escape-3d/prototype/v0.1.html",
+      "destination": "/escape-3d/prototype/v0.2.html",
       "permanent": false
     },
     {
       "source": "/escape",
-      "destination": "/escape-3d/prototype/v0.1.html",
+      "destination": "/escape-3d/prototype/v0.2.html",
       "permanent": false
     }
   ]
