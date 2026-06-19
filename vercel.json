@@ -28,6 +28,16 @@
       "source": "/the-window",
       "destination": "/the-window/prototype/v0.1.html",
       "permanent": false
+    },
+    {
+      "source": "/escape-3d",
+      "destination": "/escape-3d/prototype/v0.1.html",
+      "permanent": false
+    },
+    {
+      "source": "/escape",
+      "destination": "/escape-3d/prototype/v0.1.html",
+      "permanent": false
     }
   ]
 }
