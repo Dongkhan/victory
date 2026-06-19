@@ -350,15 +350,41 @@ document.addEventListener('DOMContentLoaded', async function() {
     el.setAttribute('aria-modal','true');
     el.setAttribute('aria-label','복식호흡 세션');
     el.style.cssText='position:fixed;inset:0;z-index:999999;background:#F1EFE6;color:#1F1F1F;display:flex;align-items:center;justify-content:center;padding:24px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;';
-    el.innerHTML='<div style="max-width:390px;width:100%;background:#FAF8F0;border:1px solid #E2DFD3;border-radius:28px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.18)"><button type="button" aria-label="홈으로 돌아가기" data-rr-close style="float:right;border:0;background:transparent;font-size:16px;padding:10px">홈 ›</button><p style="font-size:12px;letter-spacing:.14em;color:#595753;margin:0 0 10px">RELAX ROUTINE</p><h1 style="font-size:30px;line-height:1.15;margin:0 0 12px">복식호흡</h1><p style="line-height:1.65;color:#595753;margin:0 0 20px">4-7-8 호흡을 1분 동안 연습합니다. 어지럽거나 불편하면 바로 중단하세요.</p><div data-rr-breath-phase style="height:150px;border-radius:999px;background:#E4F0BC;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;margin:20px 0">준비</div><button type="button" data-rr-start aria-label="복식호흡 시작" style="width:100%;border:0;border-radius:18px;padding:16px;background:#1F1F1F;color:white;font-size:16px;font-weight:800">시작하기</button><button type="button" data-rr-complete aria-label="복식호흡 완료하고 기록 저장" disabled style="width:100%;border:1px solid #E2DFD3;border-radius:18px;padding:16px;background:#EEE;color:#888;font-size:16px;font-weight:800;margin-top:10px">완료하고 홈으로</button></div>';
+    el.innerHTML='<div style="max-width:390px;width:100%;background:#FAF8F0;border:1px solid #E2DFD3;border-radius:28px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.18)"><button type="button" aria-label="홈으로 돌아가기" data-rr-close style="float:right;border:0;background:transparent;font-size:16px;padding:10px">홈 ›</button><p style="font-size:12px;letter-spacing:.14em;color:#595753;margin:0 0 10px">RELAX ROUTINE</p><h1 style="font-size:30px;line-height:1.15;margin:0 0 12px">복식호흡</h1><p style="line-height:1.65;color:#595753;margin:0 0 20px">4-7-8 호흡을 4회 연습합니다. 어지럽거나 불편하면 바로 중단하세요.</p><div style="height:230px;border-radius:28px;background:#F6F2E7;display:flex;align-items:center;justify-content:center;margin:20px 0;position:relative;overflow:hidden"><div data-rr-breath-balloon style="width:80px;height:80px;border-radius:999px;background:radial-gradient(circle at 35% 30%,#fff 0,#D4E8F0 35%,#5A9FB8 100%);box-shadow:0 20px 60px rgba(90,159,184,.24);transition:width 120ms linear,height 120ms linear,background 300ms ease,box-shadow 300ms ease"></div><div data-rr-breath-phase style="position:absolute;inset:auto 0 24px;text-align:center;font-size:22px;font-weight:800">준비</div><div data-rr-breath-sec style="position:absolute;top:24px;right:24px;font-size:34px;font-weight:900;color:#1F1F1F">4</div></div><div data-rr-breath-count style="font-size:13px;color:#595753;text-align:center;margin:-6px 0 16px">4초 들숨 · 7초 멈춤 · 8초 날숨</div><button type="button" data-rr-start aria-label="복식호흡 시작" style="width:100%;border:0;border-radius:18px;padding:16px;background:#1F1F1F;color:white;font-size:16px;font-weight:800">시작하기</button><button type="button" data-rr-complete aria-label="복식호흡 완료하고 기록 저장" disabled style="width:100%;border:1px solid #E2DFD3;border-radius:18px;padding:16px;background:#EEE;color:#888;font-size:16px;font-weight:800;margin-top:10px">완료하고 홈으로</button></div>';
     document.body.appendChild(el); document.documentElement.dataset.route='breath';
     const phase=el.querySelector('[data-rr-breath-phase]');
+    const sec=el.querySelector('[data-rr-breath-sec]');
+    const count=el.querySelector('[data-rr-breath-count]');
+    const balloon=el.querySelector('[data-rr-breath-balloon]');
     const start=el.querySelector('[data-rr-start]');
     const done=el.querySelector('[data-rr-complete]');
-    el.querySelector('[data-rr-close]').onclick=closeOverlay;
+    let raf=0;
+    el.querySelector('[data-rr-close]').onclick=function(){ if(raf) cancelAnimationFrame(raf); closeOverlay(); };
     start.onclick=function(){
-      let n=0; const phases=['들이쉬세요','멈추세요','내쉬세요','반복하세요','마무리']; start.disabled=true; start.textContent='진행 중';
-      const timer=setInterval(()=>{phase.textContent=phases[n%phases.length]; n++; if(n>=5){clearInterval(timer); phase.textContent='세션 완료'; done.disabled=false; done.style.background='#A8CC4D'; done.style.color='#1F1F1F';}},700);
+      const phases=[
+        {name:'들이쉬세요',dur:4,min:80,max:220,color:'radial-gradient(circle at 35% 30%,#fff 0,#D4E8F0 35%,#5A9FB8 100%)',shadow:'0 20px 60px rgba(90,159,184,.24)'},
+        {name:'멈추세요',dur:7,min:220,max:220,color:'radial-gradient(circle at 35% 30%,#fff 0,#F0E0C2 35%,#C9974D 100%)',shadow:'0 22px 70px rgba(201,151,77,.28)'},
+        {name:'내쉬세요',dur:8,min:220,max:80,color:'radial-gradient(circle at 35% 30%,#fff 0,#DCD5EA 35%,#8A7BB0 100%)',shadow:'0 20px 60px rgba(138,123,176,.22)'}
+      ];
+      const cycleMs=phases.reduce((sum,p)=>sum+p.dur*1000,0), targetCycles=4, targetMs=cycleMs*targetCycles;
+      let started=performance.now(); start.disabled=true; start.textContent='진행 중';
+      function frame(now){
+        const elapsed=Math.max(0,now-started);
+        if(elapsed>=targetMs){
+          phase.textContent='세션 완료'; sec.textContent='0'; count.textContent='4회 완료';
+          balloon.style.width='80px'; balloon.style.height='80px';
+          done.disabled=false; done.style.background='#A8CC4D'; done.style.color='#1F1F1F'; raf=0; return;
+        }
+        let within=elapsed%cycleMs, current=phases[0];
+        for(const p of phases){ const span=p.dur*1000; if(within<span){current=p; break;} within-=span; }
+        const progress=Math.min(1,Math.max(0,within/(current.dur*1000)));
+        const size=current.min+(current.max-current.min)*progress;
+        phase.textContent=current.name; sec.textContent=Math.max(1,Math.ceil((current.dur*1000-within)/1000));
+        count.textContent=(Math.floor(elapsed/cycleMs)+1)+' / '+targetCycles+'회 · 4초 들숨 · 7초 멈춤 · 8초 날숨';
+        balloon.style.width=size+'px'; balloon.style.height=size+'px'; balloon.style.background=current.color; balloon.style.boxShadow=current.shadow;
+        raf=requestAnimationFrame(frame);
+      }
+      raf=requestAnimationFrame(frame);
     };
     done.onclick=function(){window.__rrAllowCompletionRecord=true; window.recordRoutineProgress && window.recordRoutineProgress('복식호흡'); closeOverlay();};
   }
