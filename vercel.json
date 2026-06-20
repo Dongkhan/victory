@@ -21,12 +21,12 @@
     },
     {
       "source": "/escape-3d",
-      "destination": "/escape-3d/prototype/v0.10.html",
+      "destination": "/escape-3d/prototype/v0.11.html",
       "permanent": false
     },
     {
       "source": "/escape",
-      "destination": "/escape-3d/prototype/v0.10.html",
+      "destination": "/escape-3d/prototype/v0.11.html",
       "permanent": false
     }
   ]
