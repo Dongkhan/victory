@@ -1082,7 +1082,7 @@ function restore(sn){ GM.state=JSON.parse(sn.s); GM.moves.length=sn.ml; GM.posCo
 function applyMove(m,mover){ // 공통: moves/posCounts/잡힌말 기록 + 적용
   const g=GM;
   const capType = m.ep ? 'p' : (g.state.board[m.to[0]][m.to[1]] ? g.state.board[m.to[0]][m.to[1]].t : null);
-  if(capType){ g.addScore(10, m.to[0]*40, m.to[1]*40); }
+  if(capType){ addScore(10, m.to[0]*40, m.to[1]*40); }
   g.history.push(snap());  g.moves.push({mover, cap:capType, from:m.from, to:m.to});
   g.state=makeMove(g.state,m); g.last={from:m.from,to:m.to}; g.anim={from:m.from,to:m.to};
   g.posCounts[posKey(g.state)]=(g.posCounts[posKey(g.state)]||0)+1;
