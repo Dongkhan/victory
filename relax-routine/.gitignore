@@ -1,0 +1,18 @@
+# Capacitor / node
+node_modules/
+capacitor-app/node_modules/
+capacitor-app/android/node_modules/
+
+# 서명 키 (분실·유출 금지, git 절대 제외)
+release-keys/
+*.keystore
+*.jks
+
+# 빌드 산출물
+capacitor-app/android/app/build/
+capacitor-app/android/build/
+capacitor-app/android/.gradle/
+capacitor-app/android/local.properties
+
+# 빌드된 APK (원본은 prototype + cap sync로 재생산)
+RelaxRoutine-*.apk

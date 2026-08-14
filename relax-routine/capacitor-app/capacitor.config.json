@@ -1,0 +1,8 @@
+{
+  "appId": "com.dongkhan.relaxroutine",
+  "appName": "Relax Routine",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "Relax Routine",
+  "short_name": "릴랙스루틴",
+  "id": "/relax-routine/prototype/v3.10.6.html",
+  "start_url": "/relax-routine/prototype/v3.10.6.html",
+  "scope": "/relax-routine/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#95C11F",
+  "background_color": "#FFFFDD",
+  "icons": [
+    {
+      "src": "/relax-routine/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/relax-routine/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/relax-routine/icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
