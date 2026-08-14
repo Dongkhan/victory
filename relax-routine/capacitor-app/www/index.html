@@ -496,5 +496,122 @@ document.addEventListener('DOMContentLoaded', async function() {
 })();
 </script>
 
+<!-- Relax Routine v3.13 merged design/accessibility patch. Original template remains byte-identical. -->
+<style id="rr-v313-merged-css">
+:root{--rr-v313-bg:#F1EFE6;--rr-v313-text:#30362F;--rr-v313-secondary:#595753;--rr-v313-crisis:#A33D2E;--rr-v313-nav:64px;}
+
+/* 1,9,11 — navigation contrast, 12px labels, safe-area self defence. */
+nav[aria-label="주요 메뉴"]{height:auto!important;min-height:var(--rr-v313-nav)!important;padding-bottom:max(6px,env(safe-area-inset-bottom))!important;}
+nav[aria-label="주요 메뉴"] button{min-width:48px!important;min-height:48px!important;}
+nav[aria-label="주요 메뉴"] button:not([aria-current="page"])>span:first-child{color:var(--rr-v313-secondary)!important;opacity:1!important;}
+nav[aria-label="주요 메뉴"] button[aria-current="page"]>span:first-child{color:var(--rr-v313-text)!important;opacity:1!important;}
+nav[aria-label="주요 메뉴"] button>span:last-child{font-size:12px!important;line-height:1.2!important;}
+
+/* 2 — every 8–9px inline calendar/meta value is lifted to 12px; pale tokens become readable. */
+[style*="font-size: 8px"],[style*="font-size: 9px"]{font-size:12px!important;line-height:1.35!important;}
+[style*="font-size: 8px"][style*="rgb(226, 223, 211)"],[style*="font-size: 9px"][style*="rgb(226, 223, 211)"]{color:#595753!important;}
+[style*="font-size: 8px"][style*="rgb(200, 212, 203)"],[style*="font-size: 9px"][style*="rgb(200, 212, 203)"]{color:#53645A!important;}
+[style*="font-size: 8px"][style*="rgb(214, 205, 229)"],[style*="font-size: 9px"][style*="rgb(214, 205, 229)"]{color:#5C5567!important;}
+[style*="font-size: 8px"][style*="rgb(212, 212, 212)"],[style*="font-size: 9px"][style*="rgb(212, 212, 212)"]{color:#595959!important;}
+[style*="font-size: 9px"][style*="rgb(156, 138, 77)"]{color:#6E5F2E!important;}
+
+/* 3 — small overlay, secondary, recommendation and crisis controls meet 48×48px. */
+.rr-pmr-back,.rr-bscan-back,.rr-auto-back,#rr-loop-breath [data-rr-close],#rr-crisis-close{min-width:48px!important;min-height:48px!important;}
+.rr-pmr-modebar button,.rr-pmr-duration button,.rr-v33-finish-card button,.relax-focused-home-v22 button,
+#rr-pmr-v3 button,#rr-bscan button,#rr-auto button,#rr-loop-breath button,#root [role="dialog"] button{min-height:48px!important;}
+.relax-focused-home-v22 .close,#relax-close-focused-v22{width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important;}
+
+/* 4 — offline Android/system fonts first; Korean serif fallback stays explicit. */
+@font-face{font-family:'Pretendard';src:local('Roboto'),local('Noto Sans KR'),local('Noto Sans CJK KR'),local('NotoSansCJKkr-Regular');}
+@font-face{font-family:'Inter';src:local('Roboto'),local('Noto Sans KR');}
+@font-face{font-family:'Lora';src:local('Noto Serif KR'),local('Noto Serif CJK KR'),local('NotoSerifCJKkr-Regular'),local('Noto Serif');}
+@font-face{font-family:'Noto Serif KR';src:local('Noto Serif CJK KR'),local('Source Han Serif K'),local('Noto Serif');}
+body,#root,#root button,#root input,#root select,#root textarea,#rr-pmr-v3,#rr-bscan,#rr-auto,#rr-loop-breath,#rr-crisis-modal,
+[style*="Pretendard"],[style*="Avenir"]{font-family:Roboto,"Noto Sans KR","Noto Sans CJK KR","SamsungOne",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif!important;}
+[style*="Lora"],[style*="Iowan"]{font-family:"Noto Serif KR","Noto Serif CJK KR","NanumMyeongjo","AppleMyungjo","Batang",serif!important;}
+
+/* 5 — recommendation panel is bounded, scrollable, overlay-safe; JS enforces once-per-day dismissal. */
+.relax-focused-home-v22{box-sizing:border-box!important;max-height:min(44dvh,340px)!important;overflow-y:auto!important;overscroll-behavior:contain!important;scrollbar-width:thin!important;}
+html[data-route="pmr"] .relax-focused-home-v22,html[data-route="bodyscan"] .relax-focused-home-v22,
+html[data-route="autogenic"] .relax-focused-home-v22,html[data-route="breath"] .relax-focused-home-v22{display:none!important;}
+.relax-focused-home-v22 small{font-size:13px!important;color:var(--rr-v313-secondary)!important;line-height:1.45!important;}
+
+/* 6 — reduce means remove, including boot, breathing, scanning and toast motion. */
+@media (prefers-reduced-motion:reduce){
+ html:focus-within{scroll-behavior:auto!important;}
+ *,*::before,*::after{animation:none!important;animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition:none!important;transition-duration:.01ms!important;transition-delay:0s!important;scroll-behavior:auto!important;}
+ #rr-auto .rr-auto-orb,#rr-auto.stage-heart .rr-auto-orb,#rr-auto.stage-heavy .rr-auto-orb,#rr-auto.stage-warm .rr-auto-orb,#rr-auto.stage-belly .rr-auto-orb,#rr-auto.stage-fore .rr-auto-orb,
+ #rr-pmr-v3 .rr-pmr-orb,#rr-pmr-v3 .rr-pmr-orb.tension,#rr-pmr-v3 .rr-pmr-orb.relax,#rr-bscan .rr-bscan-scanline,
+ #rr-boot-loader *,#boot-loader *,.uxv01-toast,.uxv01-toast.fading,.fade-in{animation:none!important;transition:none!important;}
+ .fade-in{opacity:1!important;transform:none!important;}.uxv01-toast{opacity:1!important;transform:translate(-50%,0)!important;}
+}
+
+/* 8 — crisis/error foreground reaches AA on the light crisis surface and never shrinks below 13px. */
+[style^="color: rgb(199, 90, 77)"],[style*="; color: rgb(199, 90, 77)"]{color:var(--rr-v313-crisis)!important;}
+[style*="font-size: 11px"][style*="color: rgb(199, 90, 77)"],#root [data-safety="true"] small{font-size:13px!important;line-height:1.45!important;color:var(--rr-v313-crisis)!important;}
+#rr-crisis-modal small{font-size:13px!important;line-height:1.45!important;}
+
+/* 10,12,13 — foldable width, Korean wrapping and one coherent app background. */
+#root{background:var(--rr-v313-bg)!important;word-break:keep-all;overflow-wrap:break-word;}
+#root>*{background-color:var(--rr-v313-bg);}
+#root[data-relax-home-v25="true"]>*{background:linear-gradient(180deg,#F7F3E8 0%,var(--rr-v313-bg) 72%)!important;}
+@media (max-width:480px){html,body{background:var(--rr-v313-bg)!important;}}
+@media (min-width:481px) and (max-width:699px){
+ html,body{padding:0!important;background:var(--rr-v313-bg)!important;}
+ #root{width:min(560px,100vw)!important;max-width:100vw!important;height:100dvh!important;max-height:100dvh!important;border-radius:0!important;box-shadow:none!important;}
+ .relax-focused-home-v22{width:min(560px,calc(100vw - 32px))!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;}
+}
+</style>
+<script id="rr-v313-merged-patch">
+(function(){
+ 'use strict';
+ var STYLE_ID='rr-v313-merged-css';
+ var source=document.getElementById(STYLE_ID),CSS=source?source.textContent:'';
+ var DISMISS_KEY='rr_v313_focused_dismissed',lastTrigger=null,scheduled=false,panelPolicyDone=false;
+ var states=new Map();
+ var OVERLAYS=[
+  {id:'rr-pmr-v3',openClass:true,title:'.rr-pmr-title',close:'.rr-pmr-back'},
+  {id:'rr-bscan',openClass:true,title:'.rr-bscan-title',close:'.rr-bscan-back'},
+  {id:'rr-auto',openClass:true,title:'.rr-auto-title',close:'.rr-auto-back'},
+  {id:'rr-loop-breath',openClass:false,title:'h1',close:'[data-rr-close]'},
+  {id:'rr-crisis-modal',openClass:true,title:'#rr-crisis-title',close:'#rr-crisis-close'}
+ ];
+ function todayKey(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+ function shown(el){if(!el)return false;var c=getComputedStyle(el),r=el.getBoundingClientRect();return c.display!=='none'&&c.visibility!=='hidden'&&r.width>0&&r.height>0;}
+ function openEl(cfg){var el=document.getElementById(cfg.id);return el&&(!cfg.openClass||el.classList.contains('open'))&&shown(el)?el:null;}
+ function focusables(el){return Array.from(el.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')).filter(shown);}
+ function ensureStyle(){
+  try{var head=document.head;if(!head||!CSS)return;var st=document.getElementById(STYLE_ID);if(!st){st=document.createElement('style');st.id=STYLE_ID;st.textContent=CSS;head.appendChild(st);return;}var all=head.querySelectorAll('style');if(all.length&&all[all.length-1]!==st)head.appendChild(st);}catch(_){}
+ }
+ function focusInto(el,selector){setTimeout(function(){try{var t=(selector&&el.querySelector(selector))||focusables(el)[0]||el;if(!t.matches('button,a,input,select,textarea,[tabindex]'))t.setAttribute('tabindex','-1');t.focus({preventScroll:true});}catch(_){}},50);}
+ function syncFocus(){
+  OVERLAYS.forEach(function(cfg){var el=openEl(cfg),st=states.get(cfg.id);if(el&&!st){var trigger=lastTrigger&&document.contains(lastTrigger)?lastTrigger:document.activeElement;states.set(cfg.id,{trigger:trigger});el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');focusInto(el,cfg.title);}else if(!el&&st){states.delete(cfg.id);if(st.trigger&&document.contains(st.trigger)&&st.trigger.focus)try{st.trigger.focus({preventScroll:true});}catch(_){}}});
+  var dlg=document.querySelector('#root [role="dialog"][data-safety="true"]'),st=states.get('react-crisis');
+  if(dlg&&!st){var trigger=lastTrigger&&document.contains(lastTrigger)?lastTrigger:document.activeElement;states.set('react-crisis',{trigger:trigger});focusInto(dlg,null);}else if(!dlg&&st){states.delete('react-crisis');if(st.trigger&&document.contains(st.trigger)&&st.trigger.focus)try{st.trigger.focus({preventScroll:true});}catch(_){}}
+ }
+ function enforcePanelPolicy(){
+  try{if(panelPolicyDone)return;var panel=document.getElementById('relax-focused-home-v22');if(!panel)return;if(localStorage.getItem(DISMISS_KEY)===todayKey()){panelPolicyDone=true;var c=panel.querySelector('#relax-close-focused-v22');if(c)c.click();else panel.remove();}}catch(_){}
+ }
+ function run(){scheduled=false;ensureStyle();syncFocus();enforcePanelPolicy();}
+ function schedule(){if(!scheduled){scheduled=true;requestAnimationFrame(run);}}
+ document.addEventListener('click',function(e){
+  var t=e.target&&e.target.closest&&e.target.closest('button,a,[role="button"]');
+  if(t&&t.matches('#relax-close-focused-v22,#relax-view-all-v22'))try{localStorage.setItem(DISMISS_KEY,todayKey());}catch(_){}
+  if(t&&!t.closest('#rr-pmr-v3,#rr-bscan,#rr-auto,#rr-loop-breath,#rr-crisis-modal,#root [role="dialog"][data-safety="true"]'))lastTrigger=t;
+  setTimeout(schedule,0);
+ },true);
+ document.addEventListener('keydown',function(e){
+  var active=null,cfg=null;
+  for(var i=0;i<OVERLAYS.length;i++){var found=openEl(OVERLAYS[i]);if(found){active=found;cfg=OVERLAYS[i];break;}}
+  if(!active){active=document.querySelector('#root [role="dialog"][data-safety="true"]');if(active)cfg={close:'button'};}
+  if(!active){if((e.key==='Escape'||e.key==='Esc')){var panel=document.getElementById('relax-focused-home-v22'),pc=panel&&panel.querySelector('#relax-close-focused-v22');if(pc){e.preventDefault();pc.click();}}return;}
+  if(e.key==='Escape'||e.key==='Esc'){var close=active.querySelector(cfg.close);if(close){e.preventDefault();close.click();}return;}
+  if(e.key==='Tab'){var list=focusables(active);if(!list.length)return;var first=list[0],last=list[list.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}
+ },true);
+ var observer=new MutationObserver(schedule);
+ function boot(){run();try{observer.observe(document,{childList:true,subtree:true,attributes:true,attributeFilter:['class','style','aria-current']});}catch(_){}var n=0,iv=setInterval(function(){run();if(++n>=40)clearInterval(iv);},500);}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
 </body>
 </html>
