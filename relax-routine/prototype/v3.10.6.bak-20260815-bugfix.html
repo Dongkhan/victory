@@ -592,18 +592,7 @@ html[data-route="autogenic"] .relax-focused-home-v22,html[data-route="breath"] .
  function enforcePanelPolicy(){
   try{if(panelPolicyDone)return;var panel=document.getElementById('relax-focused-home-v22');if(!panel)return;if(localStorage.getItem(DISMISS_KEY)===todayKey()){panelPolicyDone=true;var c=panel.querySelector('#relax-close-focused-v22');if(c)c.click();else panel.remove();}}catch(_){}
  }
- function releaseInertTrap(){
-  var root=document.getElementById('root'); if(!root)return;
-  var anyOpen=false;
-  for(var i=0;i<OVERLAYS.length;i++){
-   var _cfg=OVERLAYS[i];
-   if(_cfg.openClass){ if(openEl(_cfg)){anyOpen=true;break;} }
-   else { var _el=document.getElementById(_cfg.id); if(_el&&shown(_el)&&states.get(_cfg.id)){anyOpen=true;break;} }
-  }
-  if(document.querySelector('#root [role="dialog"][data-safety="true"]'))anyOpen=true;
-  if(!anyOpen){root.removeAttribute('aria-hidden');try{root.inert=false;}catch(_){root.removeAttribute('data-inert-fallback');}}
- }
- function run(){scheduled=false;ensureStyle();syncFocus();enforcePanelPolicy();releaseInertTrap();}
+ function run(){scheduled=false;ensureStyle();syncFocus();enforcePanelPolicy();}
  function schedule(){if(!scheduled){scheduled=true;requestAnimationFrame(run);}}
  document.addEventListener('click',function(e){
   var t=e.target&&e.target.closest&&e.target.closest('button,a,[role="button"]');
