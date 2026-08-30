@@ -1,0 +1,1599 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0b1220">
+<meta name="description" content="러닝퀘스트 — 퀘스트·스토리·인터벌로 달리기를 게임처럼 만드는 오프라인 러닝 앱">
+<title>러닝퀘스트 · Run Quest</title>
+<style>
+:root{
+  --bg:#0b1220; --bg2:#111c30; --card:#152136; --card2:#1b2942; --ink:#f2f6ff; --muted:#9fb0cc;
+  --line:#26364f; --lime:#a3e635; --lime-d:#65a30d; --teal:#2dd4bf; --teal-d:#0d9488;
+  --coral:#fb7185; --sun:#fbbf24; --grape:#a78bfa; --sky:#38bdf8;
+  --ok:#34d399; --warn:#fbbf24; --bad:#f87171;
+  --shadow:0 16px 34px rgba(2,8,23,.45); --btn-ink:#05221d;
+  --radius:22px; --tap:44px;
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --bg:#f4f7fb; --bg2:#e8eefa; --card:#ffffff; --card2:#f2f6fd; --ink:#101a2b; --muted:#5b6b86;
+    --line:#dde5f2; --lime:#4d7c0f; --lime-d:#3f6212; --teal:#0d9488; --teal-d:#0f766e;
+    --shadow:0 14px 30px rgba(15,23,42,.10); --btn-ink:#ffffff;
+  }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{
+  background:radial-gradient(130% 90% at 50% 0%,var(--bg2),var(--bg));
+  color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,"Noto Sans KR",sans-serif;
+  line-height:1.55; overscroll-behavior:none; -webkit-font-smoothing:antialiased;
+}
+button,input,select{font-family:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--sky);outline-offset:2px;border-radius:12px}
+.app{max-width:480px;margin:0 auto;min-height:100%;position:relative;display:flex;flex-direction:column}
+.screen{flex:1;padding:10px 16px calc(104px + env(safe-area-inset-bottom));animation:fade .22s ease}
+.screen[hidden]{display:none}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.3px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- top bar ---------- */
+.topbar{display:flex;align-items:center;gap:8px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;position:sticky;top:0;z-index:20;
+  background:linear-gradient(180deg,var(--bg2) 62%,transparent)}
+.logo{font-size:20px;font-weight:900;display:flex;align-items:center;gap:7px;color:var(--ink)}
+.logo .mark{width:30px;height:30px;border-radius:11px;display:grid;place-items:center;font-size:17px;
+  background:linear-gradient(140deg,var(--lime),var(--teal));box-shadow:0 6px 16px rgba(45,212,191,.32)}
+.spacer{flex:1}
+.pill{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-weight:800;font-size:13px;
+  display:inline-flex;align-items:center;gap:5px;box-shadow:var(--shadow)}
+.pill.coin{color:var(--sun)} .pill.streak{color:var(--coral)}
+
+/* ---------- cards ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
+.card h2{font-size:16px;display:flex;align-items:center;gap:7px}
+.card .sub{color:var(--muted);font-size:13px;margin:4px 0 0}
+.row{display:flex;align-items:center;gap:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.muted{color:var(--muted)}
+.tiny{font-size:12px}
+
+/* ---------- hero / level ---------- */
+.hero{background:linear-gradient(140deg,#0f766e,#166534 55%,#3f6212);color:#f0fdf4;border:none;position:relative;overflow:hidden}
+.hero .glow{position:absolute;right:-40px;top:-56px;width:190px;height:190px;border-radius:50%;
+  background:radial-gradient(circle,rgba(163,230,53,.42),transparent 68%)}
+.hero .lv{font-size:12px;font-weight:800;background:rgba(255,255,255,.18);padding:4px 10px;border-radius:999px;display:inline-block}
+.hero h2{font-size:22px;margin:9px 0 2px;color:#fff}
+.bar{display:block;height:10px;border-radius:999px;background:rgba(255,255,255,.22);overflow:hidden;margin-top:12px}
+.bar > i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--sun),#a3e635);transition:width .5s ease}
+.bar.slim{height:7px;background:var(--card2)}
+
+/* ---------- buttons ---------- */
+.btn{border:none;cursor:pointer;border-radius:16px;padding:13px 18px;font-weight:800;font-size:15px;min-height:var(--tap);
+  background:linear-gradient(140deg,var(--lime),var(--teal));color:var(--btn-ink);box-shadow:0 8px 20px rgba(45,212,191,.28);
+  transition:transform .07s ease,filter .15s ease;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:active{transform:translateY(2px) scale(.99)}
+.btn.block{display:flex;width:100%}
+.btn.ghost{background:var(--card2);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.btn.danger{background:linear-gradient(140deg,#fb7185,#e11d48);color:#fff;box-shadow:0 8px 20px rgba(225,29,72,.28)}
+.btn.lg{font-size:18px;padding:18px;border-radius:20px}
+.btn[disabled]{opacity:.5;pointer-events:none}
+.chip{border:1px solid var(--line);background:var(--card2);color:var(--ink);border-radius:999px;padding:9px 14px;font-weight:700;font-size:13.5px;
+  cursor:pointer;min-height:38px}
+.chip[aria-pressed="true"]{background:linear-gradient(140deg,var(--lime),var(--teal));color:var(--btn-ink);border-color:transparent;font-weight:800}
+
+/* ---------- mode cards ---------- */
+.mode{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);
+  border-radius:20px;padding:14px;cursor:pointer;margin-bottom:10px;min-height:var(--tap);transition:border-color .15s,transform .07s}
+.mode:active{transform:scale(.99)}
+.mode[aria-pressed="true"]{border-color:var(--teal);box-shadow:0 0 0 2px rgba(45,212,191,.28) inset}
+.mode .ico{width:44px;height:44px;flex:0 0 44px;border-radius:14px;display:grid;place-items:center;font-size:22px;background:var(--card2)}
+.mode .m{flex:1;min-width:0}
+.mode .t{display:block;font-size:16px;font-weight:800}
+.mode .d{display:block;font-size:12.5px;color:var(--muted);margin-top:3px}
+
+/* ---------- stats ---------- */
+.stat{background:var(--card2);border-radius:16px;padding:12px;text-align:center}
+.stat .v{font-size:20px;font-weight:900;font-variant-numeric:tabular-nums}
+.stat .k{font-size:11.5px;color:var(--muted);font-weight:700;margin-top:2px}
+
+/* ---------- quests ---------- */
+.quest{display:flex;gap:11px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
+.quest:first-of-type{border-top:none}
+.quest .qi{width:36px;height:36px;flex:0 0 36px;border-radius:12px;display:grid;place-items:center;background:var(--card2);font-size:18px}
+.quest .qt{display:block;font-weight:700;font-size:14px}
+.quest .m{flex:1;min-width:0}
+.quest .m .tiny{display:block}
+.quest.done .qt{text-decoration:line-through;color:var(--muted)}
+.quest .qr{font-size:12px;font-weight:800;color:var(--sun);white-space:nowrap}
+
+/* ---------- weekly chart ---------- */
+.week{display:flex;align-items:flex-end;gap:8px;height:96px;margin-top:12px}
+.week .d{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%}
+.week .col{flex:1;width:100%;display:flex;align-items:flex-end}
+.week .col > i{display:block;width:100%;border-radius:8px 8px 4px 4px;background:linear-gradient(180deg,var(--teal),var(--lime-d));min-height:4px;transition:height .4s ease}
+.week .d.today .col > i{background:linear-gradient(180deg,var(--sun),var(--coral))}
+.week .lbl{font-size:11px;color:var(--muted);font-weight:700}
+
+/* ---------- badges ---------- */
+.badges{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.badge{background:var(--card2);border-radius:16px;padding:10px 6px;text-align:center;border:1px solid transparent}
+.badge .e{font-size:26px;filter:grayscale(1);opacity:.35}
+.badge.on{border-color:var(--teal)}
+.badge.on .e{filter:none;opacity:1}
+.badge .n{font-size:10.5px;font-weight:700;color:var(--muted);margin-top:4px;line-height:1.25}
+.badge.on .n{color:var(--ink)}
+
+/* ---------- list ---------- */
+.item{display:flex;gap:11px;align-items:center;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);
+  border-radius:18px;padding:13px;cursor:pointer;margin-bottom:10px;min-height:var(--tap)}
+.item .ic{width:40px;height:40px;flex:0 0 40px;border-radius:13px;display:grid;place-items:center;background:var(--card2);font-size:19px}
+.item .m{flex:1;min-width:0}
+.item .m b{font-size:14.5px;display:block}
+.item .m span{font-size:12px;color:var(--muted)}
+.item .r{text-align:right;font-weight:900;font-variant-numeric:tabular-nums}
+.item .r span{display:block;font-size:11.5px;color:var(--muted);font-weight:700}
+
+/* ---------- toggles ---------- */
+.opt{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line);min-height:var(--tap)}
+.opt:first-of-type{border-top:none}
+.opt .ot{flex:1}
+.opt .ot b{font-size:14px;display:block;font-weight:700}
+.opt .ot span{font-size:12px;color:var(--muted)}
+.sw{width:52px;height:31px;border-radius:999px;background:var(--card2);border:1px solid var(--line);position:relative;cursor:pointer;flex:0 0 52px}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:23px;height:23px;border-radius:50%;background:var(--muted);transition:transform .18s,background .18s}
+.sw[aria-checked="true"]{background:linear-gradient(140deg,var(--lime),var(--teal));border-color:transparent}
+.sw[aria-checked="true"]::after{transform:translateX(21px);background:var(--btn-ink)}
+
+/* ---------- tab bar ---------- */
+.tabbar{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:480px;z-index:30;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:2px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+  background:var(--bg);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.tabbar button{background:none;border:none;cursor:pointer;padding:6px 2px;border-radius:14px;display:flex;flex-direction:column;
+  align-items:center;gap:3px;color:var(--muted);font-weight:700;font-size:11px;min-height:var(--tap)}
+.tabbar button .ti{font-size:20px;line-height:1}
+.tabbar button[aria-selected="true"]{color:var(--ink)}
+.tabbar button[aria-selected="true"] .ti{filter:drop-shadow(0 4px 10px rgba(45,212,191,.6))}
+
+/* ---------- live run ---------- */
+.live{position:fixed;inset:0;z-index:60;background:radial-gradient(120% 80% at 50% 0%,var(--bg2),var(--bg));
+  display:flex;flex-direction:column;padding:calc(14px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
+  max-width:480px;margin:0 auto;overflow:auto}
+.live[hidden]{display:none}
+.live .bigtime{font-size:60px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-2px;text-align:center;margin:4px 0 0}
+.live .bigsub{text-align:center;color:var(--muted);font-weight:700;font-size:13px;margin-bottom:10px}
+.live .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.metric{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 8px;text-align:center}
+.metric .v{font-size:23px;font-weight:900;font-variant-numeric:tabular-nums}
+.metric .k{font-size:11px;color:var(--muted);font-weight:700}
+#routeWrap{position:relative;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:8px;margin-bottom:12px}
+#route{display:block;width:100%;height:172px;border-radius:14px;background:var(--card2)}
+.gpsflag{position:absolute;top:14px;left:14px;font-size:11px;font-weight:800;padding:4px 9px;border-radius:999px;
+  background:rgba(2,8,23,.55);color:#fff;border:1px solid var(--line)}
+.coach{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 14px;font-weight:700;font-size:14px;
+  display:flex;gap:9px;align-items:center;min-height:52px;margin-bottom:12px}
+.coach .ce{font-size:20px}
+.challenge{border-radius:20px;padding:14px;margin-bottom:12px;background:linear-gradient(140deg,#7c2d12,#b91c1c);color:#fff;
+  display:flex;gap:12px;align-items:center;box-shadow:0 12px 26px rgba(185,28,28,.3)}
+.challenge[hidden]{display:none}
+.challenge.easy{background:linear-gradient(140deg,#0f766e,#155e75)}
+.challenge .cd{width:52px;height:52px;flex:0 0 52px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:18px;
+  background:conic-gradient(#fff var(--p,0%),rgba(255,255,255,.22) 0);position:relative;font-variant-numeric:tabular-nums}
+.challenge .cd i{position:absolute;inset:5px;border-radius:50%;background:rgba(0,0,0,.35);display:grid;place-items:center;font-style:normal}
+.challenge .m{flex:1;min-width:0}
+.challenge .ct{display:block;font-size:15px;font-weight:900}
+.challenge .cs{display:block;font-size:12.5px;opacity:.92;font-weight:700}
+.live .controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:auto;padding-top:8px}
+.hold{position:relative;overflow:hidden}
+.hold .fill{position:absolute;inset:0;background:rgba(255,255,255,.28);width:0%;pointer-events:none}
+.splits{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px}
+.splits .sp{flex:0 0 auto;background:var(--card2);border-radius:12px;padding:7px 11px;font-size:12px;font-weight:800;font-variant-numeric:tabular-nums}
+.splits .sp span{color:var(--muted);font-weight:700}
+
+/* ---------- modal ---------- */
+.modal{position:fixed;inset:0;z-index:70;background:rgba(2,6,18,.72);display:flex;align-items:flex-end;justify-content:center;padding:0}
+.modal[hidden]{display:none}
+.sheet{background:var(--bg2);border-radius:26px 26px 0 0;width:100%;max-width:480px;max-height:92vh;overflow:auto;
+  padding:18px 16px calc(20px + env(safe-area-inset-bottom));border-top:1px solid var(--line);animation:up .26s ease}
+@keyframes up{from{transform:translateY(24px);opacity:.4}to{transform:none;opacity:1}}
+.sheet h2{font-size:20px;margin-bottom:4px}
+.grab{width:42px;height:4px;border-radius:999px;background:var(--line);margin:0 auto 12px}
+
+/* ---------- toast ---------- */
+.toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom));z-index:90;
+  width:min(440px,92vw);display:flex;flex-direction:column;gap:8px;pointer-events:none}
+body.sheet-open .toasts{bottom:auto;top:calc(12px + env(safe-area-inset-top))}
+.toast{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:11px 14px;font-weight:800;font-size:14px;
+  box-shadow:var(--shadow);display:flex;gap:9px;align-items:center;animation:pop .24s ease}
+.toast.gold{background:linear-gradient(140deg,#b45309,#f59e0b);color:#1f1300;border-color:transparent}
+@keyframes pop{from{transform:translateY(10px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+
+/* ---------- onboarding ---------- */
+.onboard{position:fixed;inset:0;z-index:80;background:radial-gradient(120% 80% at 50% 0%,var(--bg2),var(--bg));
+  display:flex;align-items:center;justify-content:center;padding:22px}
+.onboard[hidden]{display:none}
+.onboard .box{max-width:420px;width:100%}
+.onboard h1{font-size:28px;margin-bottom:8px}
+.safety{background:var(--card2);border-left:4px solid var(--warn);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--muted);margin:14px 0}
+.safety b{color:var(--ink)}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+}
+body.rm *{animation-duration:.001ms !important;transition-duration:.001ms !important}
+</style>
+</head>
+<body>
+
+<!-- ============ 온보딩 ============ -->
+<div class="onboard" id="onboard" role="dialog" aria-modal="true" aria-labelledby="obTitle">
+  <div class="box">
+    <div class="logo" style="margin-bottom:14px"><span class="mark">🏃</span> 러닝퀘스트</div>
+    <h1 id="obTitle">달리기를<br>모험으로 바꿔요</h1>
+    <p class="muted" style="margin:8px 0 0">매일 퀘스트를 깨고, 스토리 러닝에서 도망치고, 코인과 배지를 모으세요. 설치·로그인·광고 없이 이 기기에서만 기록이 저장됩니다.</p>
+    <div class="safety">
+      <b>먼저 안전부터.</b> 차도·신호를 항상 먼저 보세요. 화면보다 주변이 우선입니다. 이어폰은 한쪽만 쓰거나 볼륨을 낮추고, 어두운 시간에는 밝은 옷·반사 소재를 착용하세요.
+      가슴 통증·어지럼·심한 호흡곤란이 있으면 <b>즉시 멈추고</b> 도움을 요청하세요. 이 앱은 의료기기가 아니며 진단·치료를 대신하지 않습니다.
+    </div>
+    <label class="opt" style="border:none">
+      <span class="ot"><b>내 이름(선택)</b><span>응원 문구에 사용돼요. 기기에만 저장됩니다.</span></span>
+    </label>
+    <input id="obName" type="text" maxlength="12" placeholder="러너" autocomplete="off"
+      style="width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-size:15px;margin-bottom:14px">
+    <button class="btn block lg" id="obStart">알겠어요, 시작하기</button>
+  </div>
+</div>
+
+<div class="app">
+  <!-- ============ 상단바 ============ -->
+  <header class="topbar">
+    <div class="logo"><span class="mark">🏃</span> 러닝퀘스트</div>
+    <span class="spacer"></span>
+    <span class="pill streak" id="pillStreak" title="연속 달린 날">🔥 <b>0</b>일</span>
+    <span class="pill coin" id="pillCoin" title="모은 코인">🪙 <b>0</b></span>
+  </header>
+
+  <!-- ============ 홈 ============ -->
+  <section class="screen" id="s-home" role="tabpanel" aria-label="홈">
+    <div class="card hero">
+      <span class="glow"></span>
+      <span class="lv" id="lvBadge">Lv.1 새싹 러너</span>
+      <h2 id="heroTitle">오늘도 달릴 준비 됐나요?</h2>
+      <p class="tiny" id="heroSub" style="margin:2px 0 0;opacity:.9">첫 달리기를 시작하면 퀘스트가 열려요.</p>
+      <div class="bar"><i id="xpBar" style="width:0%"></i></div>
+      <p class="tiny" id="xpText" style="margin:6px 0 0;opacity:.9">XP 0 / 100</p>
+    </div>
+
+    <button class="btn block lg" id="goRun">🚀 달리기 시작</button>
+
+    <div class="card" style="margin-top:14px">
+      <h2>🎯 오늘의 퀘스트 <span class="tiny muted" id="questDate" style="font-weight:700"></span></h2>
+      <div id="questList"></div>
+      <p class="tiny muted" style="margin:10px 0 0">퀘스트는 매일 새벽에 새로 열려요.</p>
+    </div>
+
+    <div class="card">
+      <h2>📅 이번 주</h2>
+      <div class="grid3" style="margin-top:10px">
+        <div class="stat"><div class="v" id="wkDist">0.0</div><div class="k">km</div></div>
+        <div class="stat"><div class="v" id="wkRuns">0</div><div class="k">달린 횟수</div></div>
+        <div class="stat"><div class="v" id="wkTime">0분</div><div class="k">움직인 시간</div></div>
+      </div>
+      <div class="week" id="weekChart" aria-hidden="true"></div>
+    </div>
+
+    <div class="card">
+      <h2>🏅 최근 배지</h2>
+      <div class="badges" id="recentBadges" style="margin-top:10px"></div>
+    </div>
+  </section>
+
+  <!-- ============ 달리기 준비 ============ -->
+  <section class="screen" id="s-run" role="tabpanel" aria-label="달리기" hidden>
+    <h1 style="font-size:24px;margin:6px 0 4px">어떻게 달릴까요?</h1>
+    <p class="muted tiny" style="margin:0 0 14px">모드를 고르면 달리는 동안 코치가 함께해요.</p>
+
+    <div id="modeList">
+      <button class="mode" data-mode="free" aria-pressed="true">
+        <span class="ico">🌿</span>
+        <span class="m"><span class="t">자유 달리기</span><span class="d">내 페이스대로. 1km마다 스플릿과 응원을 알려줘요.</span></span>
+      </button>
+      <button class="mode" data-mode="story" aria-pressed="false">
+        <span class="ico">🧟</span>
+        <span class="m"><span class="t">스토리 러닝 · 좀비 탈출</span><span class="d">달리는 중 추격 이벤트가 등장. 정해진 시간 동안 페이스를 올려 도망치세요.</span></span>
+      </button>
+      <button class="mode" data-mode="interval">
+        <span class="ico">⚡</span>
+        <span class="m"><span class="t">인터벌 챌린지</span><span class="d">워밍업 3분 → 빠르게 1분 / 편하게 2분 × 5 → 쿨다운 3분.</span></span>
+      </button>
+    </div>
+
+    <div class="card">
+      <h2>🎚️ 목표 <span class="tiny muted" style="font-weight:700">(선택)</span></h2>
+      <div class="row" style="flex-wrap:wrap;gap:8px;margin-top:10px" id="goalChips" role="group" aria-label="목표 선택">
+        <button class="chip" data-goal="none" aria-pressed="true">목표 없음</button>
+        <button class="chip" data-goal="d2" aria-pressed="false">2 km</button>
+        <button class="chip" data-goal="d5" aria-pressed="false">5 km</button>
+        <button class="chip" data-goal="t20" aria-pressed="false">20 분</button>
+        <button class="chip" data-goal="t30" aria-pressed="false">30 분</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📍 위치 사용</h2>
+      <p class="sub" id="gpsHint">거리와 경로는 기기의 GPS로만 계산되고 어디에도 전송되지 않아요. 위치 권한이 없으면 <b>데모 모드</b>로 앱을 그대로 체험할 수 있습니다.</p>
+      <div class="row" style="gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="chip" id="btnDemo" aria-pressed="false">데모 모드로 달리기</button>
+        <span class="tiny muted" id="demoNote">GPS 없이 가상 경로로 전체 흐름을 볼 수 있어요.</span>
+      </div>
+    </div>
+
+    <div class="safety">
+      <b>달리기 전 확인.</b> 준비운동을 하고, 통증·어지럼이 느껴지면 즉시 멈추세요. 도로에서는 화면을 보지 말고 음성 안내만 들으세요.
+    </div>
+
+    <button class="btn block lg" id="startRun">▶︎ 시작</button>
+  </section>
+
+  <!-- ============ 기록 ============ -->
+  <section class="screen" id="s-log" role="tabpanel" aria-label="기록" hidden>
+    <h1 style="font-size:24px;margin:6px 0 12px">기록</h1>
+    <div class="card">
+      <h2>📈 전체 통계</h2>
+      <div class="grid3" style="margin-top:10px">
+        <div class="stat"><div class="v" id="totDist">0.0</div><div class="k">총 km</div></div>
+        <div class="stat"><div class="v" id="totRuns">0</div><div class="k">총 횟수</div></div>
+        <div class="stat"><div class="v" id="totTime">0분</div><div class="k">총 시간</div></div>
+      </div>
+      <div class="grid2" style="margin-top:12px">
+        <div class="stat"><div class="v" id="prFast">–</div><div class="k">가장 빠른 1 km</div></div>
+        <div class="stat"><div class="v" id="prLong">–</div><div class="k">최장 거리</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>🗂️ 달린 날들</h2>
+      <div id="histList" style="margin-top:12px"></div>
+    </div>
+  </section>
+
+  <!-- ============ 나 ============ -->
+  <section class="screen" id="s-me" role="tabpanel" aria-label="나" hidden>
+    <h1 style="font-size:24px;margin:6px 0 12px">나</h1>
+
+    <div class="card hero">
+      <span class="glow"></span>
+      <span class="lv" id="meLv">Lv.1</span>
+      <h2 id="meName">러너</h2>
+      <div class="bar"><i id="meXpBar" style="width:0%"></i></div>
+      <p class="tiny" id="meXpText" style="margin:6px 0 0;opacity:.9">XP 0 / 100</p>
+    </div>
+
+    <div class="card">
+      <h2>🏅 배지 <span class="tiny muted" id="badgeCount" style="font-weight:700"></span></h2>
+      <div class="badges" id="allBadges" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card">
+      <h2>⚙️ 설정</h2>
+      <div class="opt">
+        <span class="ot"><b>음성 안내</b><span>스플릿·챌린지를 소리로 알려줘요.</span></span>
+        <button class="sw" role="switch" aria-checked="true" data-opt="voice" aria-label="음성 안내"></button>
+      </div>
+      <div class="opt">
+        <span class="ot"><b>진동 피드백</b><span>이벤트가 생기면 짧게 진동해요.</span></span>
+        <button class="sw" role="switch" aria-checked="true" data-opt="haptics" aria-label="진동 피드백"></button>
+      </div>
+      <div class="opt">
+        <span class="ot"><b>자동 일시정지</b><span>신호 대기 등 멈춰 있으면 시간을 세지 않아요.</span></span>
+        <button class="sw" role="switch" aria-checked="true" data-opt="autoPause" aria-label="자동 일시정지"></button>
+      </div>
+      <div class="opt">
+        <span class="ot"><b>화면 켜두기</b><span>달리는 동안 화면이 꺼지지 않게 해요.</span></span>
+        <button class="sw" role="switch" aria-checked="true" data-opt="keepAwake" aria-label="화면 켜두기"></button>
+      </div>
+      <div class="opt">
+        <span class="ot"><b>애니메이션 줄이기</b><span>움직임에 민감하다면 켜세요.</span></span>
+        <button class="sw" role="switch" aria-checked="false" data-opt="reduceMotion" aria-label="애니메이션 줄이기"></button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>💾 내 데이터</h2>
+      <p class="sub">모든 기록은 이 브라우저(localStorage)에만 있습니다. 서버 전송·계정·광고가 없습니다.</p>
+      <div class="row" style="gap:10px;margin-top:12px">
+        <button class="btn ghost" id="btnExport" style="flex:1">내보내기(JSON)</button>
+        <button class="btn danger" id="btnWipe" style="flex:1">전체 삭제</button>
+      </div>
+    </div>
+
+    <div class="safety">
+      <b>안전 고지.</b> 러닝퀘스트는 건강·의료 서비스가 아닙니다. 지병이 있거나 오랜만에 운동을 시작한다면 전문가와 먼저 상의하세요.
+      운동 중 가슴 통증, 호흡곤란, 실신감이 있으면 즉시 중단하고 119에 연락하세요.
+    </div>
+    <p class="tiny muted" style="text-align:center">러닝퀘스트 v0.1 · 오프라인 단일 파일 프로토타입</p>
+  </section>
+
+  <!-- ============ 탭바 ============ -->
+  <nav class="tabbar" id="tabbar" role="tablist" aria-label="주요 화면">
+    <button role="tab" data-tab="home" aria-selected="true"><span class="ti">🏠</span>홈</button>
+    <button role="tab" data-tab="run" aria-selected="false"><span class="ti">🏃</span>달리기</button>
+    <button role="tab" data-tab="log" aria-selected="false"><span class="ti">📊</span>기록</button>
+    <button role="tab" data-tab="me" aria-selected="false"><span class="ti">🧑</span>나</button>
+  </nav>
+</div>
+
+<!-- ============ 달리는 중 ============ -->
+<div class="live" id="live" hidden role="dialog" aria-modal="true" aria-label="달리는 중">
+  <div class="row">
+    <span class="pill" id="liveMode">🌿 자유 달리기</span>
+    <span class="spacer"></span>
+    <span class="pill coin" id="liveCoin">🪙 <b>0</b></span>
+  </div>
+  <div class="bigtime" id="liveTime">00:00</div>
+  <div class="bigsub" id="liveGoal">목표 없음 · 편하게 달려요</div>
+
+  <div class="metrics">
+    <div class="metric"><div class="v" id="liveDist">0.00</div><div class="k">km</div></div>
+    <div class="metric"><div class="v" id="livePace">–:–</div><div class="k">현재 페이스 /km</div></div>
+    <div class="metric"><div class="v" id="liveCal">0</div><div class="k">kcal(추정)</div></div>
+  </div>
+
+  <div class="challenge" id="challenge" hidden aria-live="assertive">
+    <span class="cd" id="chCd"><i>0</i></span>
+    <span class="m"><span class="ct" id="chTitle"></span><span class="cs" id="chSub"></span></span>
+  </div>
+
+  <div id="routeWrap">
+    <canvas id="route" width="800" height="440" aria-label="달린 경로 미리보기" role="img"></canvas>
+    <span class="gpsflag" id="gpsFlag">GPS 준비 중…</span>
+  </div>
+
+  <div class="splits" id="liveSplits" aria-label="구간 기록"></div>
+
+  <div class="coach" aria-live="polite"><span class="ce" id="coachEmoji">🙌</span><span id="coachText">준비되면 첫 걸음을 내디뎌요!</span></div>
+
+  <div class="controls">
+    <button class="btn ghost" id="btnPause">⏸ 일시정지</button>
+    <button class="btn danger hold" id="btnStop"><span class="fill" id="stopFill"></span><span>■ 길게 눌러 종료</span></button>
+  </div>
+</div>
+
+<!-- ============ 요약 시트 ============ -->
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* =========================================================
+   러닝퀘스트 v0.1 — 단일 파일 · 오프라인 · 외부 의존성 없음
+   저장소: localStorage("runquest.v1")
+   ========================================================= */
+
+var KEY = "runquest.v1";
+var $  = function(s,r){ return (r||document).querySelector(s); };
+var $$ = function(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
+
+/* ---------------- 유틸 ---------------- */
+function pad2(n){ return (n<10?"0":"")+n; }
+function fmtClock(ms){
+  var s = Math.max(0, Math.floor(ms/1000));
+  var h = Math.floor(s/3600), m = Math.floor((s%3600)/60), ss = s%60;
+  return h>0 ? h+":"+pad2(m)+":"+pad2(ss) : pad2(m)+":"+pad2(ss);
+}
+function fmtDur(ms){
+  var m = Math.round(ms/60000);
+  if(m < 60) return m+"분";
+  return Math.floor(m/60)+"시간 "+(m%60)+"분";
+}
+function fmtPace(secPerKm){
+  if(!isFinite(secPerKm) || secPerKm<=0 || secPerKm>3600) return "–:–";
+  var m = Math.floor(secPerKm/60), s = Math.round(secPerKm%60);
+  if(s===60){ m++; s=0; }
+  return m+":"+pad2(s);
+}
+function km(m){ return (m/1000); }
+function fmtKm(m){ return km(m).toFixed(2); }
+function localDate(d){
+  d = d ? new Date(d) : new Date();
+  return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());
+}
+function dateLabel(ts){
+  var d = new Date(ts), days = ["일","월","화","수","목","금","토"];
+  return (d.getMonth()+1)+"월 "+d.getDate()+"일 ("+days[d.getDay()]+") "+pad2(d.getHours())+":"+pad2(d.getMinutes());
+}
+function dayDiff(a,b){ // 로컬 날짜 문자열 간 일수 차
+  var pa = a.split("-").map(Number), pb = b.split("-").map(Number);
+  var da = new Date(pa[0],pa[1]-1,pa[2]), db = new Date(pb[0],pb[1]-1,pb[2]);
+  return Math.round((db-da)/86400000);
+}
+function haversine(a,b){
+  var R=6371000, toRad=Math.PI/180;
+  var dLat=(b.lat-a.lat)*toRad, dLng=(b.lng-a.lng)*toRad;
+  var la1=a.lat*toRad, la2=b.lat*toRad;
+  var x = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.sin(dLng/2)*Math.sin(dLng/2)*Math.cos(la1)*Math.cos(la2);
+  return 2*R*Math.asin(Math.min(1,Math.sqrt(x)));
+}
+function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+function seeded(str){ // 날짜 기반 결정적 시드
+  var h=2166136261;
+  for(var i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = Math.imul(h,16777619); }
+  return function(){ h ^= h<<13; h ^= h>>>17; h ^= h<<5; return ((h>>>0)%100000)/100000; };
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c];
+  });
+}
+
+/* ---------------- 배지 정의 ---------------- */
+var BADGES = [
+  {id:"first",   e:"🎉", n:"첫 달리기",   d:"처음으로 달리기를 완료했어요."},
+  {id:"k3",      e:"🥉", n:"3km 완주",    d:"한 번에 3km 이상 달렸어요."},
+  {id:"k5",      e:"🥈", n:"5km 완주",    d:"한 번에 5km 이상 달렸어요."},
+  {id:"streak3", e:"🔥", n:"3일 연속",    d:"3일 연속으로 달렸어요."},
+  {id:"streak7", e:"💎", n:"7일 연속",    d:"7일 연속으로 달렸어요."},
+  {id:"total10", e:"🗺️", n:"누적 10km",   d:"모두 합쳐 10km를 달렸어요."},
+  {id:"total42", e:"🏆", n:"누적 42km",   d:"마라톤 거리만큼 쌓았어요."},
+  {id:"night",   e:"🌙", n:"야간 러너",   d:"밤 8시 이후에 달렸어요."},
+  {id:"early",   e:"🌅", n:"얼리버드",    d:"아침 8시 전에 달렸어요."},
+  {id:"story3",  e:"🧟", n:"스토리 3회",  d:"스토리 러닝을 3번 완주했어요."},
+  {id:"escape5", e:"🛡️", n:"추격 5회",    d:"추격 챌린지를 5번 성공했어요."},
+  {id:"interval",e:"⚡", n:"인터벌 완주", d:"인터벌 챌린지를 끝까지 마쳤어요."},
+  {id:"pace6",   e:"💨", n:"6분 페이스",  d:"1km 스플릿을 6분 이내로 달렸어요."},
+  {id:"coin100", e:"🪙", n:"코인 100",    d:"코인을 100개 모았어요."},
+  {id:"lv5",     e:"⭐", n:"Lv.5 달성",   d:"레벨 5에 도달했어요."},
+  {id:"quest",   e:"🎯", n:"퀘스트 올클리어", d:"하루 퀘스트를 모두 완료했어요."}
+];
+var LV_TITLES = ["새싹 러너","동네 러너","주말 러너","페이스 메이커","로드 러너","트레일 러너","마라토너","러닝 마스터"];
+
+/* ---------------- 상태 ---------------- */
+var DEFAULTS = {
+  v:1,
+  profile:{ name:"러너", xp:0, coins:0, voice:true, haptics:true, autoPause:true, keepAwake:true, reduceMotion:false },
+  sessions:[],
+  badges:{},
+  quests:{ date:"", list:[] },
+  streak:{ count:0, best:0, last:"" },
+  seenOnboard:false
+};
+var S = load();
+
+function load(){
+  var raw = null;
+  try{ raw = localStorage.getItem(KEY); }catch(e){}
+  if(!raw) return JSON.parse(JSON.stringify(DEFAULTS));
+  try{
+    var o = JSON.parse(raw);
+    if(!o || typeof o!=="object" || o.v!==1) return JSON.parse(JSON.stringify(DEFAULTS));
+    var base = JSON.parse(JSON.stringify(DEFAULTS));
+    base.profile = Object.assign(base.profile, o.profile||{});
+    base.sessions = Array.isArray(o.sessions) ? o.sessions : [];
+    base.badges = o.badges||{};
+    base.quests = o.quests||base.quests;
+    base.streak = Object.assign(base.streak, o.streak||{});
+    base.seenOnboard = !!o.seenOnboard;
+    return base;
+  }catch(e){ return JSON.parse(JSON.stringify(DEFAULTS)); }
+}
+var saveTimer = null;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    try{ localStorage.setItem(KEY, JSON.stringify(S)); }
+    catch(e){ toast("⚠️","저장 공간이 부족해 기록을 저장하지 못했어요."); }
+  }, 60);
+}
+
+/* ---------------- 레벨 ---------------- */
+function needFor(level){ return 100 + (level-1)*60; }
+function levelInfo(xp){
+  var lv=1, rest=xp;
+  while(rest >= needFor(lv) && lv < 99){ rest -= needFor(lv); lv++; }
+  return { level:lv, into:rest, need:needFor(lv), title: LV_TITLES[Math.min(LV_TITLES.length-1, Math.floor((lv-1)/2))] };
+}
+
+/* ---------------- 피드백 ---------------- */
+function toast(emoji, text, gold){
+  var wrap = $("#toasts");
+  var el = document.createElement("div");
+  el.className = "toast" + (gold ? " gold":"");
+  el.innerHTML = '<span>'+escapeHtml(emoji)+'</span><span>'+escapeHtml(text)+'</span>';
+  wrap.appendChild(el);
+  setTimeout(function(){ el.remove(); }, 3200);
+  while(wrap.children.length > 3) wrap.removeChild(wrap.firstChild);
+}
+function buzz(pattern){
+  if(!S.profile.haptics) return;
+  try{ if(navigator.vibrate) navigator.vibrate(pattern); }catch(e){}
+}
+function speak(text){
+  if(!S.profile.voice) return;
+  try{
+    if(!("speechSynthesis" in window)) return;
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = "ko-KR"; u.rate = 1.02; u.pitch = 1;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+function coach(emoji, text, alsoSpeak){
+  $("#coachEmoji").textContent = emoji;
+  $("#coachText").textContent = text;
+  if(alsoSpeak) speak(text);
+}
+
+/* ---------------- 퀘스트 ---------------- */
+var QUEST_POOL = [
+  {id:"dist15", e:"👟", t:"1.5 km 달리기",       kind:"dist", target:1500, reward:6},
+  {id:"dist30", e:"🛣️", t:"3 km 달리기",         kind:"dist", target:3000, reward:10},
+  {id:"time15", e:"⏱️", t:"15분 이상 움직이기",  kind:"time", target:15*60000, reward:6},
+  {id:"time25", e:"⏳", t:"25분 이상 움직이기",  kind:"time", target:25*60000, reward:10},
+  {id:"coin10", e:"🪙", t:"코인 10개 모으기",     kind:"coin", target:10, reward:5},
+  {id:"run1",   e:"🏁", t:"달리기 1회 완료",      kind:"runs", target:1, reward:4},
+  {id:"chal2",  e:"🧟", t:"챌린지 2회 성공",      kind:"chal", target:2, reward:8},
+  {id:"split1", e:"💨", t:"1 km 스플릿 만들기",   kind:"split", target:1, reward:6}
+];
+function ensureQuests(){
+  var today = localDate();
+  if(S.quests.date === today && S.quests.list.length) return;
+  var rnd = seeded("rq-"+today);
+  var pool = QUEST_POOL.slice();
+  var picked = [];
+  while(picked.length < 3 && pool.length){
+    var i = Math.floor(rnd()*pool.length) % pool.length;
+    picked.push(Object.assign({}, pool.splice(i,1)[0], {progress:0, done:false}));
+  }
+  S.quests = { date: today, list: picked };
+  save();
+}
+function todayStats(){
+  var today = localDate(), o = {dist:0, time:0, coins:0, runs:0, chal:0, splits:0};
+  S.sessions.forEach(function(s){
+    if(localDate(s.startedAt) !== today) return;
+    o.dist += s.distanceM; o.time += s.movingMs; o.coins += s.coins; o.runs += 1;
+    o.chal += (s.challengesWon||0); o.splits += (s.splits ? s.splits.length : 0);
+  });
+  return o;
+}
+function refreshQuests(){
+  ensureQuests();
+  var t = todayStats(), earned = 0, allDone = true;
+  S.quests.list.forEach(function(q){
+    var val = q.kind==="dist" ? t.dist : q.kind==="time" ? t.time : q.kind==="coin" ? t.coins :
+              q.kind==="runs" ? t.runs : q.kind==="chal" ? t.chal : t.splits;
+    q.progress = val;
+    if(!q.done && val >= q.target){
+      q.done = true; earned += q.reward;
+      toast("🎯","퀘스트 완료 · "+q.t+" (+"+q.reward+"🪙)", true);
+    }
+    if(!q.done) allDone = false;
+  });
+  if(earned){ S.profile.coins += earned; }
+  if(allDone && S.quests.list.length) grantBadge("quest");
+  save();
+  return earned;
+}
+
+/* ---------------- 배지 ---------------- */
+function grantBadge(id){
+  if(S.badges[id]) return false;
+  var b = BADGES.filter(function(x){ return x.id===id; })[0];
+  if(!b) return false;
+  S.badges[id] = Date.now();
+  toast(b.e, "새 배지 · "+b.n, true);
+  buzz([16,60,16]);
+  save();
+  return true;
+}
+function evaluateBadges(session){
+  var earned = [];
+  function g(id){ if(grantBadge(id)) earned.push(id); }
+  var totals = allTotals();
+  g("first");
+  if(session){
+    if(session.distanceM >= 3000) g("k3");
+    if(session.distanceM >= 5000) g("k5");
+    var h = new Date(session.startedAt).getHours();
+    if(h >= 20 || h < 5) g("night");
+    if(h >= 5 && h < 8) g("early");
+    if(session.mode === "story") {
+      var storyRuns = S.sessions.filter(function(s){ return s.mode==="story"; }).length;
+      if(storyRuns >= 3) g("story3");
+    }
+    if(session.mode === "interval" && session.planCompleted) g("interval");
+    if((session.splits||[]).some(function(sp){ return sp.sec <= 360; })) g("pace6");
+  }
+  if(S.streak.count >= 3) g("streak3");
+  if(S.streak.count >= 7) g("streak7");
+  if(totals.dist >= 10000) g("total10");
+  if(totals.dist >= 42195) g("total42");
+  if(S.profile.coins >= 100) g("coin100");
+  if(levelInfo(S.profile.xp).level >= 5) g("lv5");
+  var wins = S.sessions.reduce(function(a,s){ return a + (s.challengesWon||0); }, 0);
+  if(wins >= 5) g("escape5");
+  return earned;
+}
+function allTotals(){
+  return S.sessions.reduce(function(a,s){
+    a.dist += s.distanceM; a.time += s.movingMs; a.runs += 1; return a;
+  }, {dist:0, time:0, runs:0});
+}
+
+/* ---------------- 스트릭 ---------------- */
+function bumpStreak(){
+  var today = localDate();
+  if(S.streak.last === today) return;
+  if(S.streak.last && dayDiff(S.streak.last, today) === 1) S.streak.count += 1;
+  else S.streak.count = 1;
+  S.streak.last = today;
+  if(S.streak.count > S.streak.best) S.streak.best = S.streak.count;
+  save();
+}
+function liveStreak(){ // 어제까지만 유효 — 오늘 안 달렸어도 유지
+  if(!S.streak.last) return 0;
+  var d = dayDiff(S.streak.last, localDate());
+  return d <= 1 ? S.streak.count : 0;
+}
+
+/* ---------------- 경로 그리기 ---------------- */
+function drawRoute(canvas, points){
+  var ctx = canvas.getContext("2d");
+  var W = canvas.width, H = canvas.height;
+  var css = getComputedStyle(document.body);
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = css.getPropertyValue("--card2").trim() || "#1b2942";
+  ctx.fillRect(0,0,W,H);
+
+  var pts = points || [];
+  if(pts.length < 2){
+    ctx.fillStyle = css.getPropertyValue("--muted").trim() || "#9fb0cc";
+    ctx.font = "600 22px -apple-system,system-ui,sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("움직이면 경로가 그려져요", W/2, H/2);
+    return;
+  }
+  var minLat=1e9,maxLat=-1e9,minLng=1e9,maxLng=-1e9;
+  pts.forEach(function(p){
+    minLat=Math.min(minLat,p.lat); maxLat=Math.max(maxLat,p.lat);
+    minLng=Math.min(minLng,p.lng); maxLng=Math.max(maxLng,p.lng);
+  });
+  var latSpan = Math.max(maxLat-minLat, 1e-5);
+  var lngSpan = Math.max(maxLng-minLng, 1e-5);
+  var latMid = (minLat+maxLat)/2;
+  var mPerLat = 111320, mPerLng = 111320*Math.cos(latMid*Math.PI/180);
+  var wM = lngSpan*mPerLng, hM = latSpan*mPerLat;
+  var pad = 34;
+  var scale = Math.min((W-pad*2)/Math.max(wM,1), (H-pad*2)/Math.max(hM,1));
+  function X(p){ return W/2 + (p.lng-(minLng+maxLng)/2)*mPerLng*scale; }
+  function Y(p){ return H/2 - (p.lat-latMid)*mPerLat*scale; }
+
+  ctx.lineJoin = ctx.lineCap = "round";
+  ctx.strokeStyle = "rgba(45,212,191,.18)";
+  ctx.lineWidth = 16;
+  ctx.beginPath(); ctx.moveTo(X(pts[0]),Y(pts[0]));
+  for(var i=1;i<pts.length;i++) ctx.lineTo(X(pts[i]),Y(pts[i]));
+  ctx.stroke();
+
+  var grad = ctx.createLinearGradient(0,0,W,H);
+  grad.addColorStop(0,"#2dd4bf"); grad.addColorStop(1,"#a3e635");
+  ctx.strokeStyle = grad; ctx.lineWidth = 7;
+  ctx.beginPath(); ctx.moveTo(X(pts[0]),Y(pts[0]));
+  for(var j=1;j<pts.length;j++) ctx.lineTo(X(pts[j]),Y(pts[j]));
+  ctx.stroke();
+
+  function dot(p,color,r){
+    ctx.beginPath(); ctx.arc(X(p),Y(p),r,0,Math.PI*2);
+    ctx.fillStyle = color; ctx.fill();
+    ctx.lineWidth = 4; ctx.strokeStyle = "rgba(255,255,255,.85)"; ctx.stroke();
+  }
+  dot(pts[0], "#34d399", 11);
+  dot(pts[pts.length-1], "#fb7185", 11);
+}
+
+/* ---------------- 렌더 ---------------- */
+function render(){
+  ensureQuests();
+  var li = levelInfo(S.profile.xp);
+  var streak = liveStreak();
+
+  $("#pillStreak").innerHTML = "🔥 <b>"+streak+"</b>일";
+  $("#pillCoin").innerHTML  = "🪙 <b>"+S.profile.coins+"</b>";
+
+  $("#lvBadge").textContent = "Lv."+li.level+" "+li.title;
+  $("#xpBar").style.width = Math.round(li.into/li.need*100)+"%";
+  $("#xpText").textContent = "XP "+li.into+" / "+li.need;
+  $("#meLv").textContent = "Lv."+li.level+" "+li.title;
+  $("#meName").textContent = S.profile.name || "러너";
+  $("#meXpBar").style.width = Math.round(li.into/li.need*100)+"%";
+  $("#meXpText").textContent = "XP "+li.into+" / "+li.need;
+
+  var totals = allTotals();
+  var name = S.profile.name || "러너";
+  if(totals.runs === 0){
+    $("#heroTitle").textContent = name+"님, 첫 걸음을 떼볼까요?";
+    $("#heroSub").textContent = "1km만 달려도 배지와 코인이 열려요.";
+  }else if(streak >= 2){
+    $("#heroTitle").textContent = streak+"일 연속, 좋아요!";
+    $("#heroSub").textContent = "지금까지 "+km(totals.dist).toFixed(1)+"km · "+totals.runs+"번 달렸어요.";
+  }else{
+    $("#heroTitle").textContent = "오늘도 달릴 준비 됐나요?";
+    $("#heroSub").textContent = "지금까지 "+km(totals.dist).toFixed(1)+"km · "+totals.runs+"번 달렸어요.";
+  }
+
+  /* 퀘스트 */
+  $("#questDate").textContent = S.quests.date;
+  $("#questList").innerHTML = S.quests.list.map(function(q){
+    var val = q.progress||0;
+    var pct = clamp(Math.round(val/q.target*100),0,100);
+    var cur = q.kind==="dist" ? km(val).toFixed(2)+" / "+km(q.target).toFixed(1)+" km"
+            : q.kind==="time" ? Math.floor(val/60000)+" / "+Math.floor(q.target/60000)+" 분"
+            : val+" / "+q.target;
+    return '<div class="quest'+(q.done?" done":"")+'">'+
+      '<span class="qi">'+q.e+'</span>'+
+      '<span class="m" style="flex:1"><span class="qt">'+escapeHtml(q.t)+'</span>'+
+        '<span class="bar slim" style="margin-top:6px"><i style="width:'+pct+'%"></i></span>'+
+        '<span class="tiny muted">'+escapeHtml(cur)+'</span></span>'+
+      '<span class="qr">'+(q.done?"완료 ✓":"+"+q.reward+"🪙")+'</span></div>';
+  }).join("");
+
+  /* 이번 주 */
+  var week = weekBuckets();
+  $("#wkDist").textContent = km(week.total.dist).toFixed(1);
+  $("#wkRuns").textContent = week.total.runs;
+  $("#wkTime").textContent = fmtDur(week.total.time);
+  var maxD = Math.max.apply(null, week.days.map(function(d){ return d.dist; }).concat([1000]));
+  $("#weekChart").innerHTML = week.days.map(function(d){
+    var h = clamp(Math.round(d.dist/maxD*100),0,100);
+    return '<div class="d'+(d.isToday?" today":"")+'"><div class="col"><i style="height:'+(d.dist>0?Math.max(h,8):3)+'%"></i></div>'+
+      '<div class="lbl">'+d.label+'</div></div>';
+  }).join("");
+
+  /* 배지 */
+  var owned = BADGES.filter(function(b){ return S.badges[b.id]; });
+  var recent = owned.sort(function(a,b){ return S.badges[b.id]-S.badges[a.id]; }).slice(0,4);
+  $("#recentBadges").innerHTML = (recent.length ? recent : BADGES.slice(0,4)).map(function(b){
+    return badgeHtml(b);
+  }).join("");
+  $("#allBadges").innerHTML = BADGES.map(badgeHtml).join("");
+  $("#badgeCount").textContent = owned.length+" / "+BADGES.length;
+
+  /* 기록 */
+  $("#totDist").textContent = km(totals.dist).toFixed(1);
+  $("#totRuns").textContent = totals.runs;
+  $("#totTime").textContent = fmtDur(totals.time);
+  var fastest = null, longest = null;
+  S.sessions.forEach(function(s){
+    (s.splits||[]).forEach(function(sp){ if(fastest===null || sp.sec < fastest) fastest = sp.sec; });
+    if(longest===null || s.distanceM > longest) longest = s.distanceM;
+  });
+  $("#prFast").textContent = fastest ? fmtPace(fastest) : "–";
+  $("#prLong").textContent = longest ? km(longest).toFixed(2)+"km" : "–";
+
+  var list = S.sessions.slice().sort(function(a,b){ return b.startedAt-a.startedAt; }).slice(0,40);
+  $("#histList").innerHTML = list.length ? list.map(function(s){
+    var pace = s.distanceM>200 ? fmtPace(s.movingMs/1000/km(s.distanceM)) : "–:–";
+    return '<button class="item" data-sid="'+s.id+'">'+
+      '<span class="ic">'+modeIcon(s.mode)+'</span>'+
+      '<span class="m"><b>'+escapeHtml(dateLabel(s.startedAt))+'</b>'+
+        '<span>'+modeName(s.mode)+' · '+fmtClock(s.movingMs)+' · '+pace+'/km'+(s.demo?" · 데모":"")+'</span></span>'+
+      '<span class="r">'+fmtKm(s.distanceM)+'<span>km</span></span></button>';
+  }).join("") : '<p class="muted tiny">아직 기록이 없어요. 첫 달리기를 시작해 보세요!</p>';
+
+  /* 설정 스위치 */
+  $$(".sw[data-opt]").forEach(function(sw){
+    sw.setAttribute("aria-checked", S.profile[sw.dataset.opt] ? "true":"false");
+  });
+  document.body.classList.toggle("rm", !!S.profile.reduceMotion);
+}
+function badgeHtml(b){
+  var on = !!S.badges[b.id];
+  return '<div class="badge'+(on?" on":"")+'" title="'+escapeHtml(b.d)+'">'+
+    '<div class="e">'+b.e+'</div><div class="n">'+escapeHtml(b.n)+'</div></div>';
+}
+function modeIcon(m){ return m==="story"?"🧟":m==="interval"?"⚡":"🌿"; }
+function modeName(m){ return m==="story"?"스토리 러닝":m==="interval"?"인터벌 챌린지":"자유 달리기"; }
+function weekBuckets(){
+  var days = [], labels=["일","월","화","수","목","금","토"];
+  var today = new Date(); today.setHours(0,0,0,0);
+  var total = {dist:0,time:0,runs:0};
+  for(var i=6;i>=0;i--){
+    var d = new Date(today.getTime() - i*86400000);
+    days.push({ key: localDate(d), label: labels[d.getDay()], dist:0, isToday: i===0 });
+  }
+  S.sessions.forEach(function(s){
+    var k = localDate(s.startedAt);
+    var bucket = days.filter(function(d){ return d.key===k; })[0];
+    if(bucket){ bucket.dist += s.distanceM; total.dist += s.distanceM; total.time += s.movingMs; total.runs++; }
+  });
+  return {days:days, total:total};
+}
+
+/* ---------------- 내비게이션 ---------------- */
+var SCREENS = ["home","run","log","me"];
+function go(tab){
+  SCREENS.forEach(function(t){ $("#s-"+t).hidden = (t!==tab); });
+  $$("#tabbar button").forEach(function(b){ b.setAttribute("aria-selected", b.dataset.tab===tab ? "true":"false"); });
+  window.scrollTo(0,0);
+}
+$$("#tabbar button").forEach(function(b){
+  b.addEventListener("click", function(){ go(b.dataset.tab); });
+});
+$("#goRun").addEventListener("click", function(){ go("run"); });
+
+/* =========================================================
+   달리기 엔진
+   ========================================================= */
+var GOALS = {
+  none:{label:"목표 없음 · 편하게 달려요"},
+  d2:{kind:"dist", value:2000, label:"목표 2 km"},
+  d5:{kind:"dist", value:5000, label:"목표 5 km"},
+  t20:{kind:"time", value:20*60000, label:"목표 20 분"},
+  t30:{kind:"time", value:30*60000, label:"목표 30 분"}
+};
+var prep = { mode:"free", goal:"none", demo:false };
+
+$$("#modeList .mode").forEach(function(b){
+  b.addEventListener("click", function(){
+    prep.mode = b.dataset.mode;
+    $$("#modeList .mode").forEach(function(x){ x.setAttribute("aria-pressed", x===b ? "true":"false"); });
+  });
+});
+$$("#goalChips .chip").forEach(function(b){
+  b.addEventListener("click", function(){
+    prep.goal = b.dataset.goal;
+    $$("#goalChips .chip").forEach(function(x){ x.setAttribute("aria-pressed", x===b ? "true":"false"); });
+  });
+});
+$("#btnDemo").addEventListener("click", function(){
+  prep.demo = !prep.demo;
+  this.setAttribute("aria-pressed", prep.demo ? "true":"false");
+  $("#demoNote").textContent = prep.demo
+    ? "데모 모드: GPS 대신 가상 경로로 달립니다. 기록에 '데모'로 표시돼요."
+    : "GPS 없이 가상 경로로 전체 흐름을 볼 수 있어요.";
+});
+
+var run = null;
+var CHASERS = [
+  {e:"🧟", t:"좀비 무리 등장!", s:"뒤에서 따라와요. 페이스를 올려 도망쳐요!"},
+  {e:"🦢", t:"성난 거위 출현!", s:"물러설 곳이 없어요. 조금만 더 빠르게!"},
+  {e:"🌧️", t:"소나기 구름!", s:"비를 피해 다음 코너까지 속도를 올려요."},
+  {e:"🚌", t:"막차 놓치기 직전!", s:"정류장까지 스퍼트!"},
+  {e:"🐕", t:"동네 강아지 추격!", s:"짧고 굵게 달려 봐요."}
+];
+var FORMS = [
+  {e:"🧘", t:"자세 점검", s:"어깨 힘 빼고, 시선은 앞으로."},
+  {e:"🫁", t:"호흡 정리", s:"두 번 들이쉬고 두 번 내쉬기."},
+  {e:"👟", t:"발 착지 확인", s:"발소리가 작아지도록 부드럽게."},
+  {e:"💧", t:"수분 체크", s:"목이 마르면 무리하지 말고 속도를 낮춰요."}
+];
+function intervalPlan(){
+  var p = [{kind:"warm", sec:180, t:"워밍업", s:"편안한 속도로 몸을 깨워요."}];
+  for(var i=1;i<=5;i++){
+    p.push({kind:"fast", sec:60,  t:"빠르게 "+i+"/5", s:"숨이 조금 찰 정도로 올려요."});
+    p.push({kind:"easy", sec:120, t:"회복 "+i+"/5", s:"천천히 호흡을 정리해요."});
+  }
+  p.push({kind:"cool", sec:180, t:"쿨다운", s:"속도를 낮추고 마무리해요."});
+  return p;
+}
+
+$("#startRun").addEventListener("click", startRun);
+
+function startRun(){
+  run = {
+    mode: prep.mode,
+    goalKey: prep.goal,
+    demo: prep.demo,
+    startedAt: Date.now(),
+    movingMs: 0,
+    lastTick: Date.now(),
+    paused: false,
+    autoPaused: false,
+    points: [],
+    distanceM: 0,
+    coins: 0,
+    lastCoinM: 0,
+    lastSplitM: 0,
+    lastSplitMs: 0,
+    splits: [],
+    challengesWon: 0,
+    challengesTotal: 0,
+    ch: null,
+    nextChallengeAt: 70000,
+    planIdx: -1,
+    planNextAt: 0,
+    planCompleted: false,
+    plan: prep.mode==="interval" ? intervalPlan() : null,
+    goalHit: false,
+    lastMoveMoving: 0,
+    gpsOk: false,
+    simState: null,
+    speedWin: []
+  };
+  $("#liveMode").textContent = modeIcon(run.mode)+" "+modeName(run.mode);
+  $("#liveGoal").textContent = GOALS[run.goalKey].label + (run.demo ? " · 데모 모드" : "");
+  $("#liveSplits").innerHTML = "";
+  $("#challenge").hidden = true;
+  $("#live").hidden = false;
+  $("#gpsFlag").textContent = run.demo ? "데모 경로" : "GPS 준비 중…";
+  $("#btnPause").textContent = "⏸ 일시정지";
+  document.body.style.overflow = "hidden";
+  coach("🙌", (S.profile.name||"러너")+"님, 천천히 시작해요.", true);
+  updateLive();
+  drawRoute($("#route"), []);
+
+  if(run.demo) startSim(); else startGeo();
+  requestWake();
+  run.timer = setInterval(tick, 250);
+  if(run.plan) advancePlan();
+}
+
+/* ---------- 위치 ---------- */
+function startGeo(){
+  if(!navigator.geolocation){ fallbackToDemo("이 기기에서 위치를 쓸 수 없어요."); return; }
+  try{
+    run.watchId = navigator.geolocation.watchPosition(onPos, onGeoErr, {
+      enableHighAccuracy:true, maximumAge:1000, timeout:20000
+    });
+  }catch(e){ fallbackToDemo("위치 기능을 시작하지 못했어요."); }
+}
+function onGeoErr(err){
+  if(!run || run.demo) return;
+  var msg = err && err.code === 1 ? "위치 권한이 없어 데모 모드로 이어갑니다."
+          : "위치 신호를 받지 못해 데모 모드로 이어갑니다.";
+  fallbackToDemo(msg);
+}
+function fallbackToDemo(msg){
+  if(!run || run.demo) return;
+  run.demo = true;
+  if(run.watchId != null){ try{ navigator.geolocation.clearWatch(run.watchId); }catch(e){} run.watchId = null; }
+  $("#gpsFlag").textContent = "데모 경로";
+  $("#liveGoal").textContent = GOALS[run.goalKey].label + " · 데모 모드";
+  toast("🧪", msg);
+  coach("🧪", "데모 모드로 달리는 중이에요.", false);
+  startSim();
+}
+function onPos(pos){
+  if(!run) return;
+  var c = pos.coords;
+  var p = { lat:c.latitude, lng:c.longitude, t: pos.timestamp || Date.now(), acc: c.accuracy || 99 };
+  run.gpsOk = true;
+  $("#gpsFlag").textContent = p.acc <= 12 ? "GPS 정확도 좋음" : p.acc <= 30 ? "GPS 보통" : "GPS 약함";
+  addPoint(p, p.acc);
+}
+function startSim(){
+  if(run.simTimer) return;
+  run.simState = { lat:37.5665, lng:126.9780, heading: Math.random()*Math.PI*2, speed: 2.8 };
+  run.simTimer = setInterval(function(){
+    if(!run || run.paused) return;
+    var st = run.simState;
+    var target = 2.75;
+    if(run.ch && run.ch.needM) target = 3.6;            // 챌린지 중엔 힘내는 흐름
+    else if(run.ch && run.ch.easy) target = 2.3;
+    st.speed += (target - st.speed)*0.25 + (Math.random()-0.5)*0.22;
+    st.speed = clamp(st.speed, 1.6, 4.6);
+    st.heading += (Math.random()-0.5)*0.30;
+    if(Math.random() < 0.035) st.heading += (Math.random()<0.5?-1:1)*Math.PI/2;
+    var d = st.speed; // 1초 이동거리(m)
+    st.lat += (d*Math.cos(st.heading))/111320;
+    st.lng += (d*Math.sin(st.heading))/(111320*Math.cos(st.lat*Math.PI/180));
+    addPoint({ lat:st.lat, lng:st.lng, t:Date.now(), acc:5 }, 5);
+  }, 1000);
+}
+function addPoint(p, acc){
+  if(!run) return;
+  var last = run.points[run.points.length-1];
+  if(acc > 45 && !run.demo){ return; }            // 정확도 낮은 신호는 버림
+  if(!last){ run.points.push(p); return; }
+  var dt = (p.t - last.t)/1000;
+  if(dt < 0.7) return;
+  var d = haversine(last, p);
+  var v = d/dt;
+  if(d < 1.2) return;                              // 제자리 흔들림
+  if(v > 9) { run.points.push(p); return; }        // 튀는 값: 거리 미반영
+  if(run.paused && !run.autoPaused){ run.points.push(p); return; }
+  if(run.autoPaused){ resumeRun(true); }
+  run.points.push(p);
+  run.distanceM += d;
+  run.lastMoveMoving = run.movingMs;
+  run.speedWin.push({ t: run.movingMs, d: d });
+  onDistance();
+}
+function onDistance(){
+  /* 코인 */
+  while(run.distanceM - run.lastCoinM >= 200){
+    run.lastCoinM += 200;
+    run.coins += 1;
+    buzz(12);
+  }
+  /* 스플릿 */
+  while(run.distanceM - run.lastSplitM >= 1000){
+    run.lastSplitM += 1000;
+    var sec = (run.movingMs - run.lastSplitMs)/1000;
+    run.lastSplitMs = run.movingMs;
+    run.splits.push({ km: run.splits.length+1, sec: sec });
+    run.coins += 2;
+    renderSplits();
+    coach("💨", run.splits.length+"킬로미터, "+fmtPace(sec)+" 페이스예요.", true);
+    buzz([18,50,18]);
+  }
+  /* 목표 */
+  var g = GOALS[run.goalKey];
+  if(!run.goalHit && g.kind === "dist" && run.distanceM >= g.value){ hitGoal(); }
+}
+function hitGoal(){
+  run.goalHit = true;
+  run.coins += 5;
+  toast("🎯","목표 달성! (+5🪙)", true);
+  coach("🎯","목표를 달성했어요. 원하면 더 달려도 좋아요!", true);
+  buzz([20,60,20,60,20]);
+}
+function currentSpeed(){ // 최근 30초 이동 평균 (m/s)
+  var cutoff = run.movingMs - 30000;
+  run.speedWin = run.speedWin.filter(function(x){ return x.t >= cutoff; });
+  if(!run.speedWin.length) return 0;
+  var d = run.speedWin.reduce(function(a,x){ return a+x.d; }, 0);
+  var span = Math.min(30000, run.movingMs) / 1000;
+  return span > 3 ? d/span : 0;
+}
+function avgSpeed(){ return run.movingMs > 5000 ? run.distanceM/(run.movingMs/1000) : 0; }
+
+/* ---------- 타이머 ---------- */
+function tick(){
+  if(!run) return;
+  var now = Date.now();
+  var dt = now - run.lastTick;
+  run.lastTick = now;
+  if(!run.paused){
+    run.movingMs += dt;
+    /* 자동 일시정지 */
+    if(S.profile.autoPause && !run.demo && run.gpsOk && run.movingMs > 20000 &&
+       run.movingMs - run.lastMoveMoving > 15000 && !run.autoPaused){
+      pauseRun(true);
+    }
+    var g = GOALS[run.goalKey];
+    if(!run.goalHit && g.kind === "time" && run.movingMs >= g.value) hitGoal();
+    tickChallenge();
+    if(run.plan) tickPlan();
+    else if(run.mode === "story" && !run.ch && run.movingMs >= run.nextChallengeAt) startChase();
+    else if(run.mode === "free" && !run.ch && run.movingMs >= run.nextChallengeAt) startFormTip();
+  }
+  updateLive();
+}
+function updateLive(){
+  $("#liveTime").textContent = fmtClock(run.movingMs);
+  $("#liveDist").textContent = fmtKm(run.distanceM);
+  var sp = currentSpeed();
+  $("#livePace").textContent = sp > 0.4 ? fmtPace(1000/sp) : "–:–";
+  $("#liveCal").textContent = Math.round(1.036 * 65 * km(run.distanceM));
+  $("#liveCoin").innerHTML = "🪙 <b>"+run.coins+"</b>";
+  if(run.points.length > 1 && run.points.length !== run.drawnCount){
+    run.drawnCount = run.points.length;
+    drawRoute($("#route"), run.points);
+  }
+}
+function renderSplits(){
+  $("#liveSplits").innerHTML = run.splits.map(function(sp){
+    return '<span class="sp">'+sp.km+'km <span>'+fmtPace(sp.sec)+'</span></span>';
+  }).join("");
+}
+
+/* ---------- 챌린지 ---------- */
+function startChase(){
+  var c = CHASERS[Math.floor(Math.random()*CHASERS.length)];
+  var base = Math.max(avgSpeed(), 2.2);
+  var sec = 40 + Math.floor(Math.random()*3)*10;      // 40~60초
+  startChallenge({
+    emoji:c.e, title:c.e+" "+c.t, sub:c.s+" ("+sec+"초)",
+    sec:sec, needM: base*1.10*sec, reward:5, easy:false
+  });
+  speak(c.t+" "+sec+"초 동안 페이스를 올려요!");
+  buzz([30,60,30,60,60]);
+}
+function startFormTip(){
+  var f = FORMS[Math.floor(Math.random()*FORMS.length)];
+  startChallenge({
+    emoji:f.e, title:f.e+" "+f.t, sub:f.s+" (30초)",
+    sec:30, needM:null, reward:2, easy:true
+  });
+  speak(f.t+". "+f.s);
+}
+function startChallenge(cfg){
+  run.ch = {
+    title:cfg.title, sub:cfg.sub, sec:cfg.sec, easy:!!cfg.easy,
+    endsAt: run.movingMs + cfg.sec*1000,
+    startDist: run.distanceM, needM: cfg.needM, reward: cfg.reward
+  };
+  if(cfg.needM) run.challengesTotal++;
+  var el = $("#challenge");
+  el.hidden = false;
+  el.classList.toggle("easy", !!cfg.easy);
+  $("#chTitle").textContent = cfg.title;
+  $("#chSub").textContent = cfg.sub;
+}
+function tickChallenge(){
+  if(!run.ch) return;
+  var leftMs = run.ch.endsAt - run.movingMs;
+  var left = Math.max(0, Math.ceil(leftMs/1000));
+  var p = clamp(100 - (leftMs/(run.ch.sec*1000))*100, 0, 100);
+  var cd = $("#chCd");
+  cd.style.setProperty("--p", p.toFixed(0)+"%");
+  cd.innerHTML = "<i>"+left+"</i>";
+  if(leftMs <= 0) endChallenge();
+}
+function endChallenge(){
+  var ch = run.ch;
+  run.ch = null;
+  $("#challenge").hidden = true;
+  if(!ch) return;
+  if(ch.needM){
+    var covered = run.distanceM - ch.startDist;
+    var won = covered >= ch.needM * 0.92;
+    if(won){
+      run.challengesWon++;
+      run.coins += ch.reward;
+      toast("🛡️","챌린지 성공! (+"+ch.reward+"🪙)", true);
+      coach("🛡️","따돌렸어요! 호흡을 정리해요.", true);
+      buzz([20,50,20,50,80]);
+    }else{
+      run.coins += 1;
+      toast("💦","아쉬워요! 다음엔 잡히지 말아요 (+1🪙)");
+      coach("💦","괜찮아요. 무리하지 말고 내 페이스로.", true);
+    }
+  }else{
+    run.coins += ch.reward;
+    coach("👍","좋아요, 그대로 이어가요.", false);
+  }
+  run.nextChallengeAt = run.movingMs + (60 + Math.floor(Math.random()*50))*1000;
+  updateLive();
+}
+
+/* ---------- 인터벌 플랜 ---------- */
+function advancePlan(){
+  run.planIdx++;
+  if(run.planIdx >= run.plan.length){
+    run.planCompleted = true;
+    $("#challenge").hidden = true;
+    run.ch = null;
+    coach("🏆","인터벌 완주! 남은 시간은 자유롭게 마무리해요.", true);
+    toast("⚡","인터벌 챌린지 완주!", true);
+    run.coins += 8;
+    return;
+  }
+  var ph = run.plan[run.planIdx];
+  run.planNextAt = run.movingMs + ph.sec*1000;
+  var base = Math.max(avgSpeed(), 2.2);
+  startChallenge({
+    title:(ph.kind==="fast"?"⚡ ":ph.kind==="easy"?"🌊 ":"🌿 ")+ph.t,
+    sub:ph.s+" ("+ph.sec+"초)",
+    sec:ph.sec,
+    needM: ph.kind==="fast" ? base*1.08*ph.sec : null,
+    reward: ph.kind==="fast" ? 4 : 1,
+    easy: ph.kind!=="fast"
+  });
+  speak(ph.t+". "+ph.s);
+  buzz(ph.kind==="fast" ? [40,60,40] : 25);
+}
+function tickPlan(){
+  if(run.planCompleted) return;
+  if(run.movingMs >= run.planNextAt){
+    endChallenge();
+    advancePlan();
+  }
+}
+
+/* ---------- 일시정지 / 종료 ---------- */
+function pauseRun(auto){
+  if(run.paused) return;
+  run.paused = true;
+  run.autoPaused = !!auto;
+  $("#btnPause").textContent = "▶︎ 이어서 달리기";
+  coach(auto?"⏸":"⏸", auto ? "멈춘 것 같아 자동으로 일시정지했어요." : "일시정지했어요. 준비되면 이어서!", !!auto);
+}
+function resumeRun(auto){
+  if(!run.paused) return;
+  run.paused = false;
+  run.autoPaused = false;
+  run.lastTick = Date.now();
+  run.lastMoveMoving = run.movingMs;
+  $("#btnPause").textContent = "⏸ 일시정지";
+  if(!auto) coach("🏃","다시 달려요!", false);
+}
+$("#btnPause").addEventListener("click", function(){
+  if(!run) return;
+  if(run.paused) resumeRun(false); else pauseRun(false);
+});
+
+/* 길게 눌러 종료 */
+(function(){
+  var t=null, raf=null, start=0, HOLD=900;
+  var btn = $("#btnStop"), fill = $("#stopFill");
+  function begin(e){
+    if(!run) return;
+    if(e.cancelable) e.preventDefault();
+    start = Date.now();
+    (function step(){
+      var p = clamp((Date.now()-start)/HOLD,0,1);
+      fill.style.width = (p*100)+"%";
+      if(p<1) raf = requestAnimationFrame(step);
+    })();
+    t = setTimeout(function(){ cancel(); buzz(60); finishRun(); }, HOLD);
+  }
+  function cancel(){
+    clearTimeout(t); cancelAnimationFrame(raf); fill.style.width = "0%";
+  }
+  ["mousedown","touchstart","pointerdown"].forEach(function(ev){ btn.addEventListener(ev, begin, {passive:false}); });
+  ["mouseup","mouseleave","touchend","touchcancel","pointerup","pointercancel"].forEach(function(ev){ btn.addEventListener(ev, cancel); });
+  btn.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); begin(e); } });
+  btn.addEventListener("keyup", cancel);
+})();
+
+/* ---------- 종료 & 요약 ---------- */
+function stopSensors(){
+  if(!run) return;
+  clearInterval(run.timer); run.timer = null;
+  if(run.simTimer){ clearInterval(run.simTimer); run.simTimer = null; }
+  if(run.watchId != null){ try{ navigator.geolocation.clearWatch(run.watchId); }catch(e){} run.watchId = null; }
+  releaseWake();
+}
+function closeLive(){
+  $("#live").hidden = true;
+  document.body.style.overflow = "";
+  run = null;
+}
+function downsample(points, max){
+  if(points.length <= max) return points.map(function(p){ return {lat:+p.lat.toFixed(5), lng:+p.lng.toFixed(5), t:p.t}; });
+  var step = points.length/max, out = [];
+  for(var i=0;i<max;i++){
+    var p = points[Math.floor(i*step)];
+    out.push({lat:+p.lat.toFixed(5), lng:+p.lng.toFixed(5), t:p.t});
+  }
+  out.push(points[points.length-1]);
+  return out;
+}
+function finishRun(){
+  if(!run) return;
+  var r = run;
+  stopSensors();
+  if(r.movingMs < 15000 || r.distanceM < 50){
+    closeLive();
+    toast("🤏","기록이 너무 짧아 저장하지 않았어요.");
+    render();
+    go("home");
+    return;
+  }
+  var lvBefore = levelInfo(S.profile.xp).level;
+  var xp = Math.floor(km(r.distanceM)*40) + Math.floor(r.movingMs/60000*2) + r.challengesWon*10 + (r.goalHit?15:0);
+  var session = {
+    id: "s"+r.startedAt,
+    startedAt: r.startedAt,
+    endedAt: Date.now(),
+    mode: r.mode,
+    demo: !!r.demo,
+    distanceM: Math.round(r.distanceM),
+    movingMs: Math.round(r.movingMs),
+    coins: r.coins,
+    xp: xp,
+    splits: r.splits.map(function(s){ return {km:s.km, sec:Math.round(s.sec)}; }),
+    challengesWon: r.challengesWon,
+    challengesTotal: r.challengesTotal,
+    planCompleted: !!r.planCompleted,
+    goalKey: r.goalKey,
+    goalHit: !!r.goalHit,
+    points: downsample(r.points, 300)
+  };
+  S.sessions.push(session);
+  if(S.sessions.length > 200) S.sessions = S.sessions.slice(-200);
+  S.profile.xp += xp;
+  S.profile.coins += r.coins;
+  bumpStreak();
+  var questCoins = refreshQuests();
+  var newBadges = evaluateBadges(session);
+  save();
+  var lvAfter = levelInfo(S.profile.xp).level;
+
+  closeLive();
+  render();
+  go("home");
+  showSummary(session, {xp:xp, questCoins:questCoins, badges:newBadges, levelUp: lvAfter>lvBefore ? lvAfter : 0});
+  if(lvAfter > lvBefore){ toast("⭐","레벨 업! Lv."+lvAfter+" "+levelInfo(S.profile.xp).title, true); }
+  speak("수고했어요. "+km(session.distanceM).toFixed(2)+"킬로미터, "+fmtDur(session.movingMs)+" 달렸어요.");
+}
+
+function statBlock(session){
+  var pace = session.distanceM > 200 ? fmtPace(session.movingMs/1000/km(session.distanceM)) : "–:–";
+  return '<div class="grid3" style="margin:14px 0 0">'+
+    '<div class="stat"><div class="v">'+fmtKm(session.distanceM)+'</div><div class="k">km</div></div>'+
+    '<div class="stat"><div class="v">'+fmtClock(session.movingMs)+'</div><div class="k">움직인 시간</div></div>'+
+    '<div class="stat"><div class="v">'+pace+'</div><div class="k">평균 페이스</div></div>'+
+  '</div>'+
+  '<div class="grid3" style="margin-top:10px">'+
+    '<div class="stat"><div class="v">'+session.coins+'</div><div class="k">코인</div></div>'+
+    '<div class="stat"><div class="v">'+Math.round(1.036*65*km(session.distanceM))+'</div><div class="k">kcal(추정)</div></div>'+
+    '<div class="stat"><div class="v">'+session.challengesWon+'/'+(session.challengesTotal||0)+'</div><div class="k">챌린지</div></div>'+
+  '</div>';
+}
+function splitBlock(session){
+  if(!session.splits || !session.splits.length) return "";
+  var best = Math.min.apply(null, session.splits.map(function(s){ return s.sec; }));
+  return '<div class="card" style="margin-top:14px"><h2>⏱️ 구간 기록</h2>'+
+    session.splits.map(function(s){
+      return '<div class="quest"><span class="qi">'+s.km+'</span>'+
+        '<span class="m" style="flex:1"><span class="qt">'+s.km+' km 지점</span></span>'+
+        '<span class="qr" style="color:'+(s.sec===best?"var(--lime)":"var(--muted)")+'">'+fmtPace(s.sec)+' /km'+(s.sec===best?" 🏅":"")+'</span></div>';
+    }).join("")+'</div>';
+}
+function showSummary(session, extra){
+  var badges = (extra.badges||[]).map(function(id){
+    var b = BADGES.filter(function(x){ return x.id===id; })[0];
+    return b ? '<span class="chip" style="cursor:default">'+b.e+' '+escapeHtml(b.n)+'</span>' : "";
+  }).join(" ");
+  var html =
+    '<div class="grab"></div>'+
+    '<h2 id="sheetTitle">🎉 '+modeName(session.mode)+' 완료!</h2>'+
+    '<p class="muted tiny">'+escapeHtml(dateLabel(session.startedAt))+(session.demo?" · 데모 기록":"")+'</p>'+
+    statBlock(session)+
+    '<div id="sumRouteWrap" class="card" style="margin-top:14px;padding:8px"><canvas id="sumRoute" width="800" height="440" style="display:block;width:100%;height:180px;border-radius:14px" role="img" aria-label="달린 경로"></canvas></div>'+
+    '<div class="card" style="margin-top:0"><h2>🎁 보상</h2>'+
+      '<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:10px">'+
+        '<span class="chip" style="cursor:default">⭐ +'+extra.xp+' XP</span>'+
+        '<span class="chip" style="cursor:default">🪙 +'+session.coins+' 코인</span>'+
+        (extra.questCoins ? '<span class="chip" style="cursor:default">🎯 퀘스트 +'+extra.questCoins+'🪙</span>':'')+
+        (extra.levelUp ? '<span class="chip" style="cursor:default">🆙 Lv.'+extra.levelUp+'</span>':'')+
+      '</div>'+
+      (badges ? '<p class="tiny muted" style="margin:12px 0 6px">새 배지</p><div class="row" style="gap:8px;flex-wrap:wrap">'+badges+'</div>' : '')+
+    '</div>'+
+    splitBlock(session)+
+    '<div class="row" style="gap:10px;margin-top:6px">'+
+      '<button class="btn ghost" id="btnShare" style="flex:1">기록 공유</button>'+
+      '<button class="btn" id="btnCloseSheet" style="flex:1">좋아요!</button>'+
+    '</div>';
+  openSheet(html, session);
+}
+function showDetail(session){
+  var html =
+    '<div class="grab"></div>'+
+    '<h2 id="sheetTitle">'+modeIcon(session.mode)+' '+modeName(session.mode)+'</h2>'+
+    '<p class="muted tiny">'+escapeHtml(dateLabel(session.startedAt))+(session.demo?" · 데모 기록":"")+'</p>'+
+    statBlock(session)+
+    '<div class="card" style="margin-top:14px;padding:8px"><canvas id="sumRoute" width="800" height="440" style="display:block;width:100%;height:180px;border-radius:14px" role="img" aria-label="달린 경로"></canvas></div>'+
+    splitBlock(session)+
+    '<div class="row" style="gap:10px;margin-top:6px">'+
+      '<button class="btn danger" id="btnDelRun" style="flex:1">이 기록 삭제</button>'+
+      '<button class="btn" id="btnCloseSheet" style="flex:1">닫기</button>'+
+    '</div>';
+  openSheet(html, session);
+  var del = $("#btnDelRun");
+  if(del) del.addEventListener("click", function(){
+    if(!confirm("이 기록을 삭제할까요? 되돌릴 수 없어요.")) return;
+    S.sessions = S.sessions.filter(function(s){ return s.id !== session.id; });
+    save(); render(); closeSheet();
+    toast("🗑️","기록을 삭제했어요.");
+  });
+}
+function openSheet(html, session){
+  $("#sheet").innerHTML = html;
+  $("#modal").hidden = false;
+  document.body.classList.add("sheet-open");
+  document.body.style.overflow = "hidden";
+  if(session){
+    var c = $("#sumRoute");
+    if(c) drawRoute(c, session.points||[]);
+  }
+  var close = $("#btnCloseSheet");
+  if(close){ close.addEventListener("click", closeSheet); close.focus(); }
+  var share = $("#btnShare");
+  if(share && session) share.addEventListener("click", function(){ shareSession(session); });
+}
+function closeSheet(){
+  $("#modal").hidden = true;
+  document.body.classList.remove("sheet-open");
+  if($("#live").hidden) document.body.style.overflow = "";
+}
+$("#modal").addEventListener("click", function(e){ if(e.target === this) closeSheet(); });
+document.addEventListener("keydown", function(e){ if(e.key === "Escape" && !$("#modal").hidden) closeSheet(); });
+
+function shareSession(s){
+  var pace = s.distanceM>200 ? fmtPace(s.movingMs/1000/km(s.distanceM)) : "–:–";
+  var text = "러닝퀘스트 🏃 "+km(s.distanceM).toFixed(2)+"km · "+fmtClock(s.movingMs)+" · "+pace+"/km"+
+             (s.challengesWon?" · 챌린지 "+s.challengesWon+"회 성공":"")+" 🪙"+s.coins;
+  if(navigator.share){
+    navigator.share({title:"러닝퀘스트 기록", text:text}).catch(function(){});
+  }else if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){ toast("📋","기록을 복사했어요."); },
+                                             function(){ toast("📋", text); });
+  }else{ toast("📋", text); }
+}
+
+/* ---------- 화면 켜두기 ---------- */
+var wakeLock = null;
+function requestWake(){
+  if(!S.profile.keepAwake) return;
+  try{
+    if(navigator.wakeLock && navigator.wakeLock.request){
+      navigator.wakeLock.request("screen").then(function(w){ wakeLock = w; }).catch(function(){});
+    }
+  }catch(e){}
+}
+function releaseWake(){
+  try{ if(wakeLock){ wakeLock.release(); wakeLock = null; } }catch(e){}
+}
+document.addEventListener("visibilitychange", function(){
+  if(document.visibilityState === "visible" && run && !wakeLock) requestWake();
+});
+window.addEventListener("beforeunload", function(e){
+  if(run){ e.preventDefault(); e.returnValue = ""; return ""; }
+});
+
+/* ---------- 기록 목록 ---------- */
+$("#histList").addEventListener("click", function(e){
+  var btn = e.target.closest ? e.target.closest("[data-sid]") : null;
+  if(!btn) return;
+  var s = S.sessions.filter(function(x){ return x.id === btn.dataset.sid; })[0];
+  if(s) showDetail(s);
+});
+
+/* ---------- 설정 ---------- */
+$$(".sw[data-opt]").forEach(function(sw){
+  function toggle(){
+    var k = sw.dataset.opt;
+    S.profile[k] = !S.profile[k];
+    sw.setAttribute("aria-checked", S.profile[k] ? "true":"false");
+    document.body.classList.toggle("rm", !!S.profile.reduceMotion);
+    if(k === "voice" && S.profile.voice) speak("음성 안내를 켰어요.");
+    if(k === "haptics" && S.profile.haptics) buzz(30);
+    save();
+  }
+  sw.addEventListener("click", toggle);
+  sw.addEventListener("keydown", function(e){
+    if(e.key === " " || e.key === "Enter"){ e.preventDefault(); toggle(); }
+  });
+});
+$("#btnExport").addEventListener("click", function(){
+  try{
+    var blob = new Blob([JSON.stringify(S, null, 2)], {type:"application/json"});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = "runquest-"+localDate()+".json";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+    toast("💾","JSON 파일로 내보냈어요.");
+  }catch(e){ toast("⚠️","내보내기에 실패했어요."); }
+});
+$("#btnWipe").addEventListener("click", function(){
+  if(!confirm("모든 기록·배지·코인을 삭제할까요? 되돌릴 수 없어요.")) return;
+  if(!confirm("정말 삭제할까요? 마지막 확인이에요.")) return;
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  S = JSON.parse(JSON.stringify(DEFAULTS));
+  S.seenOnboard = true;
+  save(); render(); go("home");
+  toast("🧹","모든 데이터를 삭제했어요.");
+});
+
+/* ---------- 온보딩 ---------- */
+$("#obStart").addEventListener("click", function(){
+  var v = ($("#obName").value || "").trim().slice(0,12);
+  if(v) S.profile.name = v;
+  S.seenOnboard = true;
+  save();
+  $("#onboard").hidden = true;
+  render();
+});
+if(S.seenOnboard){ $("#onboard").hidden = true; }
+else { $("#obName").value = S.profile.name === "러너" ? "" : S.profile.name; }
+
+/* ---------- 시작 ---------- */
+refreshQuests();
+render();
+go("home");
+window.RunQuest = { state: function(){ return S; }, render: render, drawRoute: drawRoute };
+
+})();
+</script>
+</body>
+</html>

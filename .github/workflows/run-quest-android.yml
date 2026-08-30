@@ -1,0 +1,83 @@
+name: Run Quest Android APK
+
+# 러닝퀘스트(run-quest) 웹 앱을 Capacitor로 감싸 안드로이드 APK로 빌드하고,
+# 실행 아티팩트와 GitHub 릴리스 자산으로 내려받을 수 있게 올린다.
+on:
+  push:
+    paths:
+      - "run-quest/**"
+      - ".github/workflows/run-quest-android.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: run-quest/capacitor-app
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Install Android SDK packages
+        run: |
+          yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null
+          "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" \
+            "platform-tools" "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Install JS dependencies
+        run: npm ci
+
+      - name: Sync web assets into the Android project
+        run: npx cap sync android
+
+      - name: Build debug APK
+        run: |
+          chmod +x android/gradlew
+          cd android
+          ./gradlew --no-daemon assembleDebug
+
+      - name: Name the APK with the app version
+        id: apk
+        run: |
+          VERSION=$(grep -m1 versionName android/app/build.gradle | sed 's/.*"\(.*\)".*/\1/')
+          SRC=android/app/build/outputs/apk/debug/app-debug.apk
+          OUT="run-quest-v${VERSION}-debug.apk"
+          cp "$SRC" "$OUT"
+          echo "name=$OUT" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          ls -lh "$OUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: run-quest-debug-apk
+          path: run-quest/capacitor-app/${{ steps.apk.outputs.name }}
+          if-no-files-found: error
+
+      - name: Publish APK to a GitHub release
+        if: github.ref_name == 'main' || startsWith(github.ref_name, 'claude/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="run-quest-v${{ steps.apk.outputs.version }}"
+          NOTES="러닝퀘스트 v${{ steps.apk.outputs.version }} 디버그 APK. 커밋 ${GITHUB_SHA:0:7} (브랜치 ${GITHUB_REF_NAME}) 기준 빌드.
+
+          설치: 안드로이드에서 이 APK를 내려받아 열고, '출처를 알 수 없는 앱 설치'를 허용하세요.
+          첫 실행 후 '달리기 시작'을 누르면 위치 권한을 묻습니다. 거부해도 데모 모드로 전체 기능을 볼 수 있습니다.
+          디버그 서명 빌드라 Play 스토어 배포용이 아닙니다."
+          gh release create "$TAG" --title "러닝퀘스트 v${{ steps.apk.outputs.version }} (debug APK)" --notes "$NOTES" --prerelease \
+            || echo "릴리스가 이미 있어 자산만 갱신합니다."
+          gh release upload "$TAG" "${{ steps.apk.outputs.name }}" --clobber
+          echo "다운로드: $(gh release view "$TAG" --json assets --jq '.assets[].url')" >> "$GITHUB_STEP_SUMMARY"

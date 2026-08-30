@@ -1,0 +1,17 @@
+{
+  "name": "run-quest-app",
+  "version": "0.1.0",
+  "description": "러닝퀘스트 · Run Quest — Android wrapper (Capacitor)",
+  "private": true,
+  "scripts": {
+    "copy:web": "cp ../prototype/v0.1.html www/index.html",
+    "icons": "python3 tools/make_icons.py",
+    "sync": "npm run copy:web && cap sync android",
+    "apk:debug": "npm run sync && cd android && ./gradlew --no-daemon assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0"
+  }
+}

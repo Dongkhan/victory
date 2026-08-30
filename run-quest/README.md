@@ -36,3 +36,48 @@
 - 실제 지도 타일(오프라인 제약 검토) 및 고도·심박 연동
 - 친구와 함께 달리기(비동기 고스트 러너)
 - 주간 리포트 및 목표 코칭
+
+## 안드로이드 APK
+
+`capacitor-app/` 이 Capacitor 8 래퍼입니다. 웹 자산은 `prototype/v0.1.html` 하나를
+`capacitor-app/www/index.html` 로 복사해 쓰며, 두 파일이 다르면 테스트가 실패합니다.
+
+### 내려받기 (직접 빌드하지 않는 경우)
+
+`run-quest/**` 에 푸시가 들어가면 GitHub Actions 워크플로
+`.github/workflows/run-quest-android.yml` 가 APK를 빌드해 두 곳에 올립니다.
+
+- 워크플로 실행 페이지의 아티팩트 `run-quest-debug-apk`
+- 릴리스 태그 `run-quest-v0.1.0` 의 자산 `run-quest-v0.1.0-debug.apk` (직접 다운로드 링크)
+
+안드로이드에서 APK를 열고 '출처를 알 수 없는 앱 설치'를 허용하면 됩니다.
+디버그 서명 빌드라 사이드로딩 전용이며 Play 스토어 배포본이 아닙니다.
+
+### 직접 빌드
+
+필요: JDK 21, Android SDK(platform 36 / build-tools 36.0.0), Node 20+.
+
+```bash
+cd run-quest/capacitor-app
+npm ci
+npm run apk:debug          # www 복사 → cap sync → gradlew assembleDebug
+# 결과: android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+아이콘·스플래시는 외부 에셋 없이 생성됩니다: `npm run icons` (Pillow 필요).
+
+### 네이티브 권한
+
+| 권한 | 쓰임 |
+| --- | --- |
+| `ACCESS_FINE_LOCATION` / `ACCESS_COARSE_LOCATION` | 달리기 거리·경로 계산. 기기 밖으로 전송하지 않음 |
+| `VIBRATE` | 스플릿·챌린지 진동 피드백 |
+| `INTERNET` | Capacitor 로컬 WebView 스킴(외부 통신 없음) |
+
+GPS는 `required=false` 라 GPS 없는 기기에도 설치되며, 권한을 거부하면 데모 모드로 동작합니다.
+
+### 안드로이드에서의 제약
+
+- 음성 안내: 안드로이드 WebView에는 `speechSynthesis` 가 없어 무음으로 동작합니다(코드가 방어 처리).
+  네이티브 TTS가 필요하면 후속 버전에서 Capacitor TTS 플러그인을 붙이면 됩니다.
+- 화면 켜두기: WebView에 `navigator.wakeLock` 이 없으면 자동으로 무시됩니다.

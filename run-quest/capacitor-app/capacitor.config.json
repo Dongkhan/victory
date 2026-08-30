@@ -1,0 +1,11 @@
+{
+  "appId": "com.dongkhan.runquest",
+  "appName": "러닝퀘스트",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}
