@@ -28,6 +28,21 @@
       "source": "/escape",
       "destination": "/escape-3d/prototype/v0.11.html",
       "permanent": false
+    },
+    {
+      "source": "/run",
+      "destination": "/run-quest/prototype/v0.1.html",
+      "permanent": false
+    },
+    {
+      "source": "/running",
+      "destination": "/run-quest/prototype/v0.1.html",
+      "permanent": false
+    },
+    {
+      "source": "/run-quest",
+      "destination": "/run-quest/prototype/v0.1.html",
+      "permanent": false
     }
   ]
 }

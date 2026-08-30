@@ -3,3 +3,4 @@ scripts/last_drive_publish_report.json
 *.backup
 *.fixed
 *.win.html
+tests/__pycache__/
