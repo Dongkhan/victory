@@ -23,24 +23,11 @@ def test_run_quest_is_a_single_offline_file():
         assert host not in HTML
 
 
-def test_project_is_reachable_from_root_index_and_folder_index():
-    index = (ROOT / "index.html").read_text(encoding="utf-8")
-    assert "run-quest/prototype/v0.1.html" in index
-    assert "러닝퀘스트" in index
-
-    folder_index = (ROOT / "run-quest" / "index.html").read_text(encoding="utf-8")
-    assert "./prototype/v0.1.html" in folder_index
-
-
-def test_short_urls_redirect_to_latest_build():
+def test_v01_stays_available_as_the_previous_build():
+    """v0.1은 보존 대상. 최신본 링크는 v0.2 테스트가 검증한다."""
     cfg = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
-    targets = {
-        r["source"]: r["destination"]
-        for r in cfg["redirects"]
-        if r["destination"].startswith("/run-quest/")
-    }
-    assert targets.get("/run") == "/run-quest/prototype/v0.1.html"
-    assert targets.get("/run-quest") == "/run-quest/prototype/v0.1.html"
+    sources = {r["source"] for r in cfg["redirects"]}
+    assert "/run-quest/prototype/v0.1.html" in sources, "구 링크는 최신본으로 넘겨야 한다"
 
 
 def test_three_run_modes_and_goal_options_exist():
