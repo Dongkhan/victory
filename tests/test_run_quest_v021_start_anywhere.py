@@ -9,7 +9,7 @@ APP = ROOT / "run-quest" / "prototype" / "v0.2.1.html"
 HTML = APP.read_text(encoding="utf-8")
 
 
-def test_latest_build_is_offline_and_dependency_free():
+def test_v021_build_is_offline_and_dependency_free():
     assert not re.search(r"<script[^>]+src=", HTML)
     assert not re.search(r"<link[^>]+stylesheet", HTML)
     assert "http://" not in HTML
@@ -19,14 +19,11 @@ def test_latest_build_is_offline_and_dependency_free():
         assert sink not in HTML
 
 
-def test_latest_build_is_the_one_linked_everywhere():
-    assert "run-quest/prototype/v0.2.1.html" in (ROOT / "index.html").read_text(encoding="utf-8")
-    assert "./prototype/v0.2.1.html" in (ROOT / "run-quest/index.html").read_text(encoding="utf-8")
+def test_v021_stays_available_as_the_previous_build():
+    """v0.2.1은 보존 대상. 최신본 링크는 v0.2.2 테스트가 검증한다."""
     cfg = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
-    targets = {r["source"]: r["destination"] for r in cfg["redirects"]}
-    for src in ("/run", "/running", "/run-quest",
-                "/run-quest/prototype/v0.1.html", "/run-quest/prototype/v0.2.html"):
-        assert targets.get(src) == "/run-quest/prototype/v0.2.1.html", src
+    sources = {r["source"] for r in cfg["redirects"]}
+    assert "/run-quest/prototype/v0.2.1.html" in sources
 
 
 def test_running_never_requires_a_saved_place():

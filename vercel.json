@@ -31,27 +31,32 @@
     },
     {
       "source": "/run",
-      "destination": "/run-quest/prototype/v0.2.1.html",
+      "destination": "/run-quest/prototype/v0.2.2.html",
       "permanent": false
     },
     {
       "source": "/running",
-      "destination": "/run-quest/prototype/v0.2.1.html",
+      "destination": "/run-quest/prototype/v0.2.2.html",
       "permanent": false
     },
     {
       "source": "/run-quest",
-      "destination": "/run-quest/prototype/v0.2.1.html",
+      "destination": "/run-quest/prototype/v0.2.2.html",
       "permanent": false
     },
     {
       "source": "/run-quest/prototype/v0.1.html",
-      "destination": "/run-quest/prototype/v0.2.1.html",
+      "destination": "/run-quest/prototype/v0.2.2.html",
       "permanent": false
     },
     {
       "source": "/run-quest/prototype/v0.2.html",
-      "destination": "/run-quest/prototype/v0.2.1.html",
+      "destination": "/run-quest/prototype/v0.2.2.html",
+      "permanent": false
+    },
+    {
+      "source": "/run-quest/prototype/v0.2.1.html",
+      "destination": "/run-quest/prototype/v0.2.2.html",
       "permanent": false
     }
   ]
