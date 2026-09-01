@@ -13,11 +13,11 @@ WORKFLOW = (ROOT / ".github/workflows/run-quest-android.yml").read_text(encoding
 
 def test_web_asset_matches_the_prototype_exactly():
     """www/index.html 은 최신 실행본의 사본이어야 한다(수동 편집으로 갈라지지 않게)."""
-    proto = (ROOT / "run-quest/prototype/v0.3.html").read_text(encoding="utf-8")
+    proto = (ROOT / "run-quest/prototype/v0.4.html").read_text(encoding="utf-8")
     packed = (APP / "www/index.html").read_text(encoding="utf-8")
     assert packed == proto
     pkg = json.loads((APP / "package.json").read_text(encoding="utf-8"))
-    assert pkg["scripts"]["copy:web"].endswith("v0.3.html www/index.html")
+    assert pkg["scripts"]["copy:web"].endswith("v0.4.html www/index.html")
 
 
 def test_capacitor_config_targets_the_bundled_web_dir():
@@ -37,8 +37,8 @@ def test_manifest_declares_only_the_permissions_the_app_uses():
 def test_app_identity_and_version():
     gradle = (ANDROID / "app/build.gradle").read_text(encoding="utf-8")
     assert 'applicationId "com.dongkhan.runquest"' in gradle
-    assert 'versionName "0.3.0"' in gradle
-    assert "versionCode 5" in gradle
+    assert 'versionName "0.4.0"' in gradle
+    assert "versionCode 6" in gradle
     strings = (ANDROID / "app/src/main/res/values/strings.xml").read_text(encoding="utf-8")
     assert "러닝퀘스트" in strings
 
