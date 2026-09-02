@@ -95,7 +95,43 @@ def splash(w, h):
     return img
 
 
+PWA_DIR = Path(__file__).resolve().parents[2] / "icons"
+
+
+def notification_icon(size):
+    """안드로이드 상단 알림용: 투명 배경 위 흰색 마크만 (플러그인 요구사항)."""
+    box = size * SS
+    img = Image.new("RGBA", (box, box), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    pts = route(box, 0.12)
+    r = box * 0.76 * 0.05
+    for x, y in pts:
+        d.ellipse([x - r, y - r, x + r, y + r], fill=(255, 255, 255, 255))
+    for point in (pts[0], pts[-1]):
+        rr = box * 0.76 * 0.10
+        d.ellipse([point[0]-rr, point[1]-rr, point[0]+rr, point[1]+rr], fill=(255, 255, 255, 255))
+    return img.resize((size, size), Image.LANCZOS)
+
+
+def maskable(size):
+    """PWA maskable: 마크를 안전 영역(가운데 80%) 안에 두고 배경을 꽉 채운다."""
+    box = size * SS
+    img = gradient(box, TEAL, LIME).convert("RGBA")
+    draw_route(img, box, inset=0.22)
+    return img.resize((size, size), Image.LANCZOS)
+
+
 def main():
+    PWA_DIR.mkdir(parents=True, exist_ok=True)
+    launcher(192).save(PWA_DIR / "icon-192.png")
+    launcher(512).save(PWA_DIR / "icon-512.png")
+    maskable(512).save(PWA_DIR / "icon-maskable-512.png")
+    print("pwa icons ->", PWA_DIR)
+    ni = RES / "drawable"
+    ni.mkdir(parents=True, exist_ok=True)
+    notification_icon(96).save(ni / "ic_tracking.png")
+    print("notification icon ->", ni / "ic_tracking.png")
+
     for dpi, size in LAUNCHER.items():
         out = RES / ("mipmap-" + dpi)
         out.mkdir(parents=True, exist_ok=True)

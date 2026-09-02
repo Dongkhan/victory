@@ -3,7 +3,8 @@
   "appName": "러닝퀘스트",
   "webDir": "www",
   "android": {
-    "allowMixedContent": false
+    "allowMixedContent": false,
+    "useLegacyBridge": true
   },
   "server": {
     "androidScheme": "https"

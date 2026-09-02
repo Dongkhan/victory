@@ -1,0 +1,34 @@
+name: Run Quest Web Tests
+
+# 정적 계약 테스트 + 실제 브라우저(Chromium) 흐름 테스트.
+# 저장소의 다른 프로젝트에 남아 있는 옛 실패 테스트와 분리하기 위해 run_quest 테스트만 돌린다.
+on:
+  push:
+    paths:
+      - "run-quest/**"
+      - "tests/test_run_quest_*.py"
+      - ".github/workflows/run-quest-web.yml"
+  pull_request:
+    paths:
+      - "run-quest/**"
+      - "tests/test_run_quest_*.py"
+  workflow_dispatch:
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: |
+          pip install --quiet pytest playwright Pillow
+          python -m playwright install --with-deps chromium
+      - name: Static contract tests
+        run: pytest tests -q -k "run_quest and not browser"
+      - name: Browser smoke test (Chromium)
+        env:
+          RUNQUEST_BROWSER: "1"
+        run: pytest tests/test_run_quest_browser_smoke.py -q -s

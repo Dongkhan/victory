@@ -4,4 +4,7 @@
     <string name="title_activity_main">러닝퀘스트</string>
     <string name="package_name">com.dongkhan.runquest</string>
     <string name="custom_url_scheme">com.dongkhan.runquest</string>
+    <string name="capacitor_background_geolocation_notification_channel_name">달리기 추적</string>
+    <string name="capacitor_background_geolocation_notification_icon">drawable/ic_tracking</string>
+    <string name="capacitor_background_geolocation_notification_color">#0D9488</string>
 </resources>

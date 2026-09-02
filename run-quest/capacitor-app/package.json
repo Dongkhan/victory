@@ -1,15 +1,18 @@
 {
   "name": "run-quest-app",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "러닝퀘스트 · Run Quest — 동네 탐험 러닝 앱 Android wrapper (Capacitor)",
   "private": true,
   "scripts": {
-    "copy:web": "cp ../prototype/v0.4.html www/index.html",
+    "copy:web": "cp ../prototype/v0.5.html www/index.html",
     "icons": "python3 tools/make_icons.py",
     "sync": "npm run copy:web && cap sync android",
     "apk:debug": "npm run sync && cd android && ./gradlew --no-daemon assembleDebug"
   },
   "dependencies": {
+    "@capacitor-community/background-geolocation": "^1.2.26",
+    "@capacitor-community/keep-awake": "^8.0.1",
+    "@capacitor-community/text-to-speech": "^8.0.2",
     "@capacitor/android": "^8.5.0",
     "@capacitor/cli": "^8.5.0",
     "@capacitor/core": "^8.5.0"
