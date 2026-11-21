@@ -28,6 +28,71 @@
       "source": "/escape",
       "destination": "/escape-3d/prototype/v0.11.html",
       "permanent": false
+    },
+    {
+      "source": "/run",
+      "destination": "https://running-quest.vercel.app/run-quest/prototype/v0.5.html",
+      "permanent": false
+    },
+    {
+      "source": "/run/",
+      "destination": "https://running-quest.vercel.app/run-quest/prototype/v0.5.html",
+      "permanent": false
+    },
+    {
+      "source": "/running",
+      "destination": "https://running-quest.vercel.app/run-quest/prototype/v0.5.html",
+      "permanent": false
+    },
+    {
+      "source": "/running/",
+      "destination": "https://running-quest.vercel.app/run-quest/prototype/v0.5.html",
+      "permanent": false
+    },
+    {
+      "source": "/run-quest",
+      "destination": "https://running-quest.vercel.app/run-quest/prototype/v0.5.html",
+      "permanent": false
+    },
+    {
+      "source": "/run-quest/",
+      "destination": "https://running-quest.vercel.app/run-quest/prototype/v0.5.html",
+      "permanent": false
+    },
+    {
+      "source": "/run-quest/prototype/v0.5.html",
+      "destination": "https://running-quest.vercel.app/run-quest/prototype/v0.5.html",
+      "permanent": false
+    },
+    {
+      "source": "/run-quest/prototype/v0.1.html",
+      "destination": "https://running-quest.vercel.app/run-quest/prototype/v0.5.html",
+      "permanent": false
+    },
+    {
+      "source": "/run-quest/prototype/v0.2.html",
+      "destination": "https://running-quest.vercel.app/run-quest/prototype/v0.5.html",
+      "permanent": false
+    },
+    {
+      "source": "/run-quest/prototype/v0.2.1.html",
+      "destination": "https://running-quest.vercel.app/run-quest/prototype/v0.5.html",
+      "permanent": false
+    },
+    {
+      "source": "/run-quest/prototype/v0.2.2.html",
+      "destination": "https://running-quest.vercel.app/run-quest/prototype/v0.5.html",
+      "permanent": false
+    },
+    {
+      "source": "/run-quest/prototype/v0.3.html",
+      "destination": "https://running-quest.vercel.app/run-quest/prototype/v0.5.html",
+      "permanent": false
+    },
+    {
+      "source": "/run-quest/prototype/v0.4.html",
+      "destination": "https://running-quest.vercel.app/run-quest/prototype/v0.5.html",
+      "permanent": false
     }
   ]
 }
